@@ -1,0 +1,34 @@
+.custom-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: orange;
+  transform: scaleX(0);
+  transform-origin: right; /* start from right */
+  transition: transform 0.3s ease;
+}
+
+.custom-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left; /* end at left */
+}
+
+.custom-underline-active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: orange;
+  transform: scaleX(0);
+  transform-origin: left;
+}
