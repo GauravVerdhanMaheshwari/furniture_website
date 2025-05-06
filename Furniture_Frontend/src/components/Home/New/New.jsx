@@ -4,7 +4,7 @@ function New() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/new")
+    fetch("/api/new")
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -18,7 +18,10 @@ function New() {
       <h1 className="ml-9 text-3xl ">✨ NEW</h1>
       <div className="bg-gray-100 flex flex-wrap pt-0 px-4 pb-4">
         {products.map(({ id, name, price, description, imageUrl }) => (
-          <div key={id} className="bg-white shadow-md rounded-lg p-4 m-4 w-72">
+          <div
+            key={id}
+            className="bg-white shadow-md rounded-lg p-4 m-4 w-72 transition-transform hover:scale-105"
+          >
             <img
               src={imageUrl}
               alt={name}
