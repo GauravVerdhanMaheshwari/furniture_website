@@ -1,8 +1,13 @@
 import React from "react";
-import { Hero } from "./index.js";
+import { Hero, New } from "./index.js";
 
 function Home() {
-  return <Hero />;
+  return (
+    <>
+      <Hero />
+      <New />
+    </>
+  );
 }
 
 export default Home;
