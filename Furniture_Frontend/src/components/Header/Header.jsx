@@ -44,22 +44,17 @@ export default function Header() {
           </li>
           <li className="text-2xl p-3 font-semibold ">
             <NavLink to="/about" className={linkCss}>
-              <h1>About Me</h1>
+              <h1>Shop</h1>
             </NavLink>
           </li>
           <li className="text-2xl p-3 font-semibold">
             <NavLink to="/projects" className={linkCss}>
-              <h1>Projects</h1>
+              <h1>About Us</h1>
             </NavLink>
           </li>
           <li className="text-2xl p-3 font-semibold">
             <NavLink to="/blogs" className={linkCss}>
-              Blogs
-            </NavLink>
-          </li>
-          <li className="text-2xl p-3 font-semibold">
-            <NavLink to="/contact" className={linkCss}>
-              Contact Me
+              Content Us
             </NavLink>
           </li>
         </ul>
@@ -67,4 +62,3 @@ export default function Header() {
     </header>
   );
 }
-    
