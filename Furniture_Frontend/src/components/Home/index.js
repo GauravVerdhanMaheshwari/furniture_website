@@ -1,4 +1,4 @@
 import Hero from "./Hero/Hero";
-import New from "./New/New";
+import Suggestions from "./Suggestions/Suggestions";
 
-export { Hero, New };
+export { Hero, Suggestions };
