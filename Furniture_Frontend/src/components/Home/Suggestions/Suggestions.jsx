@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-function New() {
+function Suggestions({ title, api }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("/api/new")
+    fetch(api)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setProducts(data);
       })
       .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+  }, [api]);
 
   return (
-    <div className="bg-gray-100 flex flex-wrap p-4">
-      <h1 className="ml-9 text-3xl ">✨ NEW</h1>
+    <div className="bg-gray-100 flex flex-col justify-center items-center p-4">
+      <div className="">
+        <h1 className=" text-3xl ">{title}</h1>
+      </div>
       <div className="bg-gray-100 flex flex-wrap pt-0 px-4 pb-4">
         {products.map(({ id, name, price, description, imageUrl }) => (
           <div
@@ -38,4 +40,4 @@ function New() {
   );
 }
 
-export default New;
+export default Suggestions;
