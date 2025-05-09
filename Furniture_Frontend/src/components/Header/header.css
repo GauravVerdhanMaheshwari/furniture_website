@@ -1,6 +1,8 @@
 .custom-underline {
   position: relative;
   display: inline-block;
+  width: 100%;
+  max-width: 100%;
 }
 
 .custom-underline::after {
@@ -16,9 +18,18 @@
   transition: transform 0.3s ease;
 }
 
-.custom-underline:hover::after {
-  transform: scaleX(1);
-  transform-origin: left; /* end at left */
+@media (hover: hover) {
+  .custom-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left; /* end at left */
+  }
+}
+
+@media (hover: none) {
+  .custom-underline:active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }
 
 .custom-underline-active::after {
