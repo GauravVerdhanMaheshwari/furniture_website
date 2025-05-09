@@ -38,7 +38,7 @@ export default function Header() {
     >
       <nav className="w-full">
         {/* Hamburger Menu Button for Mobile */}
-        <button 
+        <button
           className="md:hidden p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -48,27 +48,49 @@ export default function Header() {
         </button>
 
         {/* Navigation Links */}
-        <ul className={`
+        <ul
+          className={`
           flex flex-col md:flex-row gap-2 md:gap-5
-          ${isMenuOpen ? 'absolute left-0 top-full bg-white/90 w-full p-4' : 'hidden md:flex'}
-        `}>
+          ${
+            isMenuOpen
+              ? "absolute left-0 top-full bg-white/90 w-full p-4"
+              : "hidden md:flex"
+          }
+        `}
+        >
           <li className="text-xl md:text-2xl p-2 md:p-3 font-semibold">
-            <NavLink to="/" className={linkCss} onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/"
+              className={linkCss}
+              onClick={() => setIsMenuOpen(false)}
+            >
               <h1>Home</h1>
             </NavLink>
           </li>
           <li className="text-xl md:text-2xl p-2 md:p-3 font-semibold">
-            <NavLink to="/about" className={linkCss} onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/products"
+              className={linkCss}
+              onClick={() => setIsMenuOpen(false)}
+            >
               <h1>Shop</h1>
             </NavLink>
           </li>
           <li className="text-xl md:text-2xl p-2 md:p-3 font-semibold">
-            <NavLink to="/projects" className={linkCss} onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/about"
+              className={linkCss}
+              onClick={() => setIsMenuOpen(false)}
+            >
               <h1>About Us</h1>
             </NavLink>
           </li>
           <li className="text-xl md:text-2xl p-2 md:p-3 font-semibold">
-            <NavLink to="/blogs" className={linkCss} onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/contact"
+              className={linkCss}
+              onClick={() => setIsMenuOpen(false)}
+            >
               Contact Us
             </NavLink>
           </li>
