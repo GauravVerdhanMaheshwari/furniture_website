@@ -109,6 +109,10 @@ app.get("/api/packages", (req, res) => {
   ]);
 });
 
+app.get("/api/products", (req, res) => {
+  res.json({ items: ["Sofa", "Chair", "Table", "Bed"] });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
