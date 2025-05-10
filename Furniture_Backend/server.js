@@ -110,7 +110,14 @@ app.get("/api/packages", (req, res) => {
 });
 
 app.get("/api/products", (req, res) => {
-  res.json({ items: ["Sofa", "Chair", "Table", "Bed"] });
+  res.json({
+    items: [
+      { id: 1, name: "Sofa" },
+      { id: 2, name: "Chair" },
+      { id: 3, name: "Table" },
+      { id: 4, name: "Bed" },
+    ],
+  });
 });
 
 const PORT = process.env.PORT || 5000;
