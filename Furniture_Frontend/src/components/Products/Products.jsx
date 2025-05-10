@@ -30,7 +30,7 @@ function Products() {
       <h1 className="text-2xl sm:text-3xl font-bold mb-4">Products</h1>
 
       {/* Search & Filter Row */}
-      <div className="flex flex-col sm:flex-row items-center w-full mb-4 gap-2 sm:gap-0">
+      <div className="flex flex-col sm:flex-row items-center w-full mb-4 gap-2 sm:gap-0 px-3">
         <div className="flex items-center w-full sm:w-auto">
           <img
             src="search.webp"
