@@ -120,7 +120,55 @@ app.get("/api/products", (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+app.get("/api/company", (req, res) => {
+  res.json({
+    items: [
+      { id: 1, name: "IKEA" },
+      { id: 2, name: "Urban Ladder" },
+      { id: 3, name: "Home Centre" },
+      { id: 4, name: "Pepperfry" },
+    ],
+  });
+});
+
+app.get("/api/furniture", (req, res) => {
+  res.json([
+    {
+      id: 1,
+      type: "Sofa",
+      company: "",
+      price: 2999,
+      description: "A comfortable sofa for your living room.",
+      imageUrl: "https://example.com/sofa.jpg",
+    },
+    {
+      id: 2,
+      type: "Chair",
+      company: "IKEA",
+      price: 1999,
+      description: "A comfortable chair for your office.",
+      imageUrl: "https://example.com/chair.jpg",
+    },
+    {
+      id: 3,
+      type: "Table",
+      company: "",
+      price: 4999,
+      description: "A stylish dining table for family gatherings.",
+      imageUrl: "https://example.com/dining-table.jpg",
+    },
+    {
+      id: 4,
+      type: "Bed",
+      company: "",
+      price: 3999,
+      description: "A cozy bed for a good night's sleep with full rest.",
+      imageUrl: "https://example.com/bed.jpg",
+    },
+  ]);
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
