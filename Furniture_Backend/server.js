@@ -135,7 +135,7 @@ app.get("/api/furniture", (req, res) => {
   res.json([
     {
       id: 1,
-      type: "Sofa",
+      name: "Sofa",
       company: "",
       price: 2999,
       description: "A comfortable sofa for your living room.",
@@ -143,7 +143,7 @@ app.get("/api/furniture", (req, res) => {
     },
     {
       id: 2,
-      type: "Chair",
+      name: "Chair",
       company: "IKEA",
       price: 1999,
       description: "A comfortable chair for your office.",
@@ -151,7 +151,7 @@ app.get("/api/furniture", (req, res) => {
     },
     {
       id: 3,
-      type: "Table",
+      name: "Table",
       company: "",
       price: 4999,
       description: "A stylish dining table for family gatherings.",
@@ -159,13 +159,39 @@ app.get("/api/furniture", (req, res) => {
     },
     {
       id: 4,
-      type: "Bed",
+      name: "Bed",
       company: "",
       price: 3999,
       description: "A cozy bed for a good night's sleep with full rest.",
       imageUrl: "https://example.com/bed.jpg",
     },
+    {
+      id: 5,
+      name: "Wardrobe",
+      company: "Urban Ladder",
+      price: 5999,
+      description: "A spacious wardrobe for your clothes.",
+      imageUrl: "https://example.com/wardrobe.jpg",
+    },
+    {
+      id: 6,
+      name: "Bookshelf",
+      company: "",
+      price: 2499,
+      description: "A stylish bookshelf for your books.",
+      imageUrl: "https://example.com/bookshelf.jpg",
+    },
   ]);
+});
+
+app.get("/api/furniture/priceMinMax", (req, res) => {
+  const minPrice = 1000;
+  const maxPrice = 10000;
+
+  res.json({
+    minPrice,
+    maxPrice,
+  });
 });
 
 const PORT = process.env.PORT || 3000;
