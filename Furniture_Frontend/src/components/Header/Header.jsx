@@ -96,6 +96,12 @@ export default function Header() {
           </li>
         </ul>
       </nav>
+      <NavLink
+        to="/cart"
+        className="text-black transition-all duration-300 ease-in-out hover:text-shadow-[0px_1px_40px] hover:text-orange-500 hover:text-shadow-orange-400/50 text-xl md:text-2xl p-2 md:p-3 font-semibold cursor-pointer"
+      >
+        <img src="shopping-cart.webp" alt="cart" className="w-7 h-7" />
+      </NavLink>
     </header>
   );
 }

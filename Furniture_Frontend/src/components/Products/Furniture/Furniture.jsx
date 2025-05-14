@@ -31,6 +31,10 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     setFilteredProducts(filtered);
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
 
+  const handleAddToCart = (name, id) => {
+    // Logic to add the product to the cart
+    console.log("Product added to cart", name, id);
+  };
   return (
     <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4">
       {loading ? (
@@ -60,7 +64,10 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               <p className="text-red-500 font-bold mt-2 text-base md:text-lg mx-2">
                 ₹ {price}
               </p>
-              <button className="w-full bg-red-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md mt-2 text-sm md:text-base hover:bg-red-600 transition-all duration-300 active:scale-95 active:bg-red-700 cursor-pointer">
+              <button
+                onClick={() => handleAddToCart(id, name)}
+                className="w-full bg-red-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md mt-2 text-sm md:text-base hover:bg-red-600 transition-all duration-300 active:scale-95 active:bg-red-700 cursor-pointer"
+              >
                 Add to Cart
               </button>
             </div>

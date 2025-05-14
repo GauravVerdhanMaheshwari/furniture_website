@@ -3,6 +3,11 @@ import React, { useEffect, useState } from "react";
 function Suggestions({ title, api }) {
   const [products, setProducts] = useState([]);
 
+  const handleAddToCart = (name, id) => {
+    // Logic to add the product to the cart
+    console.log("Product added to cart", name, id);
+  };
+
   useEffect(() => {
     fetch(api)
       .then((response) => response.json())
@@ -36,7 +41,10 @@ function Suggestions({ title, api }) {
             <p className="text-red-500 font-bold mt-2 text-base md:text-lg mx-2">
               ₹ {price}
             </p>
-            <button className="w-full bg-red-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md mt-2 text-sm md:text-base hover:bg-red-600 transition-all duration-300 active:scale-95 active:bg-red-700 cursor-pointer">
+            <button
+              onClick={() => handleAddToCart(id, name)}
+              className="w-full bg-red-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md mt-2 text-sm md:text-base hover:bg-red-600 transition-all duration-300 active:scale-95 active:bg-red-700 cursor-pointer"
+            >
               Add to Cart
             </button>
           </div>
