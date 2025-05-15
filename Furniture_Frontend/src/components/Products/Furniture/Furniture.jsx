@@ -1,18 +1,68 @@
 import React, { useEffect, useState } from "react";
+import FurnitureCard from "../../FurnitureCard/FurnitureCard";
+import cartContext from "../../../context/CartContext.js";
 
 function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quantities, setQuantities] = useState({});
+  const [error, setError] = useState(null);
+  const { cart, setCart } = React.useContext(cartContext);
+  const api = "http://localhost:3000/api/furniture";
+
+  const handleAddToCart = (id, name, image, price) => {
+    const quantity = quantities[id] || 1;
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+        return [...prev, { id, name, image, price, quantity }];
+      }
+    });
+    
+  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("Cart items:", cart);
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
+  const handleIncrement = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) + 1,
+    }));
+  };
+
+  const handleDecrement = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max((prev[id] || 1) - 1, 1),
+    }));
+  };
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/furniture")
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(api);
+        const data = await response.json();
         setProducts(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load products.");
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => console.error("Failed to fetch furniture:", err));
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   useEffect(() => {
@@ -31,46 +81,30 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     setFilteredProducts(filtered);
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
 
-  const handleAddToCart = (name, id) => {
-    // Logic to add the product to the cart
-    console.log("Product added to cart", name, id);
-  };
   return (
     <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4">
       {loading ? (
         <p className="my-2 text-3xl font-bold">Loading...</p>
+      ) : error ? (
+        <p className="my-2 text-3xl font-bold text-red-500">{error}</p>
       ) : filteredProducts.length === 0 ? (
         <p className="my-2 text-3xl font-bold">No Products Found</p>
       ) : (
         filteredProducts.map(
           ({ id, name, company, price, description, imageUrl }) => (
-            <div
+            <FurnitureCard
               key={id}
-              className="bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 transition-transform hover:scale-105"
-            >
-              <img
-                src={imageUrl}
-                alt={name}
-                className="w-full h-36 md:h-48 object-cover rounded-t-lg"
-              />
-              <hr />
-              <h2 className="text-lg md:text-xl font-bold mt-2 mx-2">{name}</h2>
-              <p className="text-gray-700 text-sm md:text-base line-clamp-2 md:line-clamp-3 mx-2">
-                {description}
-              </p>
-              <p className="text-gray-500 text-sm md:text-base mx-2 my-1">
-                {company ? `Company: ${company}` : "Made in factory"}
-              </p>
-              <p className="text-red-500 font-bold mt-2 text-base md:text-lg mx-2">
-                ₹ {price}
-              </p>
-              <button
-                onClick={() => handleAddToCart(id, name)}
-                className="w-full bg-red-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md mt-2 text-sm md:text-base hover:bg-red-600 transition-all duration-300 active:scale-95 active:bg-red-700 cursor-pointer"
-              >
-                Add to Cart
-              </button>
-            </div>
+              id={id}
+              name={name}
+              company={company}
+              price={price}
+              description={description}
+              imageUrl={imageUrl}
+              quantities={quantities}
+              handleAddToCart={handleAddToCart}
+              handleIncrement={handleIncrement}
+              handleDecrement={handleDecrement}
+            />
           )
         )
       )}
