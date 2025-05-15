@@ -5,5 +5,14 @@ import Products from "./Products/Products";
 import AboutUs from "./AboutUs/AboutUs";
 import Contacts from "./Contacts/Contacts";
 import Cart from "./Cart/Cart";
-
-export { Footer, Header, Home, Products, AboutUs, Contacts, Cart };
+import FurnitureCard from "./FurnitureCard/FurnitureCard";
+export {
+  Footer,
+  Header,
+  Home,
+  Products,
+  AboutUs,
+  Contacts,
+  Cart,
+  FurnitureCard,
+};
