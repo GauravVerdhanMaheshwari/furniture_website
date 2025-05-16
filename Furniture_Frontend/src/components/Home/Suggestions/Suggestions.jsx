@@ -1,35 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { FurnitureCard } from "./../../index.js";
-import cartContext from "../../../context/CartContext.js";
 
 function Suggestions({ title, api }) {
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { cart, setCart } = React.useContext(cartContext);
 
   const handleAddToCart = (id, name, image, price) => {
-    const quantity = quantities[id] || 1;
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      } else {
-        return [...prev, { id, name, image, price, quantity }];
-      }
-    });
+    console.log("added to cart", id, name, image, price);
   };
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("Cart items:", cart);
-    }, 1000);
-    return () => clearInterval(interval); // Cleanup
-  });
 
   const handleIncrement = (id) => {
     setQuantities((prev) => ({
