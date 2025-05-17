@@ -69,7 +69,16 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
         <p className="my-2 text-3xl font-bold">No Products Found</p>
       ) : (
         filteredProducts.map(
-          ({ id, name, company, price, description, imageUrl }) => (
+          ({
+            id,
+            name,
+            company,
+            price,
+            description,
+            imageUrl,
+            inStock,
+            stock,
+          }) => (
             <FurnitureCard
               key={id}
               id={id}
@@ -77,6 +86,8 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               company={company}
               price={price}
               description={description}
+              inStock={inStock}
+              stock={stock}
               imageUrl={imageUrl}
               quantities={quantities}
               handleAddToCart={handleAddToCart}
