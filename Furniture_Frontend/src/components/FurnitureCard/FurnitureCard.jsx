@@ -8,12 +8,22 @@ function FurnitureCard({
   company,
   price,
   quantities,
+  inStock,
+  stock,
   handleAddToCart,
   handleIncrement,
   handleDecrement,
 }) {
+  const stockCSS = inStock
+    ? "bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 transition-transform hover:scale-105"
+    : "bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 transition-transform hover:scale-105 opacity-50 cursor-not-allowed";
+
+  const inStockCSS = inStock
+    ? "text-green-500  mt-2 text-base md:text-lg mx-2"
+    : "text-red-500  mt-2 text-base md:text-lg mx-2";
+
   return (
-    <div className="bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 transition-transform hover:scale-105">
+    <div className={stockCSS}>
       <img
         src={imageUrl}
         alt={name}
@@ -24,9 +34,14 @@ function FurnitureCard({
       <p className="text-gray-700 text-sm md:text-base line-clamp-2 md:line-clamp-3 mx-2">
         {description}
       </p>
-      <p className="text-gray-500 text-sm md:text-base mx-2 my-1">
-        {company ? `Company: ${company}` : "Made in factory"}
-      </p>
+      <div>
+        <p className="text-gray-500 text-sm md:text-base mx-2 my-1">
+          {company ? `Company: ${company}` : "Made in factory"}
+        </p>
+        <p className={inStockCSS}>
+          {inStock ? `In Stock: ${stock}` : "Out of Stock"}
+        </p>
+      </div>
       <p className="text-red-500 font-bold mt-2 text-base md:text-lg mx-2">
         ₹ {price}
       </p>
@@ -35,6 +50,7 @@ function FurnitureCard({
         <button
           onClick={() => handleDecrement(id)}
           className="w-1/5 py-1 border-2 border-gray-300 rounded hover:cursor-pointer"
+          
         >
           -
         </button>
