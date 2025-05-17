@@ -7,7 +7,15 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
-import { Home, Products, AboutUs, Contacts, Cart } from "./components/index.js";
+import {
+  Home,
+  Products,
+  AboutUs,
+  Contacts,
+  Cart,
+  Profile,
+  Login,
+} from "./components/index.js";
 import App from "./App.jsx";
 
 const router = createBrowserRouter(
@@ -18,6 +26,9 @@ const router = createBrowserRouter(
       <Route path="/about" element={<AboutUs />} />
       <Route path="/contact" element={<Contacts />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<h1>404 Not Found</h1>} />
     </Route>
   )
 );
