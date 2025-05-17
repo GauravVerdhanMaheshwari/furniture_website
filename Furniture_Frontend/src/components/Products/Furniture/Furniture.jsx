@@ -9,9 +9,27 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [error, setError] = useState(null);
   const api = "http://localhost:3000/api/furniture";
 
-  const handleAddToCart = (id, name, image, price) => {
-    console.log("added to cart", id, name, image, price);
+  const handleAddToCart = async (id, name, quantities) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          name,
+          quantity: quantities,
+        }),
+      });
+
+      const result = await response.json();
+      console.log("Server response:", result);
+    } catch (error) {
+      console.error("Failed to send cart data to server:", error);
+    }
   };
+
   const handleIncrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
