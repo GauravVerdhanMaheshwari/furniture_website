@@ -230,6 +230,17 @@ app.get("/api/furniture/priceMinMax", (req, res) => {
   });
 });
 
+app.post("/api/cart", (req, res) => {
+  const { id, name, quantity } = req.body;
+  console.log("Received cart item:", req.body);
+  res
+    .status(200)
+    .json({
+      message:
+        "Item added to cart successfully " + id + " " + name + " " + quantity,
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
