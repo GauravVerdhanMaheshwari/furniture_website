@@ -8,6 +8,7 @@ import AboutUs from "./AboutUs/AboutUs";
 import Contacts from "./Contacts/Contacts";
 import Cart from "./Cart/Cart";
 import FurnitureCard from "./FurnitureCard/FurnitureCard";
+import Register from "./Register/Register";
 export {
   Footer,
   Header,
@@ -18,5 +19,6 @@ export {
   Cart,
   FurnitureCard,
   Login,
+  Register,
   Profile,
 };
