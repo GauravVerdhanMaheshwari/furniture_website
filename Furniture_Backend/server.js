@@ -220,6 +220,30 @@ app.get("/api/furniture", (req, res) => {
   ]);
 });
 
+app.post("/api/register", (req, res) => {
+  console.log("Received register data:", req.body);
+  res.status(200).json({
+    message: "Registration successful",
+  });
+});
+
+app.post("/api/login", (req, res) => {
+  const { username, email, password } = req.body;
+  console.log("Received login data:", req.body);
+  const num = Math.floor(Math.random() * 10);
+  if (num % 2 === 0) {
+    return res.status(400).json({
+      message: "Login failed",
+    });
+  } else {
+    res.status(200).json({
+      message: "Login successful",
+      username,
+      email,
+    });
+  }
+});
+
 app.get("/api/furniture/priceMinMax", (req, res) => {
   const minPrice = 1000;
   const maxPrice = 10000;
@@ -233,12 +257,10 @@ app.get("/api/furniture/priceMinMax", (req, res) => {
 app.post("/api/cart", (req, res) => {
   const { id, name, quantity } = req.body;
   console.log("Received cart item:", req.body);
-  res
-    .status(200)
-    .json({
-      message:
-        "Item added to cart successfully " + id + " " + name + " " + quantity,
-    });
+  res.status(200).json({
+    message:
+      "Item added to cart successfully " + id + " " + name + " " + quantity,
+  });
 });
 
 const PORT = process.env.PORT || 3000;
