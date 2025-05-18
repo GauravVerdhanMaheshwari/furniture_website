@@ -15,6 +15,7 @@ import {
   Cart,
   Profile,
   Login,
+  Register,
 } from "./components/index.js";
 import App from "./App.jsx";
 
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<Cart />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
     </Route>
   )
