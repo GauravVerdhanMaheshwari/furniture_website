@@ -97,14 +97,14 @@ export default function Header() {
         </ul>
       </nav>
       <div className="flex items-center">
-        <NavLink to="/cart" className="w-11 h-11 mx-4 cursor-pointer flex-1">
+        <NavLink to="/cart" className="w-8 h-8 mx-4 cursor-pointer flex-1">
           <img
             src="shopping-cart.webp"
             alt="cart"
             className="w-[100%] h-[100%] "
           />
         </NavLink>
-        <NavLink to="/profile" className="w-11 h-11 mx-4 cursor-pointer flex-1">
+        <NavLink to="/profile" className="w-8 h-8 mx-4 cursor-pointer flex-1">
           <img src="user.webp" alt="user" className="w-[100%] h-[100%] " />
         </NavLink>
       </div>
