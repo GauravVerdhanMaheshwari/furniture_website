@@ -100,11 +100,9 @@ function Register() {
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
-              alt=""
+              alt={showPassword ? "Hide" : "View"}
               className=" cursor-pointer inline w-7 h-7 mt-1"
-              onClick={() => {
-                () => setShowPassword(!showPassword);
-              }}
+              onClick={() => setShowPassword(!showPassword)}
             />
           </div>
         </div>
@@ -128,11 +126,9 @@ function Register() {
             />
             <img
               src={showConfirmPassword ? "hide.webp" : "view.webp"}
-              alt=""
+              alt={showConfirmPassword ? "Hide" : "View"}
               className=" cursor-pointer inline w-7 h-7 mt-1"
-              onClick={() => {
-                setShowConfirmPassword(!showConfirmPassword);
-              }}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             />
           </div>
         </div>
