@@ -1,13 +1,16 @@
 import React from "react";
-import { Footer, Header } from "./components";
-import { Outlet } from "react-router-dom";
+import { Footer, Header, AdminFooter, AdminHeader } from "./components";
+import { Outlet, useLocation } from "react-router-dom";
 
 function App() {
+  const location = useLocation();
+  const changeHeaderFooter = location.pathname.startsWith("/admin");
+
   return (
     <div>
-      <Header />
+      {changeHeaderFooter ? <AdminHeader /> : <Header />}
       <Outlet />
-      <Footer />
+      {changeHeaderFooter ? <AdminFooter /> : <Footer />}
     </div>
   );
 }
