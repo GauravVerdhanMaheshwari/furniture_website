@@ -9,6 +9,14 @@ import Contacts from "./Contacts/Contacts";
 import Cart from "./Cart/Cart";
 import FurnitureCard from "./FurnitureCard/FurnitureCard";
 import Register from "./Register/Register";
+import AdminLogin from "./AdminLogin/AdminLogin";
+import AdminHeader from "./AdminHeader/AdminHeader";
+import AdminFooter from "./AdminFooter/AdminFooter";
+import AdminHome from "./AdminHome/AdminHome";
+import AdminProducts from "./AdminProducts/AdminProducts";
+import AdminUsers from "./AdminUsers/AdminUsers";
+import AdminOrders from "./AdminOrder/AdminOrder";
+import Page404 from "./404/Page404";
 export {
   Footer,
   Header,
@@ -21,4 +29,12 @@ export {
   Login,
   Register,
   Profile,
+  AdminLogin,
+  AdminHome,
+  AdminHeader,
+  AdminFooter,
+  AdminProducts,
+  AdminUsers,
+  AdminOrders,
+  Page404,
 };
