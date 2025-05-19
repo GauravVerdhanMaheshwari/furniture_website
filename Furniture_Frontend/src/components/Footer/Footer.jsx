@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="bg-white p-3 md:p-5 border-y w-full">
       <div className="container mx-auto py-2 md:py-3 flex flex-col md:flex-row items-center justify-between gap-4">
         <span className="text-sm md:text-base text-gray-500 text-center md:text-left">
-          © 2025 YourCompany. All rights reserved.
+          © 2025 Geetanjali Furniture . All rights reserved.
         </span>
 
         <div className="flex space-x-4 md:space-x-5">
