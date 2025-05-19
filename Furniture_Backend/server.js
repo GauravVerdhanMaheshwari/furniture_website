@@ -263,6 +263,35 @@ app.post("/api/cart", (req, res) => {
   });
 });
 
+app.get("/api/owner", (req, res) => {
+  res.json({
+    name: "John Doe",
+    email: "john.doe@example.com",
+    password: "password123",
+  });
+});
+
+app.post("/api/owner", (req, res) => {
+  const { name, email, password } = req.body;
+
+  const storedOwner = {
+    name: "John Doe",
+    email: "john.doe@example.com",
+    password: "password123",
+  };
+
+  const isSame =
+    name === storedOwner.name &&
+    email === storedOwner.email &&
+    password === storedOwner.password;
+
+  if (isSame) {
+    return res.status(200).json({ message: "Data matches the stored owner." });
+  } else {
+    return res.status(401).json({ message: "Data does not match." });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
