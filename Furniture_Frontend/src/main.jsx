@@ -16,6 +16,12 @@ import {
   Profile,
   Login,
   Register,
+  AdminLogin,
+  AdminHome,
+  AdminProducts,
+  AdminUsers,
+  AdminOrders,
+  Page404,
 } from "./components/index.js";
 import App from "./App.jsx";
 
@@ -30,7 +36,13 @@ const router = createBrowserRouter(
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="*" element={<h1>404 Not Found</h1>} />
+      <Route path="/admin" element={<AdminLogin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/home" element={<AdminHome />} />
+      <Route path="/admin/products" element={<AdminProducts />} />
+      <Route path="/admin/users" element={<AdminUsers />} />
+      <Route path="/admin/orders" element={<AdminOrders />} />
+      <Route path="*" element={<Page404 />} />
     </Route>
   )
 );
