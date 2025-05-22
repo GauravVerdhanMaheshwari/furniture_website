@@ -3,15 +3,15 @@ import React from "react";
 function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
   return (
-    <div className="mt-20 h-[73vh] flex flex-col justify-center">
+    <div className="mt-25 min-h-[73vh] flex flex-col justify-center px-4">
       <div className="flex flex-col items-center">
         <h1 className="text-4xl text-red-500 my-3">Admin Login</h1>
       </div>
-      <form action="" className="flex flex-col w-[30%] mx-auto">
+      <form action="" className="flex flex-col w-full max-w-md mx-auto">
         <div className="my-4">
           <label
             htmlFor="username"
-            className="block text-m font-medium text-gray-700 "
+            className="block text-m font-medium text-gray-700"
           >
             Username:
           </label>
@@ -20,7 +20,7 @@ function Login() {
             id="username"
             name="username"
             required
-            className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
             placeholder="Enter your username"
           />
         </div>
@@ -36,7 +36,7 @@ function Login() {
             id="email"
             name="email"
             required
-            className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
             placeholder="Enter your email"
           />
         </div>
@@ -47,7 +47,7 @@ function Login() {
           >
             Password:
           </label>
-          <div className="flex flex-row items-center">
+          <div className="flex items-center gap-2">
             <input
               type={showPassword ? "text" : "password"}
               id="password"
@@ -55,13 +55,13 @@ function Login() {
               min={8}
               max={20}
               required
-              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
               placeholder="Enter your password"
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
               alt={showPassword ? "Hide" : "View"}
-              className=" cursor-pointer inline w-7 h-7 mt-1"
+              className="cursor-pointer w-7 h-7 mt-1"
               onClick={() => setShowPassword(!showPassword)}
             />
           </div>
