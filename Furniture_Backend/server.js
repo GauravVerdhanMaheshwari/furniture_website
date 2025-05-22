@@ -292,6 +292,71 @@ app.post("/api/owner", (req, res) => {
   }
 });
 
+app.get("/api/owner/furniture", (req, res) => {
+  res.json([
+    {
+      id: 1,
+      name: "Sofa",
+      price: 2999,
+      inStock: true,
+      stock: 10,
+      description: "A comfortable sofa for your living room.",
+      imageUrl: "https://example.com/sofa.jpg",
+      new: true,
+      hot: true,
+      package: true,
+      addedDate: "2023-10-01",
+      company: "made in company",
+      packageName: "Sadi",
+    },
+    {
+      id: 2,
+      name: "Chair",
+      price: 1999,
+      inStock: true,
+      stock: 5,
+      description: "A comfortable chair for your office.",
+      imageUrl: "https://example.com/chair.jpg",
+      new: false,
+      hot: true,
+      package: false,
+      addedDate: "2023-10-02",
+      company: "made in company",
+      packageName: "Sadi",
+    },
+    {
+      id: 3,
+      name: "Table",
+      price: 4999,
+      inStock: false,
+      stock: 4,
+      description: "A stylish dining table for family gatherings.",
+      imageUrl: "https://example.com/dining-table.jpg",
+      new: false,
+      hot: false,
+      package: true,
+      addedDate: "2023-10-03",
+      company: "made in company",
+      packageName: "Sadi",
+    },
+    {
+      id: 4,
+      name: "Bed",
+      price: 3999,
+      inStock: true,
+      stock: 3,
+      description: "A cozy bed for a good night's sleep with full rest.",
+      imageUrl: "https://example.com/bed.jpg",
+      new: false,
+      hot: false,
+      package: true,
+      addedDate: "2023-10-04",
+      company: "made in company",
+      packageName: "Sadi",
+    },
+  ]);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
