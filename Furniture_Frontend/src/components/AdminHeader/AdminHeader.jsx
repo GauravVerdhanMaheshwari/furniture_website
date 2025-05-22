@@ -96,23 +96,25 @@ export default function Header() {
         </ul>
       </nav>
       <div className="flex items-center gap-4">
-        <NavLink
-          to="/admin/login"
-          className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
-        >
-          Logout
-        </NavLink>
         <div className="hidden md:flex items-center gap-2">
           <button
             className="md:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           ></button>
         </div>
-        <img
-          src="user.webp"
-          alt="User Avatar"
-          className="w-10 h-10 rounded-full"
-        />
+        <NavLink to="/admin/profile" className="flex items-center gap-2">
+          <img
+            src="user.webp"
+            alt="User Avatar"
+            className="w-10 h-10 rounded-full"
+          />
+        </NavLink>
+        <NavLink
+          to="/admin/login"
+          className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
+        >
+          Logout
+        </NavLink>
       </div>
     </header>
   );
