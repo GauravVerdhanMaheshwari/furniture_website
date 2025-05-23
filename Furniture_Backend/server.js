@@ -357,6 +357,43 @@ app.get("/api/owner/furniture", (req, res) => {
   ]);
 });
 
+app.post("/api/owner/furniture", (req, res) => {
+  const {
+    name,
+    price,
+    inStock,
+    stock,
+    description,
+    imageUrl,
+    newProduct,
+    hot,
+    packageProduct,
+    addedDate,
+    company,
+    packageName,
+  } = req.body;
+
+  console.log("Received product data:", req.body);
+  console.log(
+    name,
+    price,
+    inStock,
+    stock,
+    description,
+    imageUrl,
+    newProduct,
+    hot,
+    packageProduct,
+    addedDate,
+    company,
+    packageName
+  );
+
+  res.status(200).json({
+    message: "Product added successfully",
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
