@@ -1,5 +1,5 @@
 import React from "react";
-import Products from "./Products";
+import { NavLink, Link } from "react-router-dom";
 
 function AdminProducts() {
   const [products, setProducts] = React.useState([]);
@@ -16,16 +16,22 @@ function AdminProducts() {
   return (
     <div className="flex flex-col mt-25 items-center justify-center min-h-screen bg-gray-100">
       <div className="flex flex-col items-center justify-center bg-gray-100">
-        <div className="flex flex-row items-center justify-between w-full p-4 bg-white shadow-md rounded-xl">
-          <div className="flex items-center m-4">
-            <h1>Filter by product</h1>
-          </div>
-          <div>
+        <div className="flex flex-row items-center justify-between w-fit p-4 bg-white shadow-md rounded-xl">
+          <div className="flex flex-row items-center">
+            <img src="search.webp" alt="search" className="w-6 h-6" />
             <input
               type="text"
               placeholder="Search by name"
               className="border border-gray-300 rounded p-2"
             />
+          </div>
+          <div className="flex flex-row items-center ml-4">
+            <Link
+              to="/admin/add-product"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+            >
+              Add Product
+            </Link>
           </div>
         </div>
       </div>
