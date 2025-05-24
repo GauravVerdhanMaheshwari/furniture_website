@@ -394,6 +394,35 @@ app.post("/api/owner/furniture", (req, res) => {
   });
 });
 
+app.get("/api/owner/order", (req, res) => {
+  res.json([
+    {
+      id: 1,
+      customerName: "Alice",
+      orderDate: "2023-10-01",
+      items: [
+        { productId: 1, productName: "Sofa", quantity: 1 },
+        { productId: 2, productName: "Chair", quantity: 2 },
+      ],
+      totalAmount: 6997,
+      accepted: false,
+      delivered: false,
+    },
+    {
+      id: 2,
+      customerName: "Bob",
+      orderDate: "2023-10-02",
+      items: [
+        { productId: 3, productName: "Table", quantity: 1 },
+        { productId: 4, productName: "Bed", quantity: 1 },
+      ],
+      totalAmount: 8998,
+      accepted: true,
+      delivered: false,
+    },
+  ]);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
