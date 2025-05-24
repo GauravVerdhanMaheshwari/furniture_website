@@ -1,28 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 function AdminOrder() {
   const [orders, setOrders] = React.useState([]);
 
-  fetch("http://localhost:3000/api/owner/order", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
+  useEffect(() => {
+    fetch("http://localhost:3000/api/owner/order", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+      },
     })
-    .then((data) => {
-      console.log("Orders data:", data);
-      setOrders(data);
-    })
-    .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Orders data:", data);
+        setOrders(data);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-20">
@@ -40,43 +42,42 @@ function AdminOrder() {
               ))}
             </ul>
             <p className="font-bold">Total: ₹{order.totalAmount}</p>
-            order.accepted ? (
-            <div className="flex justify-between mt-3">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
-                onClick={() => {
-                  order.accepted = true;
-                }}
-              >
-                Accept
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded ml-2 cursor-pointer hover:bg-red-600"
-                onClick={() => {
-                  order.accepted = false;
-                }}
-              >
-                Reject
-              </button>
-            </div>
-            ) : (
-            <div className="flex justify-between mt-3 items-center">
-              <p className="text-gray-600 ">Order is not delivered yet.</p>
-              <div>
+            {order.accepted ? (
+              <div className="flex justify-between mt-3">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
+                  onClick={() => {
+                    order.accepted = true;
+                  }}
+                >
+                  Accept
+                </button>
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded ml-2 cursor-pointer hover:bg-red-600"
                   onClick={() => {
                     order.accepted = false;
                   }}
                 >
-                  Cancel
+                  Reject
                 </button>
               </div>
-            </div>
-            )
+            ) : (
+              <div className="flex justify-between mt-3 items-center">
+                <p className="text-gray-600 ">Order is not delivered yet.</p>
+                <div>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded ml-2 cursor-pointer hover:bg-red-600"
+                    onClick={() => {
+                      order.accepted = false;
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
-        <div></div>
       </div>
     </div>
   );
