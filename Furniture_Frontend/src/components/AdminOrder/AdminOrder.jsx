@@ -27,7 +27,7 @@ function AdminOrder() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-20">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-25">
       <h1 className="text-3xl font-bold">Admin Orders</h1>
       <div className="mt-4 flex flex-col w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
         {orders.map((order) => (
