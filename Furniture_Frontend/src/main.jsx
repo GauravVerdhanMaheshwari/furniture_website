@@ -23,6 +23,7 @@ import {
   AdminOrders,
   AdminProfile,
   AdminAddProduct,
+  AdminEditProduct,
   Page404,
 } from "./components/index.js";
 import App from "./App.jsx";
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
       <Route path="/admin/orders" element={<AdminOrders />} />
       <Route path="/admin/profile" element={<AdminProfile />} />
       <Route path="/admin/add-product" element={<AdminAddProduct />} />
+      <Route path="/admin/edit-product/:id" element={<AdminEditProduct />} />
       <Route path="*" element={<Page404 />} />
     </Route>
   )
