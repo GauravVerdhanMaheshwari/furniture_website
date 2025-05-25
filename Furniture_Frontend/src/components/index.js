@@ -18,7 +18,9 @@ import AdminUsers from "./AdminUsers/AdminUsers";
 import AdminOrders from "./AdminOrder/AdminOrder";
 import AdminProfile from "./AdminProfile/AdminProfile";
 import AdminAddProduct from "./AdminAddProduct/AdminAddProduct";
+import AdminEditProduct from "./AdminEditProduct/AdminEditProduct";
 import Page404 from "./404/Page404";
+
 export {
   Footer,
   Header,
@@ -40,5 +42,6 @@ export {
   AdminOrders,
   AdminProfile,
   AdminAddProduct,
+  AdminEditProduct,
   Page404,
 };
