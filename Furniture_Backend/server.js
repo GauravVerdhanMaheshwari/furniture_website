@@ -420,6 +420,30 @@ app.get("/api/owner/order", (req, res) => {
       accepted: true,
       delivered: false,
     },
+    {
+      id: 3,
+      customerName: "Charlie",
+      orderDate: "2023-10-03",
+      items: [
+        { productId: 1, productName: "Sofa", quantity: 1 },
+        { productId: 4, productName: "Bed", quantity: 1 },
+      ],
+      totalAmount: 6998,
+      accepted: false,
+      delivered: true,
+    },
+    {
+      id: 4,
+      customerName: "David",
+      orderDate: "2023-10-04",
+      items: [
+        { productId: 2, productName: "Chair", quantity: 3 },
+        { productId: 3, productName: "Table", quantity: 1 },
+      ],
+      totalAmount: 10997,
+      accepted: true,
+      delivered: false,
+    },
   ]);
 });
 
