@@ -447,6 +447,50 @@ app.get("/api/owner/order", (req, res) => {
   ]);
 });
 
+app.post("/api/owner/order/:id/accept", (req, res) => {
+  const { id } = req.params;
+  console.log("Accepting order with ID:", id);
+
+  // Here you would typically update the order status in your database
+  // For this example, we'll just return a success message
+  res.status(200).json({
+    message: `Order ${id} accepted successfully`,
+  });
+});
+
+app.post("/api/owner/order/:id/reject", (req, res) => {
+  const { id } = req.params;
+  console.log("Rejecting order with ID:", id);
+
+  // Here you would typically update the order status in your database
+  // For this example, we'll just return a success message
+  res.status(200).json({
+    message: `Order ${id} rejected successfully`,
+  });
+});
+
+app.post("/api/owner/order/:id/cancel", (req, res) => {
+  const { id } = req.params;
+  console.log("Cancelling order with ID:", id);
+
+  // Here you would typically update the order status in your database
+  // For this example, we'll just return a success message
+  res.status(200).json({
+    message: `Order ${id} cancelled successfully`,
+  });
+});
+
+app.post("/api/owner/order/:id/deliver", (req, res) => {
+  const { id } = req.params;
+  console.log("Delivering order with ID:", id);
+
+  // Here you would typically update the order status in your database
+  // For this example, we'll just return a success message
+  res.status(200).json({
+    message: `Order ${id} delivered successfully`,
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
