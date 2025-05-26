@@ -407,6 +407,7 @@ app.get("/api/owner/order", (req, res) => {
       totalAmount: 6997,
       accepted: false,
       delivered: false,
+      rejected: false,
       contentNumber: "1234567890",
     },
     {
@@ -420,6 +421,7 @@ app.get("/api/owner/order", (req, res) => {
       totalAmount: 8998,
       accepted: true,
       delivered: false,
+      rejected: false,
       contentNumber: "1234567890",
     },
     {
@@ -433,6 +435,7 @@ app.get("/api/owner/order", (req, res) => {
       totalAmount: 6998,
       accepted: false,
       delivered: true,
+      rejected: false,
       contentNumber: "1234567890",
     },
     {
@@ -444,12 +447,46 @@ app.get("/api/owner/order", (req, res) => {
         { productId: 3, productName: "Table", quantity: 1 },
       ],
       totalAmount: 10997,
-      accepted: true,
+      accepted: false,
       delivered: false,
+      rejected: true,
       contentNumber: "1234567890",
     },
   ]);
 });
+
+// app.get("/api/owner/user", (req, res) => {
+//   res.json([
+//     {
+//       id: 1,
+//       name: "Alice",
+//       email: "alice@example.com",
+//       contentNumber: "1234567890",
+//       address: "123 Main St, City, Country",
+//     },
+//     {
+//       id: 2,
+//       name: "Bob",
+//       email: "bob@example.com",
+//       contentNumber: "0987654321",
+//       address: "456 Elm St, City, Country",
+//     },
+//     {
+//       id: 3,
+//       name: "Charlie",
+//       email: "charlie@example.com",
+//       contentNumber: "1122334455",
+//       address: "789 Oak St, City, Country",
+//     },
+//     {
+//       id: 4,
+//       name: "David",
+//       email: "david@example.com",
+//       contentNumber: "5566778899",
+//       address: "321 Pine St, City, Country",
+//     },
+//   ]);
+// });
 
 app.post("/api/owner/order/:id/accept", (req, res) => {
   const { id } = req.params;
