@@ -263,14 +263,6 @@ app.post("/api/cart", (req, res) => {
   });
 });
 
-app.get("/api/owner", (req, res) => {
-  res.json({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    password: "password123",
-  });
-});
-
 app.post("/api/owner", (req, res) => {
   const { name, email, password } = req.body;
 
