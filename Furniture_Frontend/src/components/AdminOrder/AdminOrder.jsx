@@ -81,7 +81,7 @@ function AdminOrder() {
             {!order.accepted && !order.rejected ? (
               <div className="flex justify-between mt-3">
                 <button
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer"
                   onClick={() =>
                     handleOrderAction(order.id, "accept", { accepted: true })
                   }
@@ -89,7 +89,7 @@ function AdminOrder() {
                   Accept
                 </button>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
                   onClick={() =>
                     handleOrderAction(order.id, "reject", { rejected: true })
                   }
@@ -104,7 +104,7 @@ function AdminOrder() {
                 </p>
                 <div className="flex justify-between">
                   <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
                     onClick={() =>
                       handleOrderAction(order.id, "deliver", {
                         accepted: true,
@@ -115,7 +115,7 @@ function AdminOrder() {
                     Deliver
                   </button>
                   <button
-                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 cursor-pointer"
                     onClick={() =>
                       handleOrderAction(order.id, "cancel", {
                         accepted: false,
