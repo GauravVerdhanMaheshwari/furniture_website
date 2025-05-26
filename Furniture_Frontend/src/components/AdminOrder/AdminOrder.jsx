@@ -70,6 +70,7 @@ function AdminOrder() {
               ))}
             </ul>
             <p className="font-bold">Total: ₹{order.totalAmount}</p>
+            <p className="font-bold">Contact Number: {order.contentNumber}</p>
 
             {/* Status */}
             <div className="mt-2">
