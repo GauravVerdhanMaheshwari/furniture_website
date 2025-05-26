@@ -48,6 +48,13 @@ function AdminOrder() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-25 shadow-lg">
       <h1 className="text-3xl font-bold">Admin Orders</h1>
+      <div className="mt-4 w-full justify-center flex p-4 rounded-lg">
+        <input
+          type="search"
+          placeholder="Search orders by name"
+          className="border p-2 rounded-lg"
+        />
+      </div>
       <div className="mt-4 flex flex-col w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
         {orders.map((order) => (
           <div key={order.id} className="border p-4 mb-4 rounded-xl">
@@ -83,7 +90,13 @@ function AdminOrder() {
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer"
                   onClick={() =>
-                    handleOrderAction(order.id, "accept", { accepted: true })
+                    confirm(
+                      `Accepting order ${order.id} for ${order.customerName}`
+                    )
+                      ? handleOrderAction(order.id, "accept", {
+                          accepted: true,
+                        })
+                      : null
                   }
                 >
                   Accept
@@ -91,7 +104,13 @@ function AdminOrder() {
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
                   onClick={() =>
-                    handleOrderAction(order.id, "reject", { rejected: true })
+                    confirm(
+                      `Rejecting order ${order.id} for ${order.customerName}. This action cannot be undone.`
+                    )
+                      ? handleOrderAction(order.id, "reject", {
+                          rejected: true,
+                        })
+                      : null
                   }
                 >
                   Reject
@@ -106,10 +125,14 @@ function AdminOrder() {
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
                     onClick={() =>
-                      handleOrderAction(order.id, "deliver", {
-                        accepted: true,
-                        delivered: true,
-                      })
+                      confirm(
+                        `Delivered order ${order.id} for ${order.customerName}? This action cannot be undone.`
+                      )
+                        ? handleOrderAction(order.id, "deliver", {
+                            accepted: true,
+                            delivered: true,
+                          })
+                        : null
                     }
                   >
                     Deliver
