@@ -1,2 +1,5 @@
 Date 25-05-25
 Next up => Add search feature and edit product at admin side 
+
+Date 26-05-25
+Next up => Proper complete the edit product and make user admin tab 
