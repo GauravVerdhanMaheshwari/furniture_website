@@ -19,7 +19,6 @@ import {
   AdminLogin,
   AdminHome,
   AdminProducts,
-  AdminUsers,
   AdminOrders,
   AdminProfile,
   AdminAddProduct,
@@ -43,7 +42,6 @@ const router = createBrowserRouter(
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/home" element={<AdminHome />} />
       <Route path="/admin/products" element={<AdminProducts />} />
-      <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/admin/orders" element={<AdminOrders />} />
       <Route path="/admin/profile" element={<AdminProfile />} />
       <Route path="/admin/add-product" element={<AdminAddProduct />} />
