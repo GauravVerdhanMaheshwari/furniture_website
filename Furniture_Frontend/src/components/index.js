@@ -14,7 +14,6 @@ import AdminHeader from "./AdminHeader/AdminHeader";
 import AdminFooter from "./AdminFooter/AdminFooter";
 import AdminHome from "./AdminHome/AdminHome";
 import AdminProducts from "./AdminProducts/AdminProducts";
-import AdminUsers from "./AdminUsers/AdminUsers";
 import AdminOrders from "./AdminOrder/AdminOrder";
 import AdminProfile from "./AdminProfile/AdminProfile";
 import AdminAddProduct from "./AdminAddProduct/AdminAddProduct";
@@ -38,7 +37,6 @@ export {
   AdminHeader,
   AdminFooter,
   AdminProducts,
-  AdminUsers,
   AdminOrders,
   AdminProfile,
   AdminAddProduct,
