@@ -84,15 +84,6 @@ export default function Header() {
               <h1>Orders</h1>
             </NavLink>
           </li>
-          <li className="text-xl md:text-2xl p-2 md:p-3 font-semibold">
-            <NavLink
-              to="/admin/users"
-              className={linkCss}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              User
-            </NavLink>
-          </li>
         </ul>
       </nav>
       <div className="flex items-center gap-4">
