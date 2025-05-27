@@ -313,7 +313,7 @@ const furnitureData = [
     package: false,
     addedDate: "2023-10-02",
     company: "made in company",
-    packageName: "Sadi",
+    packageName: null,
   },
   {
     id: 3,
@@ -538,6 +538,33 @@ app.get("/api/owner/furniture/:id", (req, res) => {
   } else {
     res.status(404).json({ message: "Product not found" });
   }
+});
+
+app.put("/api/owner/furniture/:id", (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    price,
+    inStock,
+    stock,
+    description,
+    imageUrl,
+    newProduct,
+    hot,
+    packageProduct,
+    addedDate,
+    company,
+    packageName,
+  } = req.body;
+
+  console.log("Updating product with ID:", id);
+  console.log("Received product data:", req.body);
+
+  // Here you would typically update the product in your database
+  // For this example, we'll just return a success message
+  res.status(200).json({
+    message: `Product ${id} updated successfully`,
+  });
 });
 
 const PORT = process.env.PORT || 3000;
