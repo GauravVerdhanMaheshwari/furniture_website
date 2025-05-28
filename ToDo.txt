@@ -6,3 +6,6 @@ Next up => Proper complete the edit product and make user admin tab
 
 Date 27-05-25
 Next up => Make mongo db and try to connect with backend
+
+Date 28-05-25
+Next up => Connect mongo db with the backend
