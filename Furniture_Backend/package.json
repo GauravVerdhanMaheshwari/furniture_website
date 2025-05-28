@@ -9,9 +9,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongodb": "^6.16.0",
-    "mongoose": "^8.13.2",
+    "mongoose": "^8.15.1",
     "node": "^23.11.0",
     "nodemon": "^3.1.10"
   }
 }
-
