@@ -46,7 +46,10 @@ function Suggestions({ title, api }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(api);
-        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json(); // Only run this if the response is OK
         setProducts(data);
       } catch (err) {
         setError("Failed to load products.");
@@ -90,7 +93,7 @@ function Suggestions({ title, api }) {
         ) : (
           products.map(
             ({
-              id,
+              _id,
               name,
               company,
               price,
@@ -100,8 +103,8 @@ function Suggestions({ title, api }) {
               stock,
             }) => (
               <FurnitureCard
-                key={id}
-                id={id}
+                key={_id}
+                id={_id}
                 name={name}
                 company={company}
                 price={price}
