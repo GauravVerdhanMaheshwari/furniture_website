@@ -9,3 +9,6 @@ Next up => Make mongo db and try to connect with backend
 
 Date 28-05-25
 Next up => Connect mongo db with the backend
+
+Date 29-05-25
+Next up => Make all the models needed for the products and try to add routes for the same and controllers
