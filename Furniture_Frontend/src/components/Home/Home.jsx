@@ -5,9 +5,10 @@ function Home() {
   return (
     <>
       <Hero />
-      <Suggestions title="✨ NEW" api="/api/new" />
-      <Suggestions title="🔥 HOT" api="/api/hot" />
-      <Suggestions title="📦 PACKAGES" api="/api/packages" />
+      <Suggestions title="Top Picks" api="/api/products" />
+
+      {/* <Suggestions title="🔥 HOT" api="/api/products" />
+      <Suggestions title="📦 PACKAGES" api="/api/products" /> */}
     </>
   );
 }
