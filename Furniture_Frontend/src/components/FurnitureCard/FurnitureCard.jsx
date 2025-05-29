@@ -25,7 +25,9 @@ function FurnitureCard({
   return (
     <div className={stockCSS}>
       <img
-        src={imageUrl}
+        src={
+          "https://www.reddit.com/r/cats/comments/1iils5v/post_your_silly_cat_selfies/"
+        }
         alt={name}
         className="w-full h-36 md:h-48 object-cover rounded-t-lg"
       />
