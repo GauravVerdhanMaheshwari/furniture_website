@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const Product = require("./Models/product");
 const Order = require("./Models/order");
 const User = require("./Models/user");
+const Cart = require("./Models/cart");
 
 dotenv.config();
 connectDB();
@@ -103,17 +104,91 @@ const seedOrders = [
   },
 ];
 
+const seedCart = [
+  {
+    userId: "60c72b2f9b1d4c001c8e4f24",
+    items: [
+      { productId: "60c72b2f9b1d4c001c8e4f25", quantity: 1 },
+      { productId: "60c72b2f9b1d4c001c8e4f26", quantity: 2 },
+    ],
+  },
+  {
+    userId: "60c72b2f9b1d4c001c8e4f27",
+    items: [{ productId: "60c72b2f9b1d4c001c8e4f28", quantity: 3 }],
+  },
+];
+
+// async function seedDB() {
+//   try {
+//     await Product.deleteMany(); // Clears existing data
+//     await Product.insertMany(seedProducts); // Inserts new data
+//     console.log("✅ Products seeded successfully");
+//     await User.deleteMany(); // Clears existing data
+//     await User.insertMany(seedUsers); // Inserts new data
+//     console.log("✅ Users seeded successfully");
+//     await Order.deleteMany(); // Clears existing data
+//     await Order.insertMany(seedOrders); // Inserts new data
+//     console.log("✅ Orders seeded successfully");
+//     await Cart.deleteMany(); // Clears existing data
+//     await Cart.insertMany(seedCart); // Inserts new data
+//     console.log("✅ Cart seeded successfully");
+//     process.exit();
+//   } catch (error) {
+//     console.error("❌ Seeding failed:", error);
+//     process.exit(1);
+//   }
+// }
+
 async function seedDB() {
   try {
-    await Product.deleteMany(); // Clears existing data
-    await Product.insertMany(seedProducts); // Inserts new data
-    console.log("✅ Products seeded successfully");
-    await User.deleteMany(); // Clears existing data
-    await User.insertMany(seedUsers); // Inserts new data
-    console.log("✅ Users seeded successfully");
-    await Order.deleteMany(); // Clears existing data
-    await Order.insertMany(seedOrders); // Inserts new data
-    console.log("✅ Orders seeded successfully");
+    // Clear all collections
+    await Product.deleteMany();
+    await User.deleteMany();
+    await Order.deleteMany();
+    await Cart.deleteMany();
+
+    // Insert and get actual created documents
+    const createdProducts = await Product.insertMany(seedProducts);
+    const createdUsers = await User.insertMany(seedUsers);
+
+    // Use real IDs from inserted documents
+    const seedOrders = [
+      {
+        userId: createdUsers[0]._id,
+        products: [
+          { productId: createdProducts[0]._id, quantity: 2 },
+          { productId: createdProducts[1]._id, quantity: 1 },
+        ],
+        totalAmount: 1299.97,
+        status: "Pending",
+      },
+      {
+        userId: createdUsers[1]._id,
+        products: [{ productId: createdProducts[2]._id, quantity: 1 }],
+        totalAmount: 299.99,
+        status: "Shipped",
+      },
+    ];
+
+    const seedCart = [
+      {
+        userId: createdUsers[0]._id,
+        items: [
+          { productId: createdProducts[0]._id, quantity: 1 },
+          { productId: createdProducts[1]._id, quantity: 2 },
+        ],
+      },
+      {
+        userId: createdUsers[1]._id,
+        items: [{ productId: createdProducts[2]._id, quantity: 3 }],
+      },
+    ];
+
+    // Insert orders and carts
+    await Order.insertMany(seedOrders);
+    await Cart.insertMany(seedCart);
+
+    console.log("✅ All data seeded successfully");
     process.exit();
   } catch (error) {
     console.error("❌ Seeding failed:", error);
