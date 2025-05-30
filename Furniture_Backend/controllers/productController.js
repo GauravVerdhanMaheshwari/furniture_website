@@ -4,8 +4,6 @@ const Product = require("../Models/product");
 exports.getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find();
-    console.log("Fetched products:", products);
-
     res.json(products);
   } catch (error) {
     next(error);
