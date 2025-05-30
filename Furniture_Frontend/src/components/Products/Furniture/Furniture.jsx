@@ -7,24 +7,33 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
   const [error, setError] = useState(null);
-  const api = "http://localhost:3000/api/furniture";
+  const api = "http://localhost:3000/api/products";
 
-  const handleAddToCart = async (id, name, quantities) => {
+  const handleAddToCart = async (productId, quantity) => {
     try {
-      const response = await fetch("http://localhost:3000/api/cart", {
+      console.log("Adding to cart:", productId, "with quantity:", quantity);
+      const response = await fetch("http://localhost:3000/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id,
-          name,
-          quantity: quantities,
+          userId: "6839e3ac9e3d11ec8dcb93e0",
+          items: [
+            {
+              productId: productId,
+              quantity: quantity,
+            },
+          ],
         }),
       });
 
       const result = await response.json();
       console.log("Server response:", result);
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to add to cart");
+      }
     } catch (error) {
       console.error("Failed to send cart data to server:", error);
     }
@@ -88,7 +97,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
       ) : (
         filteredProducts.map(
           ({
-            id,
+            _id,
             name,
             company,
             price,
@@ -98,8 +107,8 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
             stock,
           }) => (
             <FurnitureCard
-              key={id}
-              id={id}
+              key={_id}
+              id={_id}
               name={name}
               company={company}
               price={price}
@@ -108,9 +117,9 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               stock={stock}
               imageUrl={imageUrl}
               quantities={quantities}
-              handleAddToCart={handleAddToCart}
-              handleIncrement={handleIncrement}
-              handleDecrement={handleDecrement}
+              handleAddToCart={() => handleAddToCart(_id, quantities[_id] || 1)}
+              handleIncrement={() => handleIncrement(_id)}
+              handleDecrement={() => handleDecrement(_id)}
             />
           )
         )
