@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const Product = require("./Models/product");
+const Order = require("./Models/order");
 const User = require("./Models/user");
 
 dotenv.config();
@@ -55,14 +56,49 @@ const seedUsers = [
 ];
 
 const seedOrders = [
-  
-]
+  {
+    userId: "60c72b2f9b1d4c001c8e4f1a",
+    products: [
+      { productId: "60c72b2f9b1d4c001c8e4f1b", quantity: 2 },
+      { productId: "60c72b2f9b1d4c001c8e4f1c", quantity: 1 },
+    ],
+    totalAmount: 1299.97,
+    status: "Pending",
+  },
+  {
+    userId: "60c72b2f9b1d4c001c8e4f1d",
+    products: [{ productId: "60c72b2f9b1d4c001c8e4f1e", quantity: 1 }],
+    totalAmount: 299.99,
+    status: "Shipped",
+  },
+  {
+    userId: "60c72b2f9b1d4c001c8e4f1f",
+    products: [{ productId: "60c72b2f9b1d4c001c8e4f20", quantity: 3 }],
+    totalAmount: 1499.97,
+    status: "Delivered",
+  },
+  {
+    userId: "60c72b2f9b1d4c001c8e4f21",
+    products: [
+      { productId: "60c72b2f9b1d4c001c8e4f22", quantity: 1 },
+      { productId: "60c72b2f9b1d4c001c8e4f23", quantity: 2 },
+    ],
+    totalAmount: 899.98,
+    status: "Cancelled",
+  },
+];
 
 async function seedDB() {
   try {
     await Product.deleteMany(); // Clears existing data
+    await Product.insertMany(seedProducts); // Inserts new data
+    console.log("✅ Products seeded successfully");
+    await User.deleteMany(); // Clears existing data
     await User.insertMany(seedUsers); // Inserts new data
     console.log("✅ Users seeded successfully");
+    await Order.deleteMany(); // Clears existing data
+    await Order.insertMany(seedOrders); // Inserts new data
+    console.log("✅ Orders seeded successfully");
     process.exit();
   } catch (error) {
     console.error("❌ Seeding failed:", error);
