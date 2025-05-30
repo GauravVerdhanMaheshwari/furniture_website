@@ -7,17 +7,21 @@ function Suggestions({ title, api }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleAddToCart = async (id, name, quantities) => {
+  const handleAddToCart = async (id, quantities) => {
     try {
-      const response = await fetch("http://localhost:3000/api/cart", {
+      const response = await fetch("http://localhost:3000/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id,
-          name,
-          quantity: quantities,
+          userId: "6839d27c2342092a149f838a", // Replace with real user ID if you have auth
+          items: [
+            {
+              productId: id,
+              quantity: quantities,
+            },
+          ],
         }),
       });
 
