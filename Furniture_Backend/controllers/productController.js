@@ -10,6 +10,48 @@ exports.getAllProducts = async (req, res, next) => {
   }
 };
 
+exports.getNewProducts = async (req, res, next) => {
+  try {
+    const newProducts = await Product.find({ New: true })
+      .sort({ AddedDate: -1 })
+      .limit(3);
+    if (newProducts.length === 0) {
+      return res.status(404).json({ message: "No new products found" });
+    }
+    res.json(newProducts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getHotProducts = async (req, res, next) => {
+  try {
+    const hotProducts = await Product.find({ Hot: true })
+      .sort({ AddedDate: -1 })
+      .limit(3);
+    if (hotProducts.length === 0) {
+      return res.status(404).json({ message: "No hot products found" });
+    }
+    res.json(hotProducts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getPackageProducts = async (req, res, next) => {
+  try {
+    const packageProducts = await Product.find({ Package: true })
+      .sort({ AddedDate: -1 })
+      .limit(3);
+    if (packageProducts.length === 0) {
+      return res.status(404).json({ message: "No package products found" });
+    }
+    res.json(packageProducts);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Add a new product
 exports.addProduct = async (req, res, next) => {
   try {
