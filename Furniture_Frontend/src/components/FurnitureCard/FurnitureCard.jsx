@@ -2,7 +2,7 @@ import React from "react";
 
 function FurnitureCard({
   id,
-  imageUrl,
+  imageURL,
   name,
   description,
   company,
@@ -25,9 +25,7 @@ function FurnitureCard({
   return (
     <div className={stockCSS}>
       <img
-        src={
-          "https://www.reddit.com/r/cats/comments/1iils5v/post_your_silly_cat_selfies/"
-        }
+        src={imageURL}
         alt={name}
         className="w-full h-36 md:h-48 object-cover rounded-t-lg"
       />
@@ -72,7 +70,7 @@ function FurnitureCard({
       </div>
 
       <button
-        onClick={() => handleAddToCart(id, name, quantities[id] || 1)}
+        onClick={() => handleAddToCart(id, quantities[id] || 1)}
         className={
           inStock
             ? "w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 active:scale-95 transition-all hover:cursor-pointer"
