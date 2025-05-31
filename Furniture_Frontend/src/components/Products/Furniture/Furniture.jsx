@@ -9,16 +9,27 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [error, setError] = useState(null);
   const api = "http://localhost:3000/api/products";
 
-  const handleAddToCart = async (productId, quantity) => {
+  const handleAddToCart = async (
+    userID = "683adac421be8a674188b8e9",
+    productId,
+    quantity
+  ) => {
     try {
-      console.log("Adding to cart:", productId, "with quantity:", quantity);
+      console.log(
+        "Adding to cart:",
+        productId,
+        "with quantity:",
+        quantity,
+        "for user:",
+        userID
+      );
       const response = await fetch("http://localhost:3000/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: "6839e3ac9e3d11ec8dcb93e0",
+          userId: userID,
           items: [
             {
               productId: productId,
@@ -117,7 +128,13 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               stock={stock}
               imageUrl={imageUrl}
               quantities={quantities}
-              handleAddToCart={() => handleAddToCart(_id, quantities[_id] || 1)}
+              handleAddToCart={() =>
+                handleAddToCart(
+                  "683adac421be8a674188b8e9",
+                  _id,
+                  quantities[_id] || 1
+                )
+              }
               handleIncrement={() => handleIncrement(_id)}
               handleDecrement={() => handleDecrement(_id)}
             />
