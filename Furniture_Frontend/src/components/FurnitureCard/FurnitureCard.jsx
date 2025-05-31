@@ -19,8 +19,8 @@ function FurnitureCard({
     : "bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 opacity-50 cursor-not-allowed";
 
   const inStockCSS = inStock
-    ? "text-green-500  mt-2 text-base md:text-lg mx-2"
-    : "text-red-500  mt-2 text-base md:text-lg mx-2";
+    ? "text-green-500 mt-2 text-base md:text-lg mx-2"
+    : "text-red-500 mt-2 text-base md:text-lg mx-2";
 
   return (
     <div className={stockCSS}>
@@ -54,10 +54,7 @@ function FurnitureCard({
         >
           -
         </button>
-        <p
-          className="w-1/5 text-center py-1 border-2 border-gray-300 rounded"
-          disabled={!inStock}
-        >
+        <p className="w-1/5 text-center py-1 border-2 border-gray-300 rounded">
           {quantities[id] || 1}
         </p>
         <button
@@ -70,7 +67,9 @@ function FurnitureCard({
       </div>
 
       <button
-        onClick={() => handleAddToCart(id, quantities[id] || 1)}
+        onClick={() =>
+          handleAddToCart("683adac421be8a674188b8e9", id, quantities[id] || 1)
+        }
         className={
           inStock
             ? "w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 active:scale-95 transition-all hover:cursor-pointer"
