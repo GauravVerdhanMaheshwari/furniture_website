@@ -15,28 +15,47 @@ function Suggestions({ title, api }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: "6839d27c2342092a149f838a", // Replace with real user ID if you have auth
+          userId: "683c89fd2d0a92ad8f27d92d", // Replace with real user ID if you have auth
           items: [
             {
               productId: id,
-              quantity: quantities,
+              quantity: quantities[id] || 1,
             },
           ],
         }),
       });
 
       const result = await response.json();
+      if (!response.ok) {
+        alert("Failed to add item to cart: " + result.message);
+        console.error("Error adding to cart:", result);
+        console.log("Request payload:", {
+          userId: "683c89fd2d0a92ad8f27d92d",
+          items: [
+            {
+              productId: id,
+              quantity: quantities[id] || 1,
+            },
+          ],
+        });
+
+        throw new Error(result.message || "Failed to add item to cart");
+      }
+      alert("Item added to cart successfully!");
       console.log("Server response:", result);
     } catch (error) {
+      alert("Error sending cart data to server: " + error.message);
       console.error("Failed to send cart data to server:", error);
     }
   };
 
   const handleIncrement = (id) => {
+    let prevQuantity = (quantities[id] || 1) + 1;
     setQuantities((prev) => ({
       ...prev,
-      [id]: (prev[id] || 1) + 1,
+      [id]: prevQuantity,
     }));
+    console.log("Incremented quantity for ID:", id, "to", prevQuantity);
   };
 
   const handleDecrement = (id) => {
