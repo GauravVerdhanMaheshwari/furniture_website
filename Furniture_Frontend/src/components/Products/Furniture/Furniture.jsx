@@ -40,6 +40,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
       });
 
       const result = await response.json();
+      alert("Item added to cart successfully!");
       console.log("Server response:", result);
 
       if (!response.ok) {
@@ -51,10 +52,12 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   };
 
   const handleIncrement = (id) => {
+    let prevQuantity = (quantities[id] || 1) + 1;
     setQuantities((prev) => ({
       ...prev,
-      [id]: (prev[id] || 1) + 1,
+      [id]: prevQuantity,
     }));
+    console.log("Incremented quantity for ID:", id, "to", prevQuantity);
   };
 
   const handleDecrement = (id) => {
