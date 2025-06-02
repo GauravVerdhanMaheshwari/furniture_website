@@ -106,7 +106,6 @@ function Cart() {
       <div className="flex flex-row items-center">
         <h1 className="text-4xl font-bold py-5">🛒 Cart</h1>
       </div>
-      <p>{userId}</p>
 
       {loading && <p className="text-3xl font-bold">Loading cart...</p>}
 
