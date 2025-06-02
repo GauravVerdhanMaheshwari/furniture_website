@@ -83,7 +83,7 @@ exports.updateCartForUser = async (req, res) => {
 
       const incomingId =
         typeof item.productId === "object"
-          ? item.productId._id || item.productId.toString()
+          ? item.productId.ObjectId || item.productId.toString()
           : item.productId.toString();
 
       cart.items.push({
@@ -95,7 +95,7 @@ exports.updateCartForUser = async (req, res) => {
     await cart.save();
     res.status(200).json(cart);
   } catch (error) {
-    console.error("Error updating cart:", error);
+    console.error("BACK END Error updating cart:", error);
     res
       .status(500)
       .json({ message: "Error updating cart", error: error.message });
