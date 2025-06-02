@@ -10,6 +10,19 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+// Get a user by ID
+exports.getUserById = async (req, res, next) => {
+  try {
+    const userData = await user.findById(req.params.id);
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(userData);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Add a new user
 exports.addUser = async (req, res, next) => {
   try {
