@@ -5,7 +5,8 @@ const connectDB = require("./config/db");
 const productRoutes = require("./Routes/productRoutes");
 // const authRoutes = require("./Routes/authRoutes");
 const cartRoutes = require("./Routes/cartRoutes");
-// const orderRoutes = require("./Routes/orderRoutes");\  
+// const orderRoutes = require("./Routes/orderRoutes");\
+const userRoutes = require("./Routes/userRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/products", productRoutes);
 // app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/users", userRoutes);
 // app.use("/api/orders", orderRoutes);
 
 // Error Handling Middleware
