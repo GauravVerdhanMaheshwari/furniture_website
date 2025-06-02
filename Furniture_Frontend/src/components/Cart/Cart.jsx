@@ -19,7 +19,7 @@ function Cart() {
     }
   };
 
-  const userId = "683adac421be8a674188b8e9";
+  const userId = "683adac421be8a674188b8e1";
 
   const handleIncrement = (id) => {
     setCart((prevCart) => {
@@ -51,21 +51,36 @@ function Cart() {
 
   const handleSaveChanges = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/update`, {
+      const res = await fetch(`http://localhost:3000/api/cart/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           cartId: cart._id,
-          items: cart.items,
+          items: cart.items.map((item) => ({
+            productId: item.productId._id,
+            quantity: item.quantity,
+          })),
         }),
       });
 
       if (!res.ok)
         throw new Error("Failed to update cart", res.statusText, " ", {
           cartId: cart._id,
-          items: cart.items,
+          items: cart.items.map((item) => ({
+            productId: item.productId._id,
+            quantity: item.quantity,
+          })),
+        });
+
+      if (!res.ok)
+        throw new Error("Failed to update cart", res.statusText, " ", {
+          cartId: cart._id,
+          items: cart.items.map((item) => ({
+            productId: item.productId._id,
+            quantity: item.quantity,
+          })),
         });
 
       const updatedCart = await res.json();
@@ -76,7 +91,10 @@ function Cart() {
     } catch (err) {
       console.log("Error saving changes:", {
         cartId: cart._id,
-        items: cart.items,
+        items: cart.items.map((item) => ({
+          productId: item.productId._id,
+          quantity: item.quantity,
+        })),
       });
       console.error("Failed to save changes:", err);
       alert("Failed to save cart changes");
@@ -106,9 +124,11 @@ function Cart() {
                 className="flex flex-col items-center mb-4 w-full border-b border-gray-300"
               >
                 <img
-                  src={item.productId.imageUrl}
+                  src={item.productId.image || "https://picsum.photos/200/300"}
                   alt={item.productId.name}
-                  onError={(e) => (e.target.src = "/fallback-image.png")}
+                  onError={(e) => {
+                    e.target.src = "https://picsum.photos/200/300"; // Fallback image
+                  }}
                   className="w-45 h-45 object-cover text-2xl font-bold mb-2 rounded-lg"
                 />
                 <p className="text-xl font-semibold my-2">
@@ -133,7 +153,8 @@ function Cart() {
                   </button>
                 </div>
                 <p className="text-lg font-semibold my-2">
-                  Price: ₹{Math.floor(item.productId.price * item.quantity)}
+                  Price: ₹
+                  {Number.parseInt(item.productId.price * item.quantity)}
                 </p>
               </li>
             ))}
