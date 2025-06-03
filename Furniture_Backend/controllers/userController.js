@@ -37,8 +37,14 @@ exports.addUser = async (req, res, next) => {
 // Update a user
 exports.updateUser = async (req, res, next) => {
   try {
-    await user.findByIdAndUpdate(req.params.id, req.body);
-    res.json({ message: "User updated successfully" });
+    const updatedUser = await user.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ message: "User updated successfully", data: updatedUser });
   } catch (error) {
     next(error);
   }
@@ -47,7 +53,10 @@ exports.updateUser = async (req, res, next) => {
 // Delete a user
 exports.deleteUser = async (req, res, next) => {
   try {
-    await user.findByIdAndDelete(req.params.id);
+    const deletedUser = await user.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
