@@ -29,10 +29,10 @@ const userSchema = new mongoose.Schema(
       maxlength: 500,
     },
     phone: {
-      type: Number,
+      type: String,
       required: true,
-      minlength: 10,
-      maxlength: 10,
+      trim: true,
+      match: /^[0-9]{10}$/, // Ensures exactly 10 digits
     },
   },
   { timestamps: true }
