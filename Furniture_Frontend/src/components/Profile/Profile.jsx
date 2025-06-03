@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
+import UserForm from "./UserForm/UserForm";
+import HistoryBuys from "./UserForm/HistoryBuys";
 
 function Profile() {
-  const userID = "683adac421be8a674188b8e0";
+  const userID = "683ebe05df51425cf136e968";
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const [savingChange, setSavingChange] = useState(false);
+  const [changed, setChanged] = useState(false);
 
-  const handleSaveChanges = async () => {
-    console.log("Save changes clicked");
-    console.log("Updated userData:", userData);
+  const saving = async () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/users/${userID}`,
@@ -27,9 +27,28 @@ function Profile() {
 
       const data = await response.json();
       console.log("User updated successfully:", data);
+      location.reload();
     } catch (error) {
       console.error("There was a problem with the update operation:", error);
     }
+  };
+
+  const handleSaveChanges = async () => {
+    console.log("Save changes clicked");
+    console.log("Updated userData:", userData);
+
+    for (const key in userData) {
+      if (userData[key] === "") {
+        alert(`Please fill in the ${key} field.`);
+        location.reload();
+        setChanged(false);
+        return;
+      }
+    }
+
+    confirm("Are you sure you want to save changes?")
+      ? saving()
+      : console.log("Changes not saved");
   };
 
   const handleDeleteUser = () => {
@@ -65,85 +84,16 @@ function Profile() {
       {loading ? (
         <p className="text-black text-xl">Loading...</p>
       ) : userData ? (
-        <div className="flex flex-col border p-6 text-xl font-semibold py-6">
-          <label htmlFor="name" className="mb-2 font-semibold">
-            Name:
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={userData.name}
-            onChange={(e) =>
-              setUserData((prevData) => ({
-                ...prevData,
-                name: e.target.value,
-              }))
-            }
-            className="mb-4 p-2 border border-gray-300 rounded"
+        <div>
+          <UserForm
+            userData={userData}
+            setUserData={setUserData}
+            handleSaveChanges={handleSaveChanges}
+            handleDeleteUser={handleDeleteUser}
+            changed={changed}
+            setChanged={setChanged}
           />
-
-          <label htmlFor="email" className="mb-2 font-semibold">
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={userData.email}
-            onChange={(e) =>
-              setUserData((prevData) => ({
-                ...prevData,
-                email: e.target.value,
-              }))
-            }
-            className="mb-4 p-2 border border-gray-300 rounded"
-          />
-
-          <label htmlFor="address" className="mb-2 font-semibold">
-            Address:
-          </label>
-          <input
-            type="text"
-            id="address"
-            value={userData.address}
-            onChange={(e) =>
-              setUserData((prevData) => ({
-                ...prevData,
-                address: e.target.value,
-              }))
-            }
-            className="mb-4 p-2 border border-gray-300 rounded"
-          />
-
-          <label htmlFor="phone" className="mb-2 font-semibold">
-            Phone:
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            value={userData.phone}
-            onChange={(e) =>
-              setUserData((prevData) => ({
-                ...prevData,
-                phone: e.target.value,
-              }))
-            }
-            className="mb-4 p-2 border border-gray-300 rounded"
-          />
-
-          <div className="flex justify-center">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 mx-2 rounded hover:bg-blue-600 cursor-pointer"
-              onClick={handleSaveChanges}
-            >
-              Save Changes
-            </button>
-            <button
-              className="bg-red-500 text-white px-4 py-2 mx-2 rounded hover:bg-red-600 cursor-pointer"
-              onClick={handleDeleteUser}
-            >
-              Delete Account
-            </button>
-          </div>
+          <HistoryBuys />
         </div>
       ) : (
         <p className="text-red-500">User not found</p>
