@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import UserForm from "./UserForm/UserForm";
 import HistoryBuys from "./UserForm/HistoryBuys";
+import { useSelector } from "react-redux";
 
 function Profile() {
-  const userID = "683ebe05df51425cf136e968";
+  const userID = useSelector((state) => state.user.userID);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
@@ -76,7 +77,7 @@ function Profile() {
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-  }, []);
+  }, [userID]);
 
   return (
     <div className="mt-25 min-h-screen p-4 bg-white justify-center items-center text-center">
