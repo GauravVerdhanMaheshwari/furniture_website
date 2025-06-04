@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FurnitureCard } from "./../../index.js";
+import { useSelector } from "react-redux";
 
 function Suggestions({ title, api }) {
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const userId = useSelector((state) => state.user.userID);
 
   const handleAddToCart = async (id, quantities) => {
     try {
@@ -15,7 +18,7 @@ function Suggestions({ title, api }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: "683c89fd2d0a92ad8f27d92d", // Replace with real user ID if you have auth
+          userId: userId, // Replace with real user ID if you have auth
           items: [
             {
               productId: id,
@@ -30,7 +33,7 @@ function Suggestions({ title, api }) {
         alert("Failed to add item to cart: " + result.message);
         console.error("Error adding to cart:", result);
         console.log("Request payload:", {
-          userId: "683c89fd2d0a92ad8f27d92d",
+          userId: userId,
           items: [
             {
               productId: id,
