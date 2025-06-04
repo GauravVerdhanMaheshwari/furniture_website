@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FurnitureCard from "../../FurnitureCard/FurnitureCard";
+import { useSelector } from "react-redux";
 
 function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [products, setProducts] = useState([]);
@@ -9,11 +10,9 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [error, setError] = useState(null);
   const api = "http://localhost:3000/api/products";
 
-  const handleAddToCart = async (
-    userID = "683adac421be8a674188b8e9",
-    productId,
-    quantity
-  ) => {
+  const userId = useSelector((state) => state.user.userID);
+
+  const handleAddToCart = async (userId, productId, quantity) => {
     try {
       console.log(
         "Adding to cart:",
@@ -21,7 +20,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
         "with quantity:",
         quantity,
         "for user:",
-        userID
+        userId
       );
       const response = await fetch("http://localhost:3000/api/cart/add", {
         method: "POST",
@@ -29,7 +28,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: userID,
+          userId: userId,
           items: [
             {
               productId: productId,
@@ -132,11 +131,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               imageUrl={imageUrl}
               quantities={quantities}
               handleAddToCart={() =>
-                handleAddToCart(
-                  "683adac421be8a674188b8e9",
-                  _id,
-                  quantities[_id] || 1
-                )
+                handleAddToCart(userId, _id, quantities[_id] || 1)
               }
               handleIncrement={() => handleIncrement(_id)}
               handleDecrement={() => handleDecrement(_id)}
