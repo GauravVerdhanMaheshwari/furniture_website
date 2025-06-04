@@ -34,3 +34,15 @@ exports.addPurchase = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.deletePurchase = async (req, res, next) => {
+  try {
+    const deletedPurchase = await purchase.findByIdAndDelete(req.params.id);
+    if (!deletedPurchase) {
+      return res.status(404).json({ message: "Purchase not found" });
+    }
+    res.json({ message: "Purchase deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
