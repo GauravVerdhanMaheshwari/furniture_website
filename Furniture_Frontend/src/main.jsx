@@ -26,6 +26,8 @@ import {
   Page404,
 } from "./components/index.js";
 import App from "./App.jsx";
+import { Provider } from "react-redux";
+import { store } from "../app/store.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,6 +55,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );
