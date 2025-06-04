@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function Cart() {
   const [cart, setCart] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [change, setChange] = useState(false);
+  const userId = useSelector((state) => state.user.userID);
   const fetchCart = async () => {
     try {
       const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
@@ -18,8 +20,6 @@ function Cart() {
       setLoading(false);
     }
   };
-
-  const userId = "683adac421be8a674188b8e1";
 
   const handleIncrement = (id) => {
     setCart((prevCart) => {
@@ -47,7 +47,7 @@ function Cart() {
 
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [userId]);
 
   const handleSaveChanges = async () => {
     try {
