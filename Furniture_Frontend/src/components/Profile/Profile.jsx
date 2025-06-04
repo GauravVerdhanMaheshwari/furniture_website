@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserForm from "./UserForm/UserForm";
 import HistoryBuys from "./UserForm/HistoryBuys";
 import { useSelector } from "react-redux";
@@ -54,6 +54,35 @@ function Profile() {
 
   const handleDeleteUser = () => {
     console.log("Delete user clicked");
+    if (
+      confirm(
+        "Are you sure you want to delete your account? This act will not be undo-able."
+      )
+    ) {
+      fetch(`http://localhost:3000/api/users/${userID}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("User deleted successfully:", data);
+          alert("Your account has been deleted successfully.");
+          location.reload();
+        })
+        .catch((error) => {
+          console.error(
+            "There was a problem with the delete operation:",
+            error
+          );
+        });
+    }
   };
 
   useEffect(() => {
