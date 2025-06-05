@@ -1,9 +1,6 @@
 import React from "react";
 
 function Purchase({ userPurchases, PurchaseProductDetail }) {
-  console.log("userPurchases:", userPurchases);
-  console.log("Product Details:", PurchaseProductDetail);
-
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">Purchase History</h2>
