@@ -116,44 +116,6 @@ function Products() {
             </div>
             <hr />
 
-            {/* Type */}
-            <div className="flex flex-col sm:flex-row justify-between px-4">
-              <h2 className="font-semibold">Furniture Type</h2>
-              <div className="flex flex-wrap gap-2 w-full sm:w-2/3">
-                {productsType?.map((product, index) => (
-                  <span
-                    key={index}
-                    className={getButtonClass(selectedType, product.name)}
-                    onClick={() => handleTypeSelect(product.name)}
-                  >
-                    {product.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <hr />
-
-            {/* Company */}
-            {showCompany && (
-              <>
-                <div className="flex flex-col sm:flex-row justify-between px-4">
-                  <h2 className="font-semibold">Company</h2>
-                  <div className="flex flex-wrap gap-2 w-full sm:w-2/3">
-                    {/* {company?.map((comp, index) => (
-                      <span
-                        key={index}
-                        className={getButtonClass(selectedCompany, comp.name)}
-                        onClick={() => handleCompanySelect(comp.name)}
-                      >
-                        {comp.name}
-                      </span>
-                    ))} */}
-                  </div>
-                </div>
-                <hr />
-              </>
-            )}
-
             <div className="flex justify-end px-4">
               <button
                 className="bg-red-100 px-3 py-2 rounded hover:bg-red-300 text-sm"

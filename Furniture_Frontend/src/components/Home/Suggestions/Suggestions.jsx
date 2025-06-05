@@ -9,8 +9,13 @@ function Suggestions({ title, api }) {
   const [error, setError] = useState(null);
 
   const userId = useSelector((state) => state.user.userID);
+  const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
   const handleAddToCart = async (id, quantities) => {
+    if (!isLoggedIn || !userId) {
+      alert("You must be logged in to add items to the cart.");
+      window.location.href = "/login";
+    }
     try {
       const response = await fetch("http://localhost:3000/api/cart/add", {
         method: "POST",

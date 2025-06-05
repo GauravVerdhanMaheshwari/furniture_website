@@ -11,8 +11,13 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const api = "http://localhost:3000/api/products";
 
   const userId = useSelector((state) => state.user.userID);
+  const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
   const handleAddToCart = async (userId, productId, quantity) => {
+    if (!isLoggedIn || !userId) {
+      alert("You must be logged in to add items to the cart.");
+      window.location.href = "/login";
+    }
     try {
       console.log(
         "Adding to cart:",
