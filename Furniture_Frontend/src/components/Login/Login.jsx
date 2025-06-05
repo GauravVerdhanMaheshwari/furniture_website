@@ -43,7 +43,7 @@ function Login() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username: username,
+            name: username,
             email: email,
             password: password,
           }),
@@ -51,7 +51,16 @@ function Login() {
           .then((response) => response.json())
           .then((userData) => {
             console.log("User data:", userData);
-            dispatch({ type: "SET_USER", payload: userData });
+            // if (userData && userData._id) {
+            //   dispatch({
+            //     type: "SET_USER",
+            //     payload: {
+            //       id: userData._id,
+            //     },
+            //   });
+            // } else {
+            //   console.error("User data is not valid:", userData);
+            // }
           })
           .catch((error) => {
             console.error("Error fetching user data:", error);
