@@ -13,6 +13,7 @@ import {
   AboutUs,
   Contacts,
   Cart,
+  CheckOut,
   Profile,
   Login,
   Register,
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
       <Route path="/about" element={<AboutUs />} />
       <Route path="/contact" element={<Contacts />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<CheckOut />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
