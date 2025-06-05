@@ -1,8 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     const password = document.getElementById("password").value;
@@ -29,6 +31,35 @@ function Login() {
 
       const result = await response.json();
       console.log("Server response:", result);
+
+      if (response.ok) {
+        document.getElementById("username").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+        alert("Login successful");
+        fetch("http://localhost:3000/api/users/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            password: password,
+          }),
+        })
+          .then((response) => response.json())
+          .then((userData) => {
+            console.log("User data:", userData);
+            dispatch({ type: "SET_USER", payload: userData });
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+          });
+        location.href = "/";
+      } else {
+        alert("Login failed. Please check your credentials.");
+      }
     } catch (error) {
       console.error("Failed to send login data to server:", error);
     }
