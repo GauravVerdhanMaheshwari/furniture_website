@@ -24,13 +24,14 @@ function HistoryBuys({ userID, userHistory }) {
       }
       const data = await response.json();
       console.log("Product reordered successfully:", data);
+      alert("Product reordered successfully!");
     } catch (error) {
       console.error("Error reordering product:", error);
       alert("Failed to reorder product. Please try again later.");
     }
   };
 
-  return (userHistory ? (
+  return userHistory ? (
     <div className="mt-4 flex flex-col border p-6 py-6">
       <h1 className="text-2xl font-bold mb-2">History</h1>
       {userHistory.map((item) => (
@@ -65,7 +66,7 @@ function HistoryBuys({ userID, userHistory }) {
     <div className="flex flex-col border p-6 text-xl font-semibold py-6">
       <p className="text-red-500">User history not available.</p>
     </div>
-  ));
+  );
 }
 
 export default HistoryBuys;
