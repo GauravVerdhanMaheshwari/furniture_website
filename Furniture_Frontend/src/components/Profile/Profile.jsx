@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 function Profile() {
   const userID = useSelector((state) => state.user.userID);
   const [userData, setUserData] = useState(null);
+  const [userHistory, setUserHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
 
@@ -99,8 +100,29 @@ function Profile() {
         return response.json();
       })
       .then((data) => {
-        console.log("Profile data:", data);
         setUserData(data);
+        // setLoading(false);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+
+    fetch(`http://localhost:3000/api/history/user/${userID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        console.log("Fetching user history for userID:", userID);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("User history data:", data);
+        setUserHistory(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -123,7 +145,7 @@ function Profile() {
             changed={changed}
             setChanged={setChanged}
           />
-          <HistoryBuys />
+          <HistoryBuys userID={userID} userHistory={userHistory} />
         </div>
       ) : (
         <p className="text-red-500">User not found</p>
