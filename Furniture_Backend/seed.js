@@ -5,6 +5,8 @@ const Product = require("./Models/product");
 const Order = require("./Models/order");
 const User = require("./Models/user");
 const Cart = require("./Models/cart");
+const Purchase = require("./Models/purchase");
+const History = require("./Models/history");
 
 dotenv.config();
 connectDB();
@@ -142,53 +144,87 @@ const seedCart = [
 async function seedDB() {
   try {
     // Clear all collections
-    await Product.deleteMany();
-    await User.deleteMany();
-    await Order.deleteMany();
-    await Cart.deleteMany();
-
-    // Insert and get actual created documents
-    const createdProducts = await Product.insertMany(seedProducts);
-    const createdUsers = await User.insertMany(seedUsers);
+    // await Product.deleteMany();
+    // await User.deleteMany();
+    // await Order.deleteMany();
+    // await Cart.deleteMany();
+    // await History.deleteMany();
+    // await History.deleteMany();
+    // console.log("✅ Collections cleared");
+    // const createdProducts = await Product.insertMany(seedProducts);
+    // const createdUsers = await User.insertMany(seedUsers);
 
     // Use real IDs from inserted documents
-    const seedOrders = [
-      {
-        userId: createdUsers[0]._id,
-        products: [
-          { productId: createdProducts[0]._id, quantity: 2 },
-          { productId: createdProducts[1]._id, quantity: 1 },
-        ],
-        totalAmount: 1299.97,
-        status: "Pending",
-      },
-      {
-        userId: createdUsers[1]._id,
-        products: [{ productId: createdProducts[2]._id, quantity: 1 }],
-        totalAmount: 299.99,
-        status: "Shipped",
-      },
-    ];
+    // const seedOrders = [
+    //   {
+    //     userId: createdUsers[0]._id,
+    //     products: [
+    //       { productId: createdProducts[0]._id, quantity: 2 },
+    //       { productId: createdProducts[1]._id, quantity: 1 },
+    //     ],
+    //     totalAmount: 1299.97,
+    //     status: "Pending",
+    //   },
+    //   {
+    //     userId: createdUsers[1]._id,
+    //     products: [{ productId: createdProducts[2]._id, quantity: 1 }],
+    //     totalAmount: 299.99,
+    //     status: "Shipped",
+    //   },
+    // ];
 
-    const seedCart = [
-      {
-        userId: createdUsers[0]._id,
-        items: [
-          { productId: createdProducts[0]._id, quantity: 1 },
-          { productId: createdProducts[1]._id, quantity: 2 },
-        ],
-      },
-      {
-        userId: createdUsers[1]._id,
-        items: [{ productId: createdProducts[2]._id, quantity: 3 }],
-      },
-    ];
+    // const seedCart = [
+    //   {
+    //     userId: createdUsers[0]._id,
+    //     items: [
+    //       { productId: createdProducts[0]._id, quantity: 1 },
+    //       { productId: createdProducts[1]._id, quantity: 2 },
+    //     ],
+    //   },
+    //   {
+    //     userId: createdUsers[1]._id,
+    //     items: [{ productId: createdProducts[2]._id, quantity: 3 }],
+    //   },
+    // ];
+
+    // const seedHistory = [
+    //   {
+    //     userID: "683ebe05df51425cf136e968",
+    //     productID: "683ebe05df51425cf136e964",
+    //     quantity: 1,
+    //     totalPrice: 499.99,
+    //     Date: new Date(),
+    //     timestamp: new Date(),
+    //   },
+    //   {
+    //     userID: "683ebe05df51425cf136e968",
+    //     productID: "683ebe05df51425cf136e965",
+    //     quantity: 1,
+    //     totalPrice: 799.98,
+    //     Date: new Date(),
+    //     timestamp: new Date(),
+    //   },
+    // ];
+
+    // const seedPurchase = [
+    //   {
+    //     userId: "683ebe05df51425cf136e968",
+    //     items: [
+    //       { productId: "683ebe05df51425cf136e964", quantity: 1 },
+    //       { productId: "683ebe05df51425cf136e965", quantity: 1 },
+    //     ],
+    //     totalPrice: 1299,
+    //     status: "Pending",
+    //   },
+    // ];
 
     // Insert orders and carts
-    await Order.insertMany(seedOrders);
-    await Cart.insertMany(seedCart);
+    // await Order.insertMany(seedOrders);
+    // await Cart.insertMany(seedCart);
+    // await Purchase.insertMany(seedPurchase);
+    // await History.insertMany(seedHistory);
 
-    console.log("✅ All data seeded successfully");
+    // console.log("✅ All data seeded successfully");
     process.exit();
   } catch (error) {
     console.error("❌ Seeding failed:", error);
