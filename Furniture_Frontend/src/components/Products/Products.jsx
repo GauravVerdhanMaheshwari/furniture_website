@@ -11,7 +11,7 @@ function Products() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const minPrice = 0;
+  const minPrice = 100;
   const maxPrice = 10000;
 
   useEffect(() => {
@@ -86,7 +86,7 @@ function Products() {
         </div>
         <button
           onClick={() => setShowFilter((prev) => !prev)}
-          className={`w-full sm:w-auto sm:ml-auto font-semibold hover:text-blue-500 ${
+          className={`w-full sm:w-auto sm:ml-auto font-semibold cursor-pointer hover:text-blue-500 ${
             showFilter ? "text-blue-500" : "text-black"
           }`}
         >
@@ -118,7 +118,7 @@ function Products() {
 
             <div className="flex justify-end px-4">
               <button
-                className="bg-red-100 px-3 py-2 rounded hover:bg-red-300 text-sm"
+                className="bg-red-100 px-3 py-2 rounded hover:bg-red-300 text-sm cursor-pointer"
                 onClick={handleClearFilter}
               >
                 Clear Filter
