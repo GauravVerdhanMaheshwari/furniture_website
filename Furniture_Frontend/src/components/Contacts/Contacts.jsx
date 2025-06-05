@@ -3,7 +3,7 @@ import React from "react";
 function Contacts() {
   return (
     <div className="flex flex-col md:flex-row gap-4 justify-center items-center min-h-[85vh] mt-3 px-4">
-      <div className="flex flex-col gap-4 md:mr-5 border-b-2 md:border-b-0 md:border-r-2 border-gray-300 p-4 md:p-10 w-full md:flex-1 mt-20">
+      {/* <div className="flex flex-col gap-4 md:mr-5 border-b-2 md:border-b-0 md:border-r-2 border-gray-300 p-4 md:p-10 w-full md:flex-1 mt-20">
         <h1 className="text-xl md:text-2xl font-bold text-center mb-1">
           Contact Us
         </h1>
@@ -39,7 +39,7 @@ function Contacts() {
             Send
           </button>
         </form>
-      </div>
+      </div> */}
       <div className="flex flex-col w-full md:flex-1 p-4 md:p-10">
         <div className="p-2 md:p-4">
           <h1 className="text-xl md:text-2xl font-bold">Address 🏬 : </h1>
