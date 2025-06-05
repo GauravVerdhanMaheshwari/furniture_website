@@ -4,7 +4,6 @@ const purchase = require("../Models/purchase");
 exports.getAllPurchases = async (req, res, next) => {
   try {
     const purchases = await purchase.find();
-    console.log("Fetched purchases:", purchases);
     res.json(purchases);
   } catch (error) {
     next(error);
@@ -14,7 +13,9 @@ exports.getAllPurchases = async (req, res, next) => {
 // Get a purchase by ID
 exports.getPurchaseById = async (req, res, next) => {
   try {
-    const purchaseData = await purchase.findById(req.params.id);
+    const purchaseData = await purchase
+      .find({ userId: req.params.id })
+      .populate("userId");
     if (!purchaseData) {
       return res.status(404).json({ message: "Purchase not found" });
     }
