@@ -8,7 +8,7 @@ function UserForm({
   handleDeleteUser,
   changed = false,
 }) {
-  return (
+  return userData ? (
     <div className="flex flex-col border p-6 text-xl font-semibold py-6">
       <label htmlFor="name" className="mb-2 font-semibold">
         Name:
@@ -141,6 +141,10 @@ function UserForm({
           </button>
         </div>
       </div>
+    </div>
+  ) : (
+    <div className="flex flex-col border p-6 text-xl font-semibold py-6">
+      <p className="text-red-500">User data not available.</p>
     </div>
   );
 }
