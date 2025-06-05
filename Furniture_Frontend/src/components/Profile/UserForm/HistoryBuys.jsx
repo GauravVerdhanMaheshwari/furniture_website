@@ -23,7 +23,7 @@ function HistoryBuys({ userID, userHistory }) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log("Product reordered successfully:", data);
+      // console.log("Product reordered successfully:", data);
       alert("Product reordered successfully!");
     } catch (error) {
       console.error("Error reordering product:", error);
