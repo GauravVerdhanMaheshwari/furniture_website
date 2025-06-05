@@ -14,9 +14,9 @@ exports.getAllUsers = async (req, res, next) => {
 exports.getUserByEmail = async (req, res, next) => {
   try {
     const userData = await user.findOne({
-      name: req.name,
-      email: req.email,
-      password: req.password,
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
     });
     if (!userData) {
       return res.status(404).json({ message: "User not found" });
