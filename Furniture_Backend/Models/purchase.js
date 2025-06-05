@@ -30,6 +30,11 @@ const purchaseSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    status: {
+      type: String,
+      enum: ["Pending", "Completed", "Cancelled"],
+      default: "Pending",
+    },
   },
   { timestamps: true }
 );
