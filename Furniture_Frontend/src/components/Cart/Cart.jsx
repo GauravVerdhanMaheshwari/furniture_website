@@ -185,6 +185,18 @@ function Cart() {
                     ? "bg-gray-400 text-white cursor-not-allowed"
                     : "bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"
                 }`}
+                onClick={() => {
+                  if (change) {
+                    alert("Please save changes before proceeding to checkout.");
+                    return;
+                  }
+                  window.location.href = "/checkout";
+                }}
+                title={
+                  change
+                    ? "Please save changes before proceeding to checkout."
+                    : "Proceed to Checkout"
+                }
               >
                 Checkout
               </button>
