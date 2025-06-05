@@ -10,6 +10,23 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+// Get the current user by email
+exports.getUserByEmail = async (req, res, next) => {
+  try {
+    const userData = await user.findOne({
+      name: req.name,
+      email: req.email,
+      password: req.password,
+    });
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(userData);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get a user by ID
 exports.getUserById = async (req, res, next) => {
   try {
@@ -43,6 +60,27 @@ exports.addUser = async (req, res, next) => {
     const newUser = new user(req.body);
     await newUser.save();
     res.status(201).json({ message: "User added successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Login a user
+exports.loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    const userData = await user.findOne({ email });
+    if (!userData || !(await userData.comparePassword(password))) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    res.json({ message: "Login successful", user: userData });
   } catch (error) {
     next(error);
   }
