@@ -7,6 +7,7 @@ import Profile from "./Profile/Profile";
 import AboutUs from "./AboutUs/AboutUs";
 import Contacts from "./Contacts/Contacts";
 import Cart from "./Cart/Cart";
+import CheckOut from "./CheckOut/CheckOut";
 import FurnitureCard from "./FurnitureCard/FurnitureCard";
 import Register from "./Register/Register";
 import AdminLogin from "./AdminLogin/AdminLogin";
@@ -28,6 +29,7 @@ export {
   AboutUs,
   Contacts,
   Cart,
+  CheckOut,
   FurnitureCard,
   Login,
   Register,
