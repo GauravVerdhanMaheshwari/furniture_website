@@ -4,12 +4,14 @@ import { NavLink } from "react-router-dom";
 function Register() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [phone, setPhone] = React.useState("");
 
   const handleRegister = async () => {
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -21,15 +23,17 @@ function Register() {
       return;
     }
     const data = {
-      username: username,
+      name: username,
       email: email,
       password: password,
+      address: address,
+      phone: phone,
     };
 
     console.log("Register data:", data);
 
     try {
-      const response = await fetch("http://localhost:3000/api/register", {
+      const response = await fetch("http://localhost:3000/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +43,18 @@ function Register() {
 
       const result = await response.json();
       console.log("Server response:", result);
+      if (response.ok) {
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setAddress("");
+        setPhone("");
+        alert("Registration successful");
+        location.href = "/login";
+      }
     } catch (error) {
+      alert("Registration failed. Please try again. May be use another email");
       console.error("Failed to send register data to server:", error);
     }
   };
@@ -62,6 +77,8 @@ function Register() {
             required
             className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
             placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-4">
@@ -78,6 +95,8 @@ function Register() {
             required
             className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
             placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="mb-4">
@@ -97,6 +116,8 @@ function Register() {
               required
               className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
@@ -123,12 +144,52 @@ function Register() {
               max={20}
               className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
               placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <img
               src={showConfirmPassword ? "hide.webp" : "view.webp"}
               alt={showConfirmPassword ? "Hide" : "View"}
               className=" cursor-pointer inline w-7 h-7 mt-1"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          </div>
+          <div className="mb-4 mt-4">
+            <label
+              htmlFor="address"
+              className="block text-m font-medium text-gray-700"
+            >
+              Address:
+            </label>
+            <textarea
+              id="address"
+              placeholder="Enter your address"
+              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+              name="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              rows={3}
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="phone"
+              className="block text-m font-medium text-gray-700"
+            >
+              Phone:
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              pattern="[0-9]{10}"
+              maxLength={10}
+              minLength={10}
+              required
+              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+              placeholder="Enter your phone number"
+              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
             />
           </div>
         </div>
