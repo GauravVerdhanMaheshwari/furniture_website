@@ -5,7 +5,7 @@ const connectDB = require("./config/db");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const userRoutes = require("./routes/userRoutes");
-const purchaseRoutes = require("./routes/purchaseRoutes");
+const purchaseRoutes = require("./Routes/purchaseRoutes");
 const historyRoutes = require("./Routes/historyRoutes");
 
 const errorHandler = require("./middleware/errorHandler");
