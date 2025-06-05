@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import UserForm from "./UserForm/UserForm";
 import HistoryBuys from "./UserForm/HistoryBuys";
+import Purchase from "./UserForm/Purchase";
 import { useSelector } from "react-redux";
 
 function Profile() {
   const userID = useSelector((state) => state.user.userID);
   const [userData, setUserData] = useState(null);
   const [userHistory, setUserHistory] = useState([]);
+  const [purchaseData, setPurchaseData] = useState([]);
+  const [detailedPurchaseProducts, setDetailedPurchaseProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
 
@@ -87,6 +90,7 @@ function Profile() {
   };
 
   useEffect(() => {
+    // Fetching user data
     fetch(`http://localhost:3000/api/users/${userID}`, {
       method: "GET",
       headers: {
@@ -94,40 +98,73 @@ function Profile() {
       },
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
       })
       .then((data) => {
         setUserData(data);
-        // setLoading(false);
       })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-      });
+      .catch((error) => console.error("User fetch error:", error));
 
-    fetch(`http://localhost:3000/api/history/user/${userID}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log("Fetching user history for userID:", userID);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+    // Fetching user history
+    if (userID) {
+      fetch(`http://localhost:3000/api/history/user/${userID}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .then((data) => {
-        console.log("User history data:", data);
-        setUserHistory(data);
-        setLoading(false);
+        .then((res) => {
+          if (!res.ok) throw new Error("History fetch failed");
+          return res.json();
+        })
+        .then((data) => {
+          setUserHistory(Array.isArray(data) ? data : [data]);
+        })
+        .catch((error) => console.error("History fetch error:", error));
+    }
+
+    // Fetching purchases and product details
+    if (userID) {
+      fetch(`http://localhost:3000/api/purchases/${userID}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-      });
+        .then((res) => {
+          if (!res.ok) throw new Error("Purchase fetch failed");
+          return res.json();
+        })
+        .then(async (data) => {
+          const purchasesArray = Array.isArray(data) ? data : [data];
+          setPurchaseData(purchasesArray);
+
+          const allProductDetails = [];
+
+          for (const purchase of purchasesArray) {
+            for (const item of purchase.items) {
+              try {
+                const res = await fetch(
+                  `http://localhost:3000/api/products/${item.productId}`
+                );
+                const product = await res.json();
+                allProductDetails.push({
+                  ...product,
+                  quantity: item.quantity,
+                  purchaseDate: item.purchaseDate,
+                });
+              } catch (error) {
+                console.error("Failed to fetch product details:", error);
+              }
+            }
+          }
+
+          setDetailedPurchaseProducts(allProductDetails);
+          setLoading(false);
+        })
+        .catch((error) => console.error("Purchase fetch error:", error));
+    }
   }, [userID]);
 
   return (
@@ -144,6 +181,10 @@ function Profile() {
             handleDeleteUser={handleDeleteUser}
             changed={changed}
             setChanged={setChanged}
+          />
+          <Purchase
+            userPurchases={purchaseData}
+            PurchaseProductDetail={detailedPurchaseProducts}
           />
           <HistoryBuys userID={userID} userHistory={userHistory} />
         </div>
