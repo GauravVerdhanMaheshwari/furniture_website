@@ -3,9 +3,9 @@ import Furniture from "./Furniture/Furniture";
 
 function Products() {
   const [showFilter, setShowFilter] = useState(false);
-  const [showCompany, setShowCompany] = useState(false);
+  // const [showCompany, setShowCompany] = useState(false);
   const [priceValue, setPriceValue] = useState(1000);
-  const [productsType, setProducts] = useState([]);
+  // const [productsType, setProducts] = useState([]);
   // const [company, setCompany] = useState([]);
   const [selectedType, setSelectedType] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
@@ -19,12 +19,12 @@ function Products() {
       .then((res) => res.json())
       .then((data) => {
         const items = data?.items || [];
-        setProducts(items);
+        // setProducts(items);
 
         const types = [...new Set(items?.map((item) => item.name))];
         if (!types.includes(selectedType)) {
           setSelectedType("");
-          setShowCompany(false);
+          // setShowCompany(false);
         }
       })
       .catch((err) => console.error("Failed to fetch products:", err));
@@ -37,27 +37,27 @@ function Products() {
   //     .catch((err) => console.error("Failed to fetch company:", err));
   // }, []);
 
-  const handleTypeSelect = (type) => {
-    const newType = selectedType === type ? "" : type;
-    setSelectedType(newType);
-    setShowCompany(newType === "Chair");
-  };
+  // const handleTypeSelect = (type) => {
+  //   const newType = selectedType === type ? "" : type;
+  //   setSelectedType(newType);
+  //   setShowCompany(newType === "Chair");
+  // };
 
   // const handleCompanySelect = (brand) => {
   //   setSelectedCompany((prev) => (prev === brand ? "" : brand));
   // };
 
-  const getButtonClass = (selected, value) =>
-    selected === value
-      ? "bg-blue-500 border px-3 py-2 rounded shadow-sm text-sm text-white cursor-pointer"
-      : "bg-white border px-3 py-2 rounded shadow-sm text-sm cursor-pointer hover:bg-blue-100";
+  // const getButtonClass = (selected, value) =>
+  //   selected === value
+  //     ? "bg-blue-500 border px-3 py-2 rounded shadow-sm text-sm text-white cursor-pointer"
+  //     : "bg-white border px-3 py-2 rounded shadow-sm text-sm cursor-pointer hover:bg-blue-100";
 
   const handleClearFilter = () => {
     setPriceValue(maxPrice);
     setSelectedType("");
     setSelectedCompany("");
     setShowFilter(false);
-    setShowCompany(false);
+    // setShowCompany(false);
     setSearchTerm("");
   };
 
