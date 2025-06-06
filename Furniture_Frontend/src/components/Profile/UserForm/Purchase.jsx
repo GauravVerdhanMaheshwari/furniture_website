@@ -1,6 +1,31 @@
 import React from "react";
 
 function Purchase({ userPurchases, PurchaseProductDetail }) {
+  const handleCancelPurchase = async (purchaseId) => {
+    if (!confirm("Are you sure you want to cancel this purchase?")) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/purchases/${purchaseId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to cancel purchase");
+
+      alert("Purchase canceled successfully");
+      // Optionally, you can refresh the purchase history here
+      window.location.reload();
+    } catch (error) {
+      console.error("Error canceling purchase:", error);
+      alert("Failed to cancel purchase");
+    }
+  };
+
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">Purchase History</h2>
@@ -40,6 +65,12 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
               <strong>Date:</strong>{" "}
               {new Date(purchase.createdAt).toLocaleString()}
             </p>
+            <button
+              onClick={() => handleCancelPurchase(purchase._id)}
+              className="bg-red-500 text-white px-4 py-2 rounded-md my-2 hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
+            >
+              Cancel
+            </button>
           </div>
         ))
       ) : (
