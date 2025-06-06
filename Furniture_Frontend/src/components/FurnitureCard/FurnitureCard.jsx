@@ -58,7 +58,7 @@ function FurnitureCard({
           {quantities[id] || 1}
         </p>
         <button
-          onClick={() => handleIncrement(id)}
+          onClick={() => handleIncrement(id, stock)}
           className="w-1/5 py-1 border-2 border-gray-300 rounded hover:cursor-pointer"
           disabled={!inStock}
         >
@@ -67,9 +67,7 @@ function FurnitureCard({
       </div>
 
       <button
-        onClick={() =>
-          handleAddToCart("683adac421be8a674188b8e9", id, quantities[id] || 1)
-        }
+        onClick={() => handleAddToCart(id, quantities[id] || 1)}
         className={
           inStock
             ? "w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 active:scale-95 transition-all hover:cursor-pointer"
