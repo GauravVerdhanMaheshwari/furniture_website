@@ -13,8 +13,8 @@ function Suggestions({ title, api }) {
 
   const handleAddToCart = async (id, quantities) => {
     if (!isLoggedIn || !userId) {
-      alert("You must be logged in to add items to the cart.");
-      window.location.href = "/login";
+      alert("Please log in to add items to the cart.");
+      return;
     }
     try {
       const response = await fetch("http://localhost:3000/api/cart/add", {
@@ -23,7 +23,7 @@ function Suggestions({ title, api }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: userId, // Replace with real user ID if you have auth
+          userId: userId,
           items: [
             {
               productId: id,
@@ -50,20 +50,21 @@ function Suggestions({ title, api }) {
         throw new Error(result.message || "Failed to add item to cart");
       }
       alert("Item added to cart successfully!");
-      console.log("Server response:", result);
     } catch (error) {
       alert("Error sending cart data to server: " + error.message);
       console.error("Failed to send cart data to server:", error);
     }
   };
 
-  const handleIncrement = (id) => {
+  const handleIncrement = (id, stock) => {
+    if (stock > 0 && (quantities[id] || 1) >= stock) {
+      return;
+    }
     let prevQuantity = (quantities[id] || 1) + 1;
     setQuantities((prev) => ({
       ...prev,
       [id]: prevQuantity,
     }));
-    console.log("Incremented quantity for ID:", id, "to", prevQuantity);
   };
 
   const handleDecrement = (id) => {
@@ -134,6 +135,7 @@ function Suggestions({ title, api }) {
               stock,
             }) => (
               <FurnitureCard
+                userId={userId}
                 key={_id}
                 id={_id}
                 name={name}
