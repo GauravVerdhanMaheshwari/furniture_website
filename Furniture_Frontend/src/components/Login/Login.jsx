@@ -1,31 +1,28 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { setUser } from "../../../features/userSlice";
 
 function Login() {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const password = document.getElementById("password").value;
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
-    if (!password && !username && !email) {
+    if (!username || !email || !password) {
       alert("Please fill in all fields");
       return;
     }
-    const data = {
-      username: username,
-      email: email,
-      password: password,
-    };
+
+    const data = { username, email, password };
 
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch("http://localhost:3000/api/users/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -33,67 +30,59 @@ function Login() {
       console.log("Server response:", result);
 
       if (response.ok) {
-        document.getElementById("username").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("password").value = "";
-        alert("Login successful");
-        fetch("http://localhost:3000/api/users/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: username,
-            email: email,
-            password: password,
-          }),
-        })
-          .then((response) => response.json())
-          .then((userData) => {
-            console.log("User data:", userData);
-            // if (userData && userData._id) {
-            //   dispatch({
-            //     type: "SET_USER",
-            //     payload: {
-            //       id: userData._id,
-            //     },
-            //   });
-            // } else {
-            //   console.error("User data is not valid:", userData);
-            // }
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            userID: result.user._id,
+            isAuthenticated: true,
           })
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-          });
-        location.href = "/";
+        );
+
+        dispatch(
+          setUser({
+            userID: result.user._id,
+            isAuthenticated: true,
+          })
+        );
+
+        navigate("/");
       } else {
         alert("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      console.error("Failed to send login data to server:", error);
+      console.error("Login error:", error);
     }
   };
 
   return (
     <div className="mt-20 py-7 bg-gray-100 min-h-[70vh] flex items-center justify-center">
-      <form className="flex flex-col items-center justify-center w-full max-w-sm mx-auto bg-white shadow-md rounded px-15 py-10 mb-4">
+      <form
+        className="flex flex-col items-center justify-center w-full max-w-sm mx-auto bg-white shadow-md rounded px-15 py-10 mb-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+      >
         <h2 className="text-2xl font-bold mb-6">Login</h2>
+
         <div className="mb-4">
           <label
             htmlFor="username"
-            className="block text-m font-medium text-gray-700 "
+            className="block text-m font-medium text-gray-700"
           >
             Username:
           </label>
           <input
             type="text"
             id="username"
-            name="username"
-            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
             placeholder="Enter your username"
+            required
           />
         </div>
+
         <div className="mb-4">
           <label
             htmlFor="email"
@@ -104,12 +93,14 @@ function Login() {
           <input
             type="email"
             id="email"
-            name="email"
-            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
             placeholder="Enter your email"
+            required
           />
         </div>
+
         <div className="mb-4">
           <label
             htmlFor="password"
@@ -121,34 +112,31 @@ function Login() {
             <input
               type={showPassword ? "text" : "password"}
               id="password"
-              name="password"
-              required
-              min={8}
-              max={20}
-              autoComplete="on"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="mt-1 inline w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
               placeholder="Enter your password"
+              minLength={8}
+              maxLength={20}
+              autoComplete="on"
+              required
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
               alt=""
-              className=" cursor-pointer inline w-7 h-7 mt-1"
-              onClick={() => {
-                setShowPassword(!showPassword);
-              }}
+              className="cursor-pointer inline w-7 h-7 mt-1 ml-2"
+              onClick={() => setShowPassword(!showPassword)}
             />
           </div>
         </div>
+
         <button
           type="submit"
-          className="bg-blue-500 text-white font-bold py-2 my-1 px-8 rounded hover:bg-blue-700 transition duration-300 ease-in-out cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault();
-            handleLogin();
-          }}
+          className="bg-blue-500 text-white font-bold py-2 my-1 px-8 rounded hover:bg-blue-700 transition duration-300 ease-in-out"
         >
           Login
         </button>
+
         <NavLink
           to="/register"
           className="text-blue-500 hover:underline mt-2 transition duration-300 ease-in-out"
