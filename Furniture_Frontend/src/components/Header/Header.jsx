@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../../../features/userSlice";
 import "./header.css";
 
 export default function Header() {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const userId = useSelector((state) => state.user.userID);
+  const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
+  const dispatch = useDispatch();
 
   const linkCss = ({ isActive }) =>
     isActive
@@ -107,6 +113,27 @@ export default function Header() {
         <NavLink to="/profile" className="w-8 h-8 mx-4 cursor-pointer flex-1">
           <img src="user.webp" alt="user" className="w-[100%] h-[100%] " />
         </NavLink>
+        {isLoggedIn ? (
+          <button
+            onClick={() => {
+              localStorage.removeItem("user");
+              dispatch(setUser({ userID: null, isAuthenticated: false }));
+              window.location.href = "/login";
+            }}
+            className="flex-1 w-full h-full rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-300 py-3 px-3 cursor-pointer"
+          >
+            Logout
+          </button>
+        ) : (
+          <NavLink
+            to="/login"
+            className="w-full h-full mx-2 cursor-pointer flex-1"
+          >
+            <button className="flex-1 w-full h-full rounded-2xl bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-300 py-4 px-5 cursor-pointer">
+              Login
+            </button>
+          </NavLink>
+        )}
       </div>
     </header>
   );
