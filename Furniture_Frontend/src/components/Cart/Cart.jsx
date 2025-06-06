@@ -23,7 +23,23 @@ function Cart() {
       const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
       if (!res.ok) throw new Error("Failed to fetch cart");
       const data = await res.json();
-      setCart(data);
+
+      // Adjust quantity if more than stock
+      let adjusted = false;
+      const updatedItems = data.items.map((item) => {
+        if (item.quantity > item.productId.stock) {
+          adjusted = true;
+          return { ...item, quantity: item.productId.stock };
+        }
+        return item;
+      });
+
+      if (adjusted) {
+        setChange(true);
+        alert("Some items exceeded stock and were adjusted.");
+      }
+
+      setCart({ ...data, items: updatedItems });
     } catch (err) {
       setError(err.message);
       console.error("Error fetching cart:", err);
@@ -34,11 +50,21 @@ function Cart() {
 
   const updateItemQuantity = (productId, delta) => {
     setCart((prevCart) => {
-      const updatedItems = prevCart.items.map((item) =>
-        item.productId._id === productId
-          ? { ...item, quantity: Math.max(item.quantity + delta, 1) }
-          : item
-      );
+      const updatedItems = prevCart.items.map((item) => {
+        if (item.productId._id === productId) {
+          let newQty = item.quantity + delta;
+          if (newQty < 1) {
+            alert("Quantity cannot be less than 1");
+            newQty = 1;
+          }
+          if (newQty > item.productId.stock) {
+            alert("Cannot exceed stock limit");
+            newQty = item.productId.stock;
+          }
+          return { ...item, quantity: newQty };
+        }
+        return item;
+      });
       return { ...prevCart, items: updatedItems };
     });
     setChange(true);
@@ -60,13 +86,53 @@ function Cart() {
 
       if (!res.ok) throw new Error("Failed to update cart");
 
-      const updatedCart = await res.json();
-      setCart(updatedCart);
-      setChange(false);
       alert("Cart updated successfully");
+
+      fetchCart();
+
+      setChange(false);
     } catch (err) {
       console.error("Failed to save changes:", err);
       alert("Failed to save cart changes");
+    }
+  };
+
+  const handleClearCart = async () => {
+    if (!window.confirm("Are you sure you want to clear your cart?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/cart/clear`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!res.ok) throw new Error("Failed to clear cart");
+
+      alert("Cart cleared successfully");
+      setCart({ ...cart, items: [] });
+    } catch (err) {
+      console.error("Error clearing cart:", err);
+      alert("Failed to clear cart");
+    }
+  };
+
+  const handleRemoveItem = async (productId) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/cart/remove`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, productId }),
+      });
+
+      if (!res.ok) throw new Error("Failed to remove item");
+
+      const updatedCart = await res.json();
+      setCart(updatedCart);
+      setChange(true);
+    } catch (err) {
+      console.error("Error removing item:", err);
+      alert("Failed to remove item from cart");
     }
   };
 
@@ -89,10 +155,10 @@ function Cart() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 mt-25 p-4">
+    <div className="mt-20 flex flex-col items-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-4xl font-bold py-5">🛒 Cart</h1>
 
-      <div className="bg-white shadow-md rounded-lg p-6 mt-10 w-full max-w-2xl">
+      <div className="bg-white shadow-md rounded-lg p-6 mt-6 w-full max-w-2xl">
         {error && <p className="text-red-500">{error}</p>}
 
         {!cart || !Array.isArray(cart.items) ? (
@@ -134,6 +200,12 @@ function Cart() {
                     >
                       +
                     </button>
+                    <button
+                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 ml-4"
+                      onClick={() => handleRemoveItem(item.productId._id)}
+                    >
+                      Remove
+                    </button>
                   </div>
                   <p className="text-lg mt-2">
                     Price: ₹{item.productId.price * item.quantity}
@@ -169,18 +241,20 @@ function Cart() {
                 }`}
                 onClick={() => {
                   if (change) {
-                    alert("Please save changes before proceeding to checkout.");
+                    alert("Please save changes before checkout.");
                     return;
                   }
                   window.location.href = "/checkout";
                 }}
-                title={
-                  change
-                    ? "Please save changes before proceeding to checkout."
-                    : "Proceed to Checkout"
-                }
               >
                 Checkout
+              </button>
+
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={handleClearCart}
+              >
+                Clear Cart
               </button>
             </div>
           </>
