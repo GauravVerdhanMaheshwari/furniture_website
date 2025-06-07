@@ -25,7 +25,11 @@ function FurnitureCard({
   return (
     <div className={stockCSS}>
       <img
-        src={imageURL}
+        src={
+          imageURL
+            ? `data:image/jpeg;base64,${imageURL}`
+            : "/fallback-image.jpg"
+        }
         alt={name}
         className="w-full h-36 md:h-48 object-cover rounded-t-lg"
       />
