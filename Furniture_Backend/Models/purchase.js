@@ -32,7 +32,7 @@ const purchaseSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "Completed", "Cancelled"],
+      enum: ["Pending", "Accepted", "Cancelled", "Delivered"],
       default: "Pending",
     },
   },
