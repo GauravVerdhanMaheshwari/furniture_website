@@ -10,20 +10,11 @@ function HistoryBuys({ userID, userHistory }) {
         },
         body: JSON.stringify({
           userId: userID,
-          items: [
-            {
-              productId: productID,
-              quantity: quantity,
-            },
-          ],
+          items: [{ productId: productID, quantity }],
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      // const data = await response.json();
-      // console.log("Product reordered successfully:", data);
+      if (!response.ok) throw new Error("Reorder failed");
       alert("Product reordered successfully!");
     } catch (error) {
       console.error("Error reordering product:", error);
@@ -31,7 +22,15 @@ function HistoryBuys({ userID, userHistory }) {
     }
   };
 
-  return userHistory ? (
+  if (!userHistory || userHistory.length === 0) {
+    return (
+      <div className="flex flex-col border p-6 text-xl font-semibold py-6">
+        <p className="text-red-500">NO HISTORY FOUND</p>
+      </div>
+    );
+  }
+
+  return (
     <div className="mt-4 flex flex-col border p-6 py-6">
       <h1 className="text-2xl font-bold mb-2">History</h1>
       {userHistory.map((item) => (
@@ -43,8 +42,8 @@ function HistoryBuys({ userID, userHistory }) {
             src={item.productID.image || "https://picsum.photos/200/300"}
             alt=""
             onError={(e) => {
-              e.target.onerror = null; // prevents infinite loop
-              e.target.src = "https://picsum.photos/200/300"; // fallback image
+              e.target.onerror = null;
+              e.target.src = "https://picsum.photos/200/300";
             }}
             className="w-40 h-40 object-cover mb-2"
           />
@@ -54,17 +53,15 @@ function HistoryBuys({ userID, userHistory }) {
           <p className="text-gray-600">Quantity: {item.quantity}</p>
           <p className="text-gray-600">Total Price: {item.totalPrice}</p>
           <button
-            onClick={() => handleReorder(userID, item.productID, item.quantity)}
+            onClick={() =>
+              handleReorder(userID, item.productID._id, item.quantity)
+            }
             className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
           >
             Reorder
           </button>
         </div>
       ))}
-    </div>
-  ) : (
-    <div className="flex flex-col border p-6 text-xl font-semibold py-6">
-      <p className="text-red-500">User history not available.</p>
     </div>
   );
 }
