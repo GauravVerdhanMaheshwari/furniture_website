@@ -90,19 +90,24 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
 
   useEffect(() => {
     const filtered = products.filter((product) => {
-      const matchesCompany = !company || product.company === company;
-      const matchesType =
-        !furnitureProduct || product.name === furnitureProduct;
+      // const matchesCompany = !company || product.company === company;
+      // const matchesType =
+      // !furnitureProduct || product.name === furnitureProduct;
       const matchesPrice = !priceValue || product.price <= priceValue;
       const matchesSearch =
         !searchTerm ||
         product.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesCompany && matchesType && matchesPrice && matchesSearch;
+      return (
+        // matchesCompany && matchesType &&
+        matchesPrice && matchesSearch
+      );
     });
 
     setFilteredProducts(filtered);
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
+
+  console.log("Filtered Products:", filteredProducts);
 
   return (
     <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4">
