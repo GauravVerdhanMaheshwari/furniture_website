@@ -6,20 +6,21 @@ function AdminEditProduct() {
   const [product, setProduct] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
-  const handleSaveChanges = (e) => {
-    // const date = new Date();
-    // const updatedProduct = {
-    //   ...product,
-    //   updatedAt: date.toISOString(),
-    //   image: product.image ? product.image.name : null,
-    // };
-    // setProduct(updatedProduct);
-    fetch(`http://localhost:3000/api/owner/furniture/${id}`, {
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
+    let updatedProduct = { ...product };
+
+    if (product.image instanceof File) {
+      const base64Image = await convertToBase64(product.image);
+      updatedProduct.image = base64Image;
+    }
+
+    fetch(`http://localhost:3000/api/owner/product/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(product),
+      body: JSON.stringify(updatedProduct),
     })
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
@@ -28,18 +29,25 @@ function AdminEditProduct() {
       .then((data) => {
         console.log("Product updated successfully:", data);
         alert("Product updated successfully");
+        location.href = "/admin/products";
       })
       .catch((error) => {
         console.error("Error updating product:", error);
         alert("Error updating product");
       });
-
-    console.log(product);
-    e.preventDefault();
   };
 
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
   useEffect(() => {
-    fetch(`http://localhost:3000/api/owner/furniture/${id}`, {
+    fetch(`http://localhost:3000/api/owner/product/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +58,8 @@ function AdminEditProduct() {
         return response.json();
       })
       .then((data) => {
-        console.log("Product data:", data);
+        data.isNew = data.isNew || data.new || false;
+        delete data.new; // In case old data uses 'new'
         setProduct(data);
         setLoading(false);
       })
@@ -65,159 +74,131 @@ function AdminEditProduct() {
     </div>
   ) : product ? (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-25">
-      <div key={product._id} className="mb-6 text-gray-600"></div>
-      <form action="">
+      <form onSubmit={handleSaveChanges}>
         <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-xl p-6 w-full max-w-md">
           <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Name
-            </label>
+
+          {/* Name */}
+          <input
+            type="text"
+            value={product.name}
+            onChange={(e) => setProduct({ ...product, name: e.target.value })}
+            placeholder="Product Name"
+            required
+            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+          />
+
+          {/* Description */}
+          <textarea
+            value={product.description}
+            onChange={(e) =>
+              setProduct({ ...product, description: e.target.value })
+            }
+            placeholder="Product Description"
+            required
+            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+          />
+
+          {/* Price */}
+          <input
+            type="number"
+            value={product.price}
+            onChange={(e) =>
+              setProduct({ ...product, price: Number(e.target.value) })
+            }
+            placeholder="Product Price"
+            required
+            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+          />
+
+          {/* In Stock */}
+          <select
+            value={product.inStock ? "Yes" : "No"}
+            onChange={(e) =>
+              setProduct({ ...product, inStock: e.target.value === "Yes" })
+            }
+            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+          >
+            <option value="Yes">In Stock</option>
+            <option value="No">Out of Stock</option>
+          </select>
+
+          {/* Stock Quantity */}
+          <input
+            type="number"
+            value={product.stock}
+            onChange={(e) =>
+              setProduct({ ...product, stock: Number(e.target.value) })
+            }
+            placeholder="Stock Quantity"
+            required
+            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+          />
+
+          {/* Image */}
+          <input
+            type="file"
+            onChange={(e) =>
+              setProduct({ ...product, image: e.target.files[0] })
+            }
+            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+          />
+
+          {/* Checkboxes */}
+          <div className="flex items-center mb-4 w-full">
+            <label className="mr-2">Hot</label>
             <input
-              type="text"
-              value={product.name}
-              onChange={(e) => setProduct({ ...product, name: e.target.value })}
-              placeholder="Enter product name"
-              className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              type="checkbox"
+              checked={product.hot}
+              onChange={(e) =>
+                setProduct({ ...product, hot: e.target.checked })
+              }
+              className="ml-2"
             />
           </div>
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              placeholder="Enter description"
-              value={product.description}
+
+          <div className="flex items-center mb-4 w-full">
+            <label className="mr-2">New</label>
+            <input
+              type="checkbox"
+              checked={product.isNew}
               onChange={(e) =>
-                setProduct({ ...product, description: e.target.value })
+                setProduct({ ...product, isNew: e.target.checked })
               }
-              className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            ></textarea>
-            <div className="mb-4 w-full">
-              <label htmlFor="price">Price</label>
-              <input
-                type="number"
-                value={product.price}
-                onChange={(e) =>
-                  setProduct({ ...product, price: e.target.value })
-                }
-                placeholder="Enter price"
-                className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4 w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                In Stock
-              </label>
-              <select
-                value={product.inStock ? "Yes" : "No"}
-                onChange={(e) =>
-                  setProduct({
-                    ...product,
-                    inStock: e.target.value === "Yes",
-                  })
-                }
-                className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-            <div className="mb-4 w-full">
-              <label htmlFor="stock">Stock</label>
-              <input
-                type="number"
-                value={product.stock}
-                onChange={(e) =>
-                  setProduct({ ...product, stock: e.target.value })
-                }
-                placeholder="Enter stock"
-                className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4 w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Image
-              </label>
-              <input
-                type="file"
-                onChange={(e) =>
-                  setProduct({ ...product, image: e.target.files[0] })
-                }
-                className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4 w-full">
-              <label htmlFor="hot">Hot</label>
-              <input
-                type="checkbox"
-                id="hot"
-                className="ml-4"
-                checked={product.hot}
-                onChange={(e) =>
-                  setProduct({ ...product, hot: e.target.checked })
-                }
-              />
-            </div>
-            <div className="mb-4 w-full">
-              <label htmlFor="new">New</label>
-              <input
-                type="checkbox"
-                id="new"
-                className="ml-4"
-                checked={product.new}
-                onChange={(e) =>
-                  setProduct({ ...product, new: e.target.checked })
-                }
-              />
-            </div>
-            <div className="mb-4 w-full">
-              <label htmlFor="includeInPackage">Include in Package</label>
-              <input
-                type="checkbox"
-                id="includeInPackage"
-                className="ml-4"
-                checked={product.package}
-                onChange={(e) =>
-                  setProduct({ ...product, package: e.target.checked })
-                }
-              />
-            </div>
-            {product.package ? (
-              <div className="mb-4 w-full">
-                <label htmlFor="package">Package</label>
-                <input
-                  type="text"
-                  value={product.packageName}
-                  onChange={(e) =>
-                    setProduct({ ...product, packageName: e.target.value })
-                  }
-                  onBlur={(e) => {
-                    e.target.value = e.target.value.trim();
-                    if (e.target.value === "") {
-                      setProduct({
-                        ...product,
-                        packageName: null,
-                        package: false,
-                      });
-                    }
-                  }}
-                  placeholder="Enter package name"
-                  className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-            ) : null}
+              className="ml-2"
+            />
           </div>
+
+          <div className="flex items-center mb-4 w-full">
+            <label className="mr-2">Package</label>
+            <input
+              type="checkbox"
+              checked={product.package}
+              onChange={(e) =>
+                setProduct({ ...product, package: e.target.checked })
+              }
+              className="ml-2"
+            />
+          </div>
+
+          {/* Package Name */}
+          {product.package && (
+            <input
+              type="text"
+              value={product.packageName || ""}
+              onChange={(e) =>
+                setProduct({ ...product, packageName: e.target.value })
+              }
+              placeholder="Package Name"
+              className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+              required
+            />
+          )}
+
+          {/* Submit */}
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 cursor-pointer w-full"
-            onClick={handleSaveChanges}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
           >
             Save Changes
           </button>
