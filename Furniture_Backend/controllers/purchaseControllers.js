@@ -1,4 +1,5 @@
 const purchase = require("../Models/purchase");
+const HistoryBought = require("../Models/history");
 
 // Get all purchases
 exports.getAllPurchases = async (req, res, next) => {
@@ -42,6 +43,14 @@ exports.deletePurchase = async (req, res, next) => {
     if (!deletedPurchase) {
       return res.status(404).json({ message: "Purchase not found" });
     }
+
+    const historyEntry = new HistoryBought({
+      userID: deletedPurchase.userId,
+      productID: deletedPurchase.productId,
+      quantity: deletedPurchase.quantity,
+      totalPrice: deletedPurchase.totalPrice,
+    });
+    await historyEntry.save();
     res.json({ message: "Purchase deleted successfully" });
   } catch (error) {
     next(error);
