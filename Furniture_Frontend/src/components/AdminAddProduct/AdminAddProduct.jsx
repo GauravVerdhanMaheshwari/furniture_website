@@ -29,35 +29,40 @@ function AdminAddProduct() {
       const data = {
         name: formData.get("name"),
         description: formData.get("description"),
-        price: formData.get("price"),
-        stock: formData.get("stock"),
-        images: images,
+        price: Number(formData.get("price")),
+        stock: Number(formData.get("stock")),
+        images: images, // ✅ Send full array now
         company: formData.get("company") || "Made in Factory",
         inStock: true,
-        newProduct: formData.get("newProduct") === "on",
-        hot: formData.get("hot") === "on",
-        packageProduct: formData.get("packageProduct") === "on",
-        addedDate: new Date().toISOString(),
-        packageName:
+        New: formData.get("newProduct") === "on",
+        Hot: formData.get("hot") === "on",
+        Package: formData.get("packageProduct") === "on",
+        AddedDate: new Date().toISOString(),
+        PackageName:
           formData.get("packageProduct") === "on"
             ? formData.get("packageName")
-            : null,
+            : "",
       };
 
       const response = await fetch(
-        "http://localhost:3000/api/owner/furniture",
+        "http://localhost:3000/api/owner/product/add",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ data }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
         }
       );
 
       const result = await response.json();
       console.log("Server response:", result);
+      setInterval(() => {
+        window.location.reload();
+        window.location.href = "/admin/products";
+      }, 1000);
 
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to add product");
+      }
       alert("Product added successfully!");
       form.reset();
       setShowPackageName(false);
