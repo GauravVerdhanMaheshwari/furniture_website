@@ -1,4 +1,5 @@
 const Order = require("../Models/order");
+const Product = require("../Models/product");
 
 exports.getAllOrders = async (req, res, next) => {
   try {
@@ -10,6 +11,7 @@ exports.getAllOrders = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.addOrder = async (req, res, next) => {
   try {
     const newOrder = new Order(req.body);
@@ -19,6 +21,7 @@ exports.addOrder = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.updateOrder = async (req, res, next) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, req.body);
@@ -27,6 +30,7 @@ exports.updateOrder = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.deleteOrder = async (req, res, next) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
