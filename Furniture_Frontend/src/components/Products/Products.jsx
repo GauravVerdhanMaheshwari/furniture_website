@@ -4,7 +4,7 @@ import Furniture from "./Furniture/Furniture";
 function Products() {
   const [showFilter, setShowFilter] = useState(false);
   // const [showCompany, setShowCompany] = useState(false);
-  const [priceValue, setPriceValue] = useState(1000);
+  const [priceValue, setPriceValue] = useState(10000);
   // const [productsType, setProducts] = useState([]);
   // const [company, setCompany] = useState([]);
   const [selectedType, setSelectedType] = useState("");
