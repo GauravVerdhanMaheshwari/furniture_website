@@ -15,9 +15,13 @@ exports.getNewProducts = async (req, res, next) => {
     const newProducts = await Product.find({ New: true })
       .sort({ AddedDate: -1 })
       .limit(3);
+
     if (newProducts.length === 0) {
-      return res.status(404).json({ message: "No new products found" });
+      return res
+        .status(200)
+        .json({ message: "No products found", products: [] });
     }
+
     res.json(newProducts);
   } catch (error) {
     next(error);
@@ -29,9 +33,13 @@ exports.getHotProducts = async (req, res, next) => {
     const hotProducts = await Product.find({ Hot: true })
       .sort({ AddedDate: -1 })
       .limit(3);
+
     if (hotProducts.length === 0) {
-      return res.status(404).json({ message: "No hot products found" });
+      return res
+        .status(200)
+        .json({ message: "No products found", products: [] });
     }
+
     res.json(hotProducts);
   } catch (error) {
     next(error);
@@ -43,15 +51,20 @@ exports.getPackageProducts = async (req, res, next) => {
     const packageProducts = await Product.find({ Package: true })
       .sort({ AddedDate: -1 })
       .limit(3);
+
     if (packageProducts.length === 0) {
-      return res.status(404).json({ message: "No package products found" });
+      return res
+        .status(200)
+        .json({ message: "No products found", products: [] });
     }
+
     res.json(packageProducts);
   } catch (error) {
     next(error);
   }
 };
 
+// products.js
 exports.getProductById = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -65,15 +78,15 @@ exports.getProductById = async (req, res, next) => {
 };
 
 // Add a new product
-exports.addProduct = async (req, res, next) => {
-  try {
-    const newProduct = new Product(req.body);
-    await newProduct.save();
-    res.status(201).json({ message: "Product added successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
+// exports.addProduct = async (req, res, next) => {
+//   try {
+//     const newProduct = new Product(req.body);
+//     await newProduct.save();
+//     res.status(201).json({ message: "Product added successfully" });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // Update a product
 exports.updateProduct = async (req, res, next) => {
