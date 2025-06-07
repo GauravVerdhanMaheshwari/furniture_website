@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+function arrayLimit(val) {
+  return val.length <= 4;
+}
+
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -16,59 +20,23 @@ const productSchema = new mongoose.Schema(
       minlength: 1,
       maxlength: 500,
     },
-    price: {
-      type: Number,
+    price: { type: Number, required: true, min: 0 },
+    images: {
+      type: [String],
       required: true,
-      min: 0,
+      validate: [arrayLimit, "You can upload up to 4 images."],
     },
-    // category: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
-    image: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    stock: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    inStock: {
-      type: Boolean,
-      default: true,
-    },
-    New: {
-      type: Boolean,
-      default: false,
-    },
-    Hot: {
-      type: Boolean,
-      default: false,
-    },
-    Package: {
-      type: Boolean,
-      default: false,
-    },
-    PackageName: {
-      type: String,
-      trim: true,
-    },
-    company: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    AddedDate: {
-      type: Date,
-      default: Date.now,
-    },
+    stock: { type: Number, required: true, min: 0 },
+    inStock: { type: Boolean, default: true },
+    New: { type: Boolean, default: false },
+    Hot: { type: Boolean, default: false },
+    Package: { type: Boolean, default: false },
+    PackageName: { type: String, trim: true },
+    company: { type: String, required: true, trim: true },
+    AddedDate: { type: Date, default: Date.now },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
+
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;
