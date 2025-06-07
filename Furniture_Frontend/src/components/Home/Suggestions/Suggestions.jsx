@@ -37,16 +37,6 @@ function Suggestions({ title, api }) {
       if (!response.ok) {
         alert("Failed to add item to cart: " + result.message);
         console.error("Error adding to cart:", result);
-        console.log("Request payload:", {
-          userId: userId,
-          items: [
-            {
-              productId: id,
-              quantity: quantities[id] || 1,
-            },
-          ],
-        });
-
         throw new Error(result.message || "Failed to add item to cart");
       }
       alert("Item added to cart successfully!");
@@ -60,10 +50,9 @@ function Suggestions({ title, api }) {
     if (stock > 0 && (quantities[id] || 1) >= stock) {
       return;
     }
-    let prevQuantity = (quantities[id] || 1) + 1;
     setQuantities((prev) => ({
       ...prev,
-      [id]: prevQuantity,
+      [id]: (prev[id] || 1) + 1,
     }));
   };
 
@@ -73,7 +62,6 @@ function Suggestions({ title, api }) {
       [id]: Math.max((prev[id] || 1) - 1, 1),
     }));
   };
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -81,8 +69,18 @@ function Suggestions({ title, api }) {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data = await response.json(); // Only run this if the response is OK
-        setProducts(data);
+
+        const data = await response.json();
+
+        // Handle array or object response
+        const normalizedProducts = Array.isArray(data)
+          ? data
+          : data.products || [];
+
+        setProducts(normalizedProducts);
+        if (normalizedProducts.length === 0 && data.message) {
+          setError(`No products found in "${title}" category`); // "No products found"
+        }
       } catch (err) {
         setError("Failed to load products.");
         console.error("Error fetching data:", err);
@@ -92,7 +90,7 @@ function Suggestions({ title, api }) {
     };
 
     fetchProducts();
-  }, [api]);
+  }, [title, api]);
 
   if (loading) {
     return (
@@ -104,7 +102,8 @@ function Suggestions({ title, api }) {
 
   if (error) {
     return (
-      <div className="text-center p-4 text-red-500">
+      <div className="text-center p-4 text-2xl text-gray-500">
+        <p>{title}</p>
         <p>{error}</p>
       </div>
     );
@@ -116,12 +115,8 @@ function Suggestions({ title, api }) {
         {title}
       </h1>
       <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4">
-        {loading ? (
-          <p className="my-2 text-3xl font-bold">Loading...</p>
-        ) : error ? (
-          <p className="my-2 text-3xl font-bold text-red-500">{error}</p>
-        ) : products.length === 0 ? (
-          <p className="my-2 text-3xl font-bold">No Products Found</p>
+        {products.length === 0 ? (
+          <p className="my-2 text-2xl font-semibold">No Products Found</p>
         ) : (
           products.map(
             ({
