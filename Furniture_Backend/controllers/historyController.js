@@ -17,13 +17,12 @@ exports.getHistoryById = async (req, res, next) => {
       .populate("userID")
       .populate("productID");
 
+    // Instead of returning 404 for empty result, return 200 with empty array
     if (!history || history.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No history found for this user" });
+      return res.status(200).json([]); // 👈 changed from 404
     }
 
-    res.json(history);
+    res.status(200).json(history);
   } catch (error) {
     next(error);
   }
