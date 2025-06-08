@@ -17,16 +17,9 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     if (!isLoggedIn || !userId) {
       alert("You must be logged in to add items to the cart.");
       window.location.href = "/login";
+      return;
     }
     try {
-      console.log(
-        "Adding to cart:",
-        productId,
-        "with quantity:",
-        quantity,
-        "for user:",
-        userId
-      );
       const response = await fetch("http://localhost:3000/api/cart/add", {
         method: "POST",
         headers: {
@@ -44,24 +37,20 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
       });
 
       const result = await response.json();
-      alert("Item added to cart successfully!");
-      console.log("Server response:", result);
-
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(result.message || "Failed to add to cart");
-      }
+
+      alert("Item added to cart successfully!");
     } catch (error) {
       console.error("Failed to send cart data to server:", error);
     }
   };
 
   const handleIncrement = (id) => {
-    let prevQuantity = (quantities[id] || 1) + 1;
     setQuantities((prev) => ({
       ...prev,
-      [id]: prevQuantity,
+      [id]: (prev[id] || 1) + 1,
     }));
-    console.log("Incremented quantity for ID:", id, "to", prevQuantity);
   };
 
   const handleDecrement = (id) => {
@@ -90,24 +79,16 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
 
   useEffect(() => {
     const filtered = products.filter((product) => {
-      // const matchesCompany = !company || product.company === company;
-      // const matchesType =
-      // !furnitureProduct || product.name === furnitureProduct;
       const matchesPrice = !priceValue || product.price <= priceValue;
       const matchesSearch =
         !searchTerm ||
         product.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return (
-        // matchesCompany && matchesType &&
-        matchesPrice && matchesSearch
-      );
+      return matchesPrice && matchesSearch;
     });
 
     setFilteredProducts(filtered);
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
-
-  console.log("Filtered Products:", filteredProducts);
 
   return (
     <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4">
@@ -125,7 +106,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
             company,
             price,
             description,
-            imageUrl,
+            images,
             inStock,
             stock,
           }) => (
@@ -138,7 +119,8 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               description={description}
               inStock={inStock}
               stock={stock}
-              imageUrl={imageUrl}
+              images={images} // ✅ pass all images
+              imageURL={images?.[0]} // optional fallback
               quantities={quantities}
               handleAddToCart={() =>
                 handleAddToCart(userId, _id, quantities[_id] || 1)
