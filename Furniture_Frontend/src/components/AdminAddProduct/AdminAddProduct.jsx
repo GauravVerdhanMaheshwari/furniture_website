@@ -1,6 +1,9 @@
 import React from "react";
 
 function AdminAddProduct() {
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
   const [showPackageName, setShowPackageName] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
