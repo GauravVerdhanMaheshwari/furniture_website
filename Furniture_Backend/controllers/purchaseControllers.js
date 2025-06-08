@@ -39,20 +39,25 @@ exports.addPurchase = async (req, res, next) => {
 
 exports.deletePurchase = async (req, res, next) => {
   try {
-    const deletedPurchase = await purchase.findByIdAndDelete(req.params.id);
+    const deletedPurchase = await purchase
+      .findByIdAndDelete(req.params.id)
+      .populate("items.productId");
     if (!deletedPurchase) {
       return res.status(404).json({ message: "Purchase not found" });
     }
 
-    const historyEntry = new HistoryBought({
+    const historyEntries = deletedPurchase.items.map((item) => ({
       userID: deletedPurchase.userId,
-      productID: deletedPurchase.productId,
-      quantity: deletedPurchase.quantity,
-      totalPrice: deletedPurchase.totalPrice,
-    });
-    await historyEntry.save();
-    res.json({ message: "Purchase deleted successfully" });
+      productID: item.productId._id,
+      quantity: item.quantity,
+      totalPrice: item.quantity * item.productId.price,
+    }));
+
+    await HistoryBought.insertMany(historyEntries);
+
+    res.json({ message: "Purchase deleted and moved to history successfully" });
   } catch (error) {
-    next(error);
+    console.error("Error in deletePurchase:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
