@@ -2,6 +2,7 @@
 const Purchase = require("../Models/purchase");
 const Product = require("../Models/product");
 const HistoryBought = require("../Models/history");
+const Admin = require("../Models/admin");
 
 exports.getAllPurchases = async (req, res, next) => {
   try {
@@ -29,14 +30,28 @@ exports.acceptPurchase = async (req, res, next) => {
 exports.rejectPurchase = async (req, res, next) => {
   try {
     const purchase = await Purchase.findById(req.params.id);
+
     if (!purchase) {
       return res.status(404).json({ message: "Purchase not found" });
     }
-    purchase.status = "Rejected";
+
+    if (purchase.status !== "Pending") {
+      return res.status(400).json({
+        message: `Cannot reject an order with status: ${purchase.status}`,
+      });
+    }
+
+    purchase.status = "Rejected"; // Update to "Rejected"
     await purchase.save();
-    res.json({ message: "Purchase rejected successfully" });
+
+    res.json({
+      message: "Purchase rejected successfully",
+      purchaseId: purchase._id,
+      status: purchase.status,
+    });
   } catch (error) {
-    next(error);
+    console.error("Error rejecting purchase:", error);
+    res.status(500).json({ message: "Server error while rejecting purchase" });
   }
 };
 
@@ -48,9 +63,8 @@ exports.deliverPurchase = async (req, res, next) => {
       return res.status(404).json({ message: "Purchase not found" });
     }
 
-    // Update product stock and log history
     for (const item of purchase.items) {
-      const product = await Product.findById(item.product);
+      const product = await Product.findById(item.productId); // ✅ correct
 
       if (product) {
         // Update stock
@@ -60,16 +74,18 @@ exports.deliverPurchase = async (req, res, next) => {
         // Add to HistoryBought
         const historyEntry = new HistoryBought({
           userID: purchase.userId,
-          productID: item.product,
+          productID: item.productId, // ✅ corrected here
           quantity: item.quantity,
           totalPrice: item.quantity * product.price,
         });
+
         await historyEntry.save();
         console.log("History Entry:", historyEntry);
+      } else {
+        console.warn("Product not found for productId:", item.productId);
       }
     }
 
-    // Update purchase status
     purchase.status = "Delivered";
     await purchase.save();
 
@@ -77,6 +93,7 @@ exports.deliverPurchase = async (req, res, next) => {
       message: "Purchase delivered, stock updated, and history logged.",
     });
   } catch (error) {
+    console.error("Error in deliverPurchase:", error);
     next(error);
   }
 };
@@ -150,6 +167,53 @@ exports.deleteProduct = async (req, res, next) => {
     }
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
+    next(error);
+  }
+};
+
+exports.getOwnerProfile = async (req, res, next) => {
+  try {
+    const owner = await Admin.find();
+    if (!owner) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+    res.json(owner);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.loginOwner = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const owner = await Admin.findOne({ email, password });
+    if (!owner) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    res.json({ message: "Login successful", owner });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateOwnerProfile = async (req, res, next) => {
+  try {
+    const owner = await Admin.findById(req.body.id);
+    if (!owner) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+    owner.name = req.body.name || owner.name;
+    owner.email = req.body.email || owner.email;
+    owner.phone = req.body.phone || owner.phone;
+    owner.password = req.body.password || owner.password;
+    await owner.save();
+    if (!owner) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+    res.json({ message: "Profile updated successfully", owner });
+  } catch (error) {
+    console.log("Updating owner profile with data:", req.body);
+    console.log("Owner before save:", owner);
     next(error);
   }
 };
