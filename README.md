@@ -145,3 +145,5 @@ The main entry point of the backend. Sets up middleware, routes, port configurat
 Big thanks to the open-source community for your support and contributions!
 =======
 >>>>>>> parent of 24c2c92 (feat: add comprehensive README file with project setup instructions and structure overview)
+=======
+>>>>>>> parent of 24c2c92 (feat: add comprehensive README file with project setup instructions and structure overview)
