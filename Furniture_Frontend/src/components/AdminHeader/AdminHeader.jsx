@@ -96,16 +96,33 @@ export default function Header() {
         <NavLink to="/admin/profile" className="flex items-center gap-2">
           <img
             src="user.webp"
-            alt="User Avatar"
+            alt="Admin Avatar"
             className="w-10 h-10 rounded-full"
           />
         </NavLink>
-        <NavLink
-          to="/admin/login"
-          className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
-        >
-          Logout
-        </NavLink>
+        {localStorage.getItem("admin") ? (
+          <NavLink
+            to="/admin/login"
+            onClick={() => {
+              localStorage.removeItem("admin");
+              window.location.href = "/admin/login";
+            }}
+            className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
+          >
+            Login
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/admin/login"
+            onClick={() => {
+              localStorage.removeItem("admin");
+              window.location.href = "/admin/login";
+            }}
+            className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
+          >
+            Logout
+          </NavLink>
+        )}
       </div>
     </header>
   );
