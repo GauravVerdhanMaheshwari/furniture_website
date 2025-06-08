@@ -36,20 +36,16 @@ function Suggestions({ title, api }) {
       const result = await response.json();
       if (!response.ok) {
         alert("Failed to add item to cart: " + result.message);
-        console.error("Error adding to cart:", result);
         throw new Error(result.message || "Failed to add item to cart");
       }
       alert("Item added to cart successfully!");
     } catch (error) {
       alert("Error sending cart data to server: " + error.message);
-      console.error("Failed to send cart data to server:", error);
     }
   };
 
   const handleIncrement = (id, stock) => {
-    if (stock > 0 && (quantities[id] || 1) >= stock) {
-      return;
-    }
+    if (stock > 0 && (quantities[id] || 1) >= stock) return;
     setQuantities((prev) => ({
       ...prev,
       [id]: (prev[id] || 1) + 1,
@@ -62,6 +58,7 @@ function Suggestions({ title, api }) {
       [id]: Math.max((prev[id] || 1) - 1, 1),
     }));
   };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -69,21 +66,18 @@ function Suggestions({ title, api }) {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const data = await response.json();
-
-        // Handle array or object response
         const normalizedProducts = Array.isArray(data)
           ? data
           : data.products || [];
 
         setProducts(normalizedProducts);
         if (normalizedProducts.length === 0 && data.message) {
-          setError(`No products found in "${title}" category`); // "No products found"
+          setError(`No products found in "${title}" category`);
         }
       } catch (err) {
         setError("Failed to load products.");
-        console.error("Error fetching data:", err);
+        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
@@ -125,7 +119,7 @@ function Suggestions({ title, api }) {
               company,
               price,
               description,
-              imageUrl,
+              images,
               inStock,
               stock,
             }) => (
@@ -139,7 +133,8 @@ function Suggestions({ title, api }) {
                 description={description}
                 inStock={inStock}
                 stock={stock}
-                imageUrl={imageUrl}
+                imageURL={images?.[0]} // for fallback
+                images={images || []} // ✅ pass full image array here
                 quantities={quantities}
                 handleAddToCart={handleAddToCart}
                 handleIncrement={handleIncrement}
