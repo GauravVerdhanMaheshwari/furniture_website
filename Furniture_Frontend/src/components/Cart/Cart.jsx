@@ -20,9 +20,7 @@ function Cart() {
 
   const fetchCart = async () => {
     try {
-      const res = await fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/cart/${userId}`
-      );
+      const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
       if (!res.ok) throw new Error("Failed to fetch cart");
       const data = await res.json();
 

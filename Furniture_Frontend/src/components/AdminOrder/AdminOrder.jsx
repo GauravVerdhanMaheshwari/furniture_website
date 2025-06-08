@@ -11,15 +11,12 @@ function AdminOrder() {
   }
 
   useEffect(() => {
-    fetch(
-      "https://furniture-website-backend-yubt.onrender.com/api/owner/purchases",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch("http://localhost:3000/api/owner/purchases", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
@@ -45,7 +42,7 @@ function AdminOrder() {
           order.items.map(async (item) => {
             try {
               const res = await fetch(
-                `https://furniture-website-backend-yubt.onrender.com/api/products/${item.productId}`
+                `http://localhost:3000/api/products/${item.productId}`
               );
               const productData = await res.json();
               return {
@@ -67,7 +64,7 @@ function AdminOrder() {
   const handleOrderAction = async (orderId, action, update) => {
     try {
       const res = await fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/owner/purchases/${action}/${orderId}`,
+        `http://localhost:3000/api/owner/purchases/${action}/${orderId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

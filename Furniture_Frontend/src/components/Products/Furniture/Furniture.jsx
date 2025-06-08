@@ -8,8 +8,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
   const [error, setError] = useState(null);
-  const api =
-    "https://furniture-website-backend-yubt.onrender.com/api/products";
+  const api = "http://localhost:3000/api/products";
 
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
@@ -21,24 +20,21 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
       return;
     }
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/cart/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-            items: [
-              {
-                productId: productId,
-                quantity: quantity,
-              },
-            ],
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          items: [
+            {
+              productId: productId,
+              quantity: quantity,
+            },
+          ],
+        }),
+      });
 
       const result = await response.json();
       if (!response.ok)

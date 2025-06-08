@@ -48,7 +48,7 @@ function AdminAddProduct() {
       };
 
       const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/owner/product/add",
+        "http://localhost:3000/api/owner/product/add",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

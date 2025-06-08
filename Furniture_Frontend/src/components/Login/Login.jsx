@@ -20,14 +20,11 @@ function Login() {
     const data = { username, email, password };
 
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/users/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       const result = await response.json();
       console.log("Server response:", result);

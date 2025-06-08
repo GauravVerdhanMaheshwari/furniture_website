@@ -40,7 +40,7 @@ function AdminProfile() {
     const fetchAdminProfile = async () => {
       try {
         const response = await fetch(
-          "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
+          "http://localhost:3000/api/owner/profile",
           {
             method: "GET",
             headers: {

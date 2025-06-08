@@ -11,15 +11,12 @@ function AdminProducts() {
 
   const deleteProduct = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      fetch(`http://localhost:3000/api/owner/product/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to delete product");
@@ -41,9 +38,7 @@ function AdminProducts() {
   };
 
   React.useEffect(() => {
-    fetch(
-      "https://furniture-website-backend-yubt.onrender.com/api/owner/product"
-    )
+    fetch("http://localhost:3000/api/owner/product")
       .then((response) => response.json())
       .then((data) => {
         setProducts(data);
