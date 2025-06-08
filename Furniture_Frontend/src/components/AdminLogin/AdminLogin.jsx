@@ -17,11 +17,14 @@ function AdminLogin() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/owner/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const result = await response.json();
       console.log("Admin login result:", result);

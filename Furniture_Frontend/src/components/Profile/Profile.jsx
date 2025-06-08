@@ -22,9 +22,15 @@ function Profile() {
       setLoading(true);
       try {
         const [userRes, historyRes, purchaseRes] = await Promise.all([
-          fetch(`http://localhost:3000/api/users/${userID}`),
-          fetch(`http://localhost:3000/api/history/user/${userID}`),
-          fetch(`http://localhost:3000/api/purchases/${userID}`),
+          fetch(
+            `https://furniture-website-backend-yubt.onrender.com/api/users/${userID}`
+          ),
+          fetch(
+            `https://furniture-website-backend-yubt.onrender.com/api/history/user/${userID}`
+          ),
+          fetch(
+            `https://furniture-website-backend-yubt.onrender.com/api/purchases/${userID}`
+          ),
         ]);
 
         const user = await userRes.json();
@@ -44,7 +50,7 @@ function Profile() {
           for (const item of purchase.items) {
             try {
               const res = await fetch(
-                `http://localhost:3000/api/products/${item.productId}`
+                `https://furniture-website-backend-yubt.onrender.com/api/products/${item.productId}`
               );
               const product = await res.json();
               details.push({
@@ -77,7 +83,7 @@ function Profile() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/users/${userID}`,
+        `https://furniture-website-backend-yubt.onrender.com/api/users/${userID}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -100,9 +106,12 @@ function Profile() {
       return;
 
     try {
-      await fetch(`http://localhost:3000/api/users/${userID}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `https://furniture-website-backend-yubt.onrender.com/api/users/${userID}`,
+        {
+          method: "DELETE",
+        }
+      );
       alert("Account deleted.");
       // Optionally: Redirect or logout
     } catch (err) {

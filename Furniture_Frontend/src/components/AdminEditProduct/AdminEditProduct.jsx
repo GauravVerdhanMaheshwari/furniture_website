@@ -19,13 +19,16 @@ function AdminEditProduct() {
       updatedProduct.image = base64Image;
     }
 
-    fetch(`http://localhost:3000/api/owner/product/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedProduct),
-    })
+    fetch(
+      `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProduct),
+      }
+    )
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
@@ -51,12 +54,15 @@ function AdminEditProduct() {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/owner/product/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();

@@ -4,7 +4,7 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
   const handleCancelPurchase = async (purchaseId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/purchases/${purchaseId}`,
+        `https://furniture-website-backend-yubt.onrender.com/api/purchases/${purchaseId}`,
         {
           method: "DELETE",
         }

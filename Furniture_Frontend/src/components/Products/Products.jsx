@@ -15,7 +15,7 @@ function Products() {
   const maxPrice = 10000;
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/products/")
+    fetch("https://furniture-website-backend-yubt.onrender.com/api/products/")
       .then((res) => res.json())
       .then((data) => {
         const items = data?.items || [];
@@ -31,7 +31,7 @@ function Products() {
   }, [selectedType]);
 
   // useEffect(() => {
-  //   fetch("http://localhost:3000/api/company")
+  //   fetch("https://furniture-website-backend-yubt.onrender.com/api/company")
   //     .then((res) => res.json())
   //     .then((data) => setCompany(data?.items || []))
   //     .catch((err) => console.error("Failed to fetch company:", err));
