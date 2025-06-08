@@ -6,7 +6,10 @@ function AdminOrder() {
   const [searchTerm, setSearchTerm] = useState("");
   const [empty, setEmpty] = useState(false);
 
-  // Fetch orders
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
+
   useEffect(() => {
     fetch("http://localhost:3000/api/owner/purchases", {
       method: "GET",
@@ -32,7 +35,6 @@ function AdminOrder() {
       });
   }, []);
 
-  // Fetch product details for each item in each order
   const fetchProductDetails = async (ordersData) => {
     const updatedOrders = await Promise.all(
       ordersData.map(async (order) => {
@@ -49,7 +51,7 @@ function AdminOrder() {
               };
             } catch (err) {
               console.error("Product fetch failed:", err);
-              return item; // fallback if product fetch fails
+              return item;
             }
           })
         );
@@ -70,6 +72,8 @@ function AdminOrder() {
       );
       if (!res.ok) throw new Error("Network error");
       const data = await res.json();
+      console.log(data);
+      window.location.reload();
       setOrders((prev) =>
         prev.map((order) =>
           order._id === orderId ? { ...order, status: update.status } : order
@@ -112,17 +116,31 @@ function AdminOrder() {
                     order.orderDate || order.createdAt
                   ).toLocaleString()}
                 </p>
-                <ul className="list-disc pl-5">
-                  {order.items?.map((item, idx) => (
-                    <li key={idx}>
-                      {item._id}
-                      {" - "}
-                      {item.productDetails?.name || "Loading product..."} (x
-                      {item.quantity})
-                    </li>
-                  ))}
-                </ul>
-                <p className="font-bold">Total: ₹{order.totalPrice}</p>
+
+                {/* Product Image Slider */}
+                <div className="mt-2">
+                  <h3 className="font-semibold">Products:</h3>
+                  <div className="overflow-x-auto flex space-x-4 py-2">
+                    {order.items?.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="min-w-[200px] bg-gray-100 p-2 rounded-lg shadow"
+                      >
+                        <img
+                          src={item.productDetails?.image || ""}
+                          alt={item.productDetails?.name || "Product"}
+                          className="w-full h-32 object-contain rounded mb-2"
+                        />
+                        <p className="font-medium">
+                          {item.productDetails?.name || "Loading..."}
+                        </p>
+                        <p>Qty: {item.quantity}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="font-bold mt-2">Total: ₹{order.totalPrice}</p>
                 <p className="font-bold">
                   Contact Number: {order.userId.phone || "N/A"}
                 </p>
@@ -133,7 +151,6 @@ function AdminOrder() {
                   </span>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="mt-3 space-y-2">
                   {order.status === "Pending" && (
                     <div className="flex justify-between">
