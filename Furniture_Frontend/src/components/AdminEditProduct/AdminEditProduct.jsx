@@ -2,6 +2,10 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router";
 
 function AdminEditProduct() {
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
+
   const id = useParams().id;
   const [product, setProduct] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
