@@ -14,4 +14,8 @@ router.post("/product/add", ownerController.addProduct);
 router.put("/product/:id", ownerController.updateProduct);
 router.delete("/product/:id", ownerController.deleteProduct);
 
+router.get("/profile", ownerController.getOwnerProfile);
+router.post("/profile", ownerController.loginOwner);
+router.put("/profile", ownerController.updateOwnerProfile);
+
 module.exports = router;
