@@ -1,6 +1,9 @@
 import React from "react";
 
 function Home() {
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="flex flex-col items-center justify-center mt-4 text-center">
@@ -22,10 +25,10 @@ function Home() {
             Manage Orders
           </a>
           <a
-            href="/admin/users"
+            href="/admin/profile"
             className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
           >
-            Manage Users
+            Manage ME
           </a>
         </div>
       </div>
