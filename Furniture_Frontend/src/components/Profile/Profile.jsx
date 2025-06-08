@@ -14,13 +14,12 @@ function Profile() {
   const [detailedPurchaseProducts, setDetailedPurchaseProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
-  const [historyEmpty, setHistoryEmpty] = useState(false);
-  const [purchaseEmpty, setPurchaseEmpty] = useState(false);
 
   useEffect(() => {
     if (!userID) return;
 
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [userRes, historyRes, purchaseRes] = await Promise.all([
           fetch(`http://localhost:3000/api/users/${userID}`),
@@ -28,52 +27,39 @@ function Profile() {
           fetch(`http://localhost:3000/api/purchases/${userID}`),
         ]);
 
-        if (!userRes.ok) throw new Error("User fetch failed");
-
         const user = await userRes.json();
-        setUserData(user);
-
         const history = await historyRes.json();
-        if (Array.isArray(history) && history.length > 0) {
-          setUserHistory(history);
-        } else {
-          setHistoryEmpty(true);
-        }
-
         const purchases = await purchaseRes.json();
-        const purchasesArray = Array.isArray(purchases)
+        const purchaseArray = Array.isArray(purchases)
           ? purchases
           : [purchases];
 
-        if (purchasesArray.length > 0) {
-          setPurchaseData(purchasesArray);
+        setUserData(user);
+        setUserHistory(Array.isArray(history) ? history : []);
+        setPurchaseData(purchaseArray);
 
-          const productDetails = [];
-          for (const purchase of purchasesArray) {
-            for (const item of purchase.items) {
-              try {
-                const productRes = await fetch(
-                  `http://localhost:3000/api/products/${item.productId}`
-                );
-                if (!productRes.ok) continue;
+        const details = [];
 
-                const product = await productRes.json();
-                productDetails.push({
-                  ...product,
-                  quantity: item.quantity,
-                  purchaseDate: item.purchaseDate,
-                });
-              } catch (err) {
-                console.error("Product fetch error", err);
-              }
+        for (const purchase of purchaseArray) {
+          for (const item of purchase.items) {
+            try {
+              const res = await fetch(
+                `http://localhost:3000/api/products/${item.productId}`
+              );
+              const product = await res.json();
+              details.push({
+                ...product,
+                quantity: item.quantity,
+                purchaseDate: item.purchaseDate,
+              });
+            } catch (err) {
+              console.error("Error fetching product detail:", err);
             }
           }
-          setDetailedPurchaseProducts(productDetails);
-        } else {
-          setPurchaseEmpty(true);
         }
+        setDetailedPurchaseProducts(details);
       } catch (err) {
-        console.error("Fetch error:", err);
+        console.error("Error fetching profile data:", err);
       } finally {
         setLoading(false);
       }
@@ -83,66 +69,44 @@ function Profile() {
   }, [userID]);
 
   const handleSaveChanges = async () => {
-    if (!userData) return;
-
-    for (const key in userData) {
-      if (userData[key] === "") {
-        alert(`Please fill in the ${key} field.`);
-        return;
-      }
+    if (!userData || Object.values(userData).includes("")) {
+      return alert("All fields must be filled out.");
     }
 
-    if (!confirm("Are you sure you want to save changes?")) return;
+    if (!window.confirm("Are you sure you want to save changes?")) return;
 
     try {
       const response = await fetch(
         `http://localhost:3000/api/users/${userID}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
         }
       );
 
-      if (!response.ok) throw new Error("Update failed");
-
       const updatedUser = await response.json();
       setUserData(updatedUser);
-      alert("Profile updated successfully.");
       setChanged(false);
+      alert("Profile updated successfully.");
     } catch (err) {
-      console.error("Save error:", err);
+      console.error("Update failed:", err);
       alert("Failed to update profile.");
     }
   };
 
   const handleDeleteUser = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to delete your account? This action is irreversible."
-      )
-    )
+    if (!window.confirm("Are you sure you want to delete your account?"))
       return;
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/users/${userID}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Delete failed");
-
-      alert("Account deleted successfully.");
-      // Optional: redirect or reset redux state here
+      await fetch(`http://localhost:3000/api/users/${userID}`, {
+        method: "DELETE",
+      });
+      alert("Account deleted.");
+      // Optionally: Redirect or logout
     } catch (err) {
-      console.error("Delete error:", err);
+      console.error("Delete failed:", err);
       alert("Failed to delete account.");
     }
   };
@@ -152,8 +116,9 @@ function Profile() {
   }
 
   return (
-    <div className="mt-25 min-h-screen p-4 bg-white justify-center items-center text-center">
+    <div className="mt-25 min-h-screen p-4 bg-white text-center">
       <h1 className="text-2xl font-bold mb-4">Profile</h1>
+
       {loading ? (
         <p className="text-black text-xl">Loading...</p>
       ) : userData && userData._id ? (
@@ -166,29 +131,11 @@ function Profile() {
             changed={changed}
             setChanged={setChanged}
           />
-
-          {purchaseEmpty ? (
-            <div className="my-5 p-4 border rounded-md">
-              <h1 className="text-black text-2xl font-bold">Purchase</h1>
-              <p className="text-gray-500 text-xl my-4">No purchases found</p>
-            </div>
-          ) : (
-            <Purchase
-              userPurchases={purchaseData}
-              PurchaseProductDetail={detailedPurchaseProducts}
-            />
-          )}
-
-          {historyEmpty ? (
-            <div className="my-5 p-4 border rounded-md">
-              <h1 className="text-black text-2xl font-bold">History</h1>
-              <p className="text-gray-500 text-xl my-4">
-                No previous bought products found
-              </p>
-            </div>
-          ) : (
-            <HistoryBuys userID={userID} userHistory={userHistory} />
-          )}
+          <Purchase
+            userPurchases={purchaseData}
+            PurchaseProductDetail={detailedPurchaseProducts}
+          />
+          <HistoryBuys userID={userID} userHistory={userHistory} />
         </>
       ) : (
         <p className="text-red-500">User not found.</p>
