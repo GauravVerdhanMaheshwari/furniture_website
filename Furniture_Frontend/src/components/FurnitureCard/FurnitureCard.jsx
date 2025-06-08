@@ -13,6 +13,7 @@ function FurnitureCard({
   handleAddToCart,
   handleIncrement,
   handleDecrement,
+  images = [], // Accept multiple images
 }) {
   const stockCSS = inStock
     ? "bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 transition-transform hover:scale-105"
@@ -24,15 +25,20 @@ function FurnitureCard({
 
   return (
     <div className={stockCSS}>
-      <img
-        src={
-          imageURL
-            ? `data:image/jpeg;base64,${imageURL}`
-            : "/fallback-image.jpg"
-        }
-        alt={name}
-        className="w-full h-36 md:h-48 object-cover rounded-t-lg"
-      />
+      {/* Slider Section */}
+      <div className="overflow-x-auto whitespace-nowrap flex space-x-2 mb-2">
+        {(images.length > 0 ? images : [imageURL || "/fallback-image.jpg"]).map(
+          (img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`${name} ${idx + 1}`}
+              className="inline-block h-36 md:h-48 w-auto object-cover rounded"
+            />
+          )
+        )}
+      </div>
+
       <hr />
       <h2 className="text-lg md:text-xl font-bold mt-2 mx-2">{name}</h2>
       <p className="text-gray-700 text-sm md:text-base line-clamp-2 md:line-clamp-3 mx-2">
