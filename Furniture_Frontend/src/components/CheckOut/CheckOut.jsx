@@ -57,8 +57,8 @@ const CheckoutPage = () => {
   useEffect(() => {
     if (thankYou) {
       const timer = setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
+        window.location.href = "/profile";
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [thankYou]);
