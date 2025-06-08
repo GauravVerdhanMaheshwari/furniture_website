@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function AdminProducts() {
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
