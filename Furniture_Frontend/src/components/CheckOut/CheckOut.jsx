@@ -13,11 +13,14 @@ const CheckoutPage = () => {
   // Clear user's cart
   const clearCartForUser = async (userId) => {
     try {
-      const res = await fetch("http://localhost:3000/api/cart/clear", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
+      const res = await fetch(
+        "https://furniture-website-backend-yubt.onrender.com/api/cart/clear",
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to clear cart");
       console.log("Cart cleared successfully");
@@ -30,7 +33,9 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
+        const res = await fetch(
+          `https://furniture-website-backend-yubt.onrender.com/api/cart/${userId}`
+        );
         if (!res.ok) throw new Error("Failed to fetch cart");
         const data = await res.json();
         setCart(data);
@@ -81,11 +86,14 @@ const CheckoutPage = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/purchases", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(purchaseData),
-      });
+      const res = await fetch(
+        "https://furniture-website-backend-yubt.onrender.com/api/purchases",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(purchaseData),
+        }
+      );
 
       if (res.ok) {
         setThankYou(true);
