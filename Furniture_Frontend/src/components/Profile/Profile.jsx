@@ -114,6 +114,8 @@ function Profile() {
       );
       alert("Account deleted.");
       // Optionally: Redirect or logout
+      localStorage.removeItem("user");
+      window.location.href = "/";
     } catch (err) {
       console.error("Delete failed:", err);
       alert("Failed to delete account.");
