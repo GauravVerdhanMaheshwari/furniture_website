@@ -193,18 +193,18 @@ exports.loginOwner = async (req, res, next) => {
     console.log("All Admins:", admins);
 
     // Step 2: Validate owner and password
-    if (!owner) {
+    if (!admin) {
       return res
         .status(401)
         .json({ message: "No admin found with this email." });
     }
 
-    if (owner.password !== password) {
+    if (admin.password !== password) {
       return res.status(401).json({ message: "Incorrect password." });
     }
 
     // Step 3: Return successful response
-    res.json({ message: "Login successful", owner });
+    res.json({ message: "Login successful", admin });
   } catch (error) {
     console.error("Login error:", error.message || error);
     next(error);
