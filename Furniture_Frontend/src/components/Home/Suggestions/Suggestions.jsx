@@ -17,21 +17,24 @@ function Suggestions({ title, api }) {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/api/cart/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userId,
-          items: [
-            {
-              productId: id,
-              quantity: quantities[id] || 1,
-            },
-          ],
-        }),
-      });
+      const response = await fetch(
+        "https://furniture-website-backend-yubt.onrender.com/api/cart/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            items: [
+              {
+                productId: id,
+                quantity: quantities[id] || 1,
+              },
+            ],
+          }),
+        }
+      );
 
       const result = await response.json();
       if (!response.ok) {

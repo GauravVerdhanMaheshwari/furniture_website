@@ -5,9 +5,18 @@ function Home() {
   return (
     <>
       <Hero />
-      <Suggestions title="✨ New" api="/api/products/new" />
-      <Suggestions title="🔥 Hot" api="/api/products/hot" />
-      <Suggestions title="📦 Packages" api="/api/products/package" />
+      <Suggestions
+        title="✨ New"
+        api="https://furniture-website-backend-yubt.onrender.com/api/products/new"
+      />
+      <Suggestions
+        title="🔥 Hot"
+        api="https://furniture-website-backend-yubt.onrender.com/api/products/hot"
+      />
+      <Suggestions
+        title="📦 Packages"
+        api="https://furniture-website-backend-yubt.onrender.com/api/products/package"
+      />
     </>
   );
 }
