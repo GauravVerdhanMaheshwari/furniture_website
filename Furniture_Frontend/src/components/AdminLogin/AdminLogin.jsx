@@ -30,7 +30,8 @@ function AdminLogin() {
       console.log("Admin login result:", result);
 
       if (response.ok) {
-        const adminID = result.owner._id;
+        const adminID = result._id;
+        console.log(adminID);
 
         localStorage.setItem(
           "admin",
