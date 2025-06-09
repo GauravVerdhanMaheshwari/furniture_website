@@ -185,19 +185,28 @@ exports.getOwnerProfile = async (req, res, next) => {
 
 exports.loginOwner = async (req, res, next) => {
   try {
-    console.log("Login body:", req.body);
-
     const { email, password } = req.body;
-    const owner = await Admin.findOne({ email, password });
-    console.log("Owner found:", owner);
+    console.log("Login attempt:", { email, password });
 
+    // Step 1: Find by email only
+    const owner = await Admin.findOne({ email });
+    console.log("Owner from DB:", owner);
+
+    // Step 2: Validate owner and password
     if (!owner) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ message: "No admin found with this email." });
     }
 
+    if (owner.password !== password) {
+      return res.status(401).json({ message: "Incorrect password." });
+    }
+
+    // Step 3: Return successful response
     res.json({ message: "Login successful", owner });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login error:", error.message || error);
     next(error);
   }
 };
