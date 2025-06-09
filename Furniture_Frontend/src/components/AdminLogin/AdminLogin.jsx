@@ -30,8 +30,10 @@ function AdminLogin() {
       console.log("Admin login result:", result);
 
       if (response.ok) {
+        console.log("Admin login successful:", result);
+        console.log("Admin login successful:", result._id);
+        console.log("Admin login successful:", result.admin._id);
         const adminID = result._id;
-        console.log(adminID);
 
         localStorage.setItem(
           "admin",
