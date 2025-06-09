@@ -189,8 +189,8 @@ exports.loginOwner = async (req, res, next) => {
     console.log("Login attempt:", { email, password });
 
     // Step 1: Find by email only
-    const admins = await Admin.find();
-    console.log("All Admins:", admins);
+    const admin = await Admin.findOne({ email });
+    console.log("Admin found:", admin);
 
     // Step 2: Validate owner and password
     if (!admin) {
