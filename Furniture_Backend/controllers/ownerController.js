@@ -189,11 +189,10 @@ exports.loginOwner = async (req, res, next) => {
     console.log("Login attempt:", { email, password });
 
     // Step 1: Find by email only
-    const admin = await Admin.findOne({ email });
-    // const admin = await Admin.findById();
+    const admin = await Admin.findOne({ email }); // ✅ This is correct
     console.log("Admin found:", admin);
 
-    // Step 2: Validate owner and password
+    // Step 2: Validate admin and password
     if (!admin) {
       return res
         .status(401)
@@ -208,7 +207,6 @@ exports.loginOwner = async (req, res, next) => {
     res.json({ message: "Login successful", admin });
   } catch (error) {
     console.error("Login error:", error.message || error);
-    console.log("Login attempt with data:", req.body);
     next(error);
   }
 };
