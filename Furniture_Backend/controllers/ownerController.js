@@ -208,6 +208,7 @@ exports.loginOwner = async (req, res, next) => {
     res.json({ message: "Login successful", admin });
   } catch (error) {
     console.error("Login error:", error.message || error);
+    console.log("Login attempt with data:", req.body);
     next(error);
   }
 };
