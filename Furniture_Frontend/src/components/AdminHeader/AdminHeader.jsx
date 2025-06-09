@@ -109,7 +109,7 @@ export default function Header() {
             }}
             className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
           >
-            Login
+            Logout
           </NavLink>
         ) : (
           <NavLink
@@ -120,7 +120,7 @@ export default function Header() {
             }}
             className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out active:bg-red-700"
           >
-            Logout
+            Login
           </NavLink>
         )}
       </div>
