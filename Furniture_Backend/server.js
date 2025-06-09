@@ -13,6 +13,7 @@ const ownerRoutes = require("./Routes/ownerRoutes");
 
 const errorHandler = require("./middleware/errorHandler");
 
+// Load environment variables
 dotenv.config();
 
 // Connect to MongoDB
@@ -20,15 +21,15 @@ connectDB();
 
 const app = express();
 
-// CORS setup for deployed frontend
+// CORS setup (update with your frontend URL)
 app.use(
   cors({
-    origin: "https://furniture-website-frontend-z6ro.onrender.com", // your frontend Render URL
+    origin: "https://furniture-website-frontend-z6ro.onrender.com",
     credentials: true,
   })
 );
 
-// Body parsing
+// Body parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -40,10 +41,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/owner", ownerRoutes);
 
-// Global error handling
+// Global error handler
 app.use(errorHandler);
 
-// Port setup
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
