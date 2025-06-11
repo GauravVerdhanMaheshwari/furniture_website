@@ -4,33 +4,37 @@ import { NavLink } from "react-router-dom";
 function AdminFooter() {
   const linkCss = ({ isActive }) =>
     isActive
-      ? "text-pink-600 mx-6 sm:mx-3"
-      : "text-white mx-6 transition-all duration-300 ease-in-out hover:text-shadow-[0px_1px_40px] hover:text-pink-600 hover:text-shadow-pink-600/50";
+      ? "text-[#CB997E] font-semibold mx-4 md:mx-3 transition-colors"
+      : "text-[#FFE8D6] mx-4 md:mx-3 hover:text-[#CB997E] transition-colors duration-300";
+
   return (
-    <div className="bg-gray-800 text-white p-4">
-      <div className="container mx-auto text-center">
-        <div className="flex md:flex-row justify-between items-center">
-          <div className=" flex-1 md:flex-none text-pretty">
-            <h1 className="text-2xl font-bold mb-2">Geetanjali Furniture</h1>
-            <p>© 2025 Geetanjali Furniture. All rights reserved.</p>
-          </div>
-          <div className="flex flex-col flex-1 md:flex-none md:flex-row">
-            <NavLink to="/admin/home" className={linkCss}>
-              <h1>Home</h1>
-            </NavLink>
-            <NavLink to="/admin/products" className={linkCss}>
-              <h1>Products</h1>
-            </NavLink>
-            <NavLink to="/admin/orders" className={linkCss}>
-              <h1>Orders</h1>
-            </NavLink>
-            <NavLink to="/admin/users" className={linkCss}>
-              User
-            </NavLink>
-          </div>
+    <footer className="bg-[#3F4238] text-[#FFE8D6] py-6 px-4">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
+        {/* Brand Info */}
+        <div className="text-center md:text-left mb-4 md:mb-0">
+          <h1 className="text-2xl font-bold">Geetanjali Furniture</h1>
+          <p className="text-sm text-[#D4C7B0]">
+            © 2025 Geetanjali Furniture. All rights reserved.
+          </p>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="flex flex-col md:flex-row items-center">
+          <NavLink to="/admin/home" className={linkCss}>
+            Home
+          </NavLink>
+          <NavLink to="/admin/products" className={linkCss}>
+            Products
+          </NavLink>
+          <NavLink to="/admin/orders" className={linkCss}>
+            Orders
+          </NavLink>
+          <NavLink to="/admin/users" className={linkCss}>
+            Users
+          </NavLink>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }
 
