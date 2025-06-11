@@ -1,148 +1,138 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
-function AdminProfile() {
-  const handleUpdateProfile = async (data) => {
-    try {
-      const response = await fetch("http://localhost:3000/api/owner/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) throw new Error("Failed to update profile");
-      const result = await response.json();
-      console.log("Profile updated successfully:", result);
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+function AdminProducts() {
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
+
+  const [products, setProducts] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  const deleteProduct = (id) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      fetch(
+        `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to delete product");
+          return res.json();
+        })
+        .then(() => {
+          alert("Product deleted successfully");
+          setProducts((prev) => prev.filter((p) => p._id !== id));
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+          alert("Failed to delete product.");
+        });
     }
   };
 
-  const [adminData, setAdminData] = useState({
-    id: "",
-    name: "",
-    email: "",
-    phone: "",
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    // Redirect if admin is not logged in
-    if (!localStorage.getItem("admin")) {
-      window.location.href = "/admin/login";
-      return;
-    }
-
-    const fetchAdminProfile = async () => {
-      try {
-        const response = await fetch(
-          "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to fetch admin profile");
-
-        const result = await response.json();
-        const admin = Array.isArray(result) ? result[0] : result;
-
-        setAdminData({
-          id: admin._id,
-          name: admin.name,
-          email: admin.email,
-          phone: admin.phone,
-        });
-      } catch (err) {
-        console.error("Error fetching admin profile:", err);
-        setError("Failed to load admin profile");
-      } finally {
+  React.useEffect(() => {
+    fetch(
+      "https://furniture-website-backend-yubt.onrender.com/api/owner/product"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
         setLoading(false);
-      }
-    };
-
-    fetchAdminProfile();
+      })
+      .catch((err) => console.error("Fetch error:", err));
   }, []);
 
-  if (loading)
-    return <p className="text-center mt-20 text-xl font-medium">Loading...</p>;
-
-  if (error)
-    return (
-      <p className="text-center mt-20 text-xl text-red-600 font-semibold">
-        {error}
-      </p>
-    );
-
   return (
-    <div className="mt-25 min-h-screen pt-20 bg-gradient-to-br from-gray-100 to-gray-200 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="p-6">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            Admin Profile
-          </h1>
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-gray-600 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                value={adminData.name}
-                onChange={(e) =>
-                  setAdminData({ ...adminData, name: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-600 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                value={adminData.email}
-                onChange={(e) =>
-                  setAdminData({ ...adminData, email: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-600 mb-1">
-                Phone
-              </label>
-              <input
-                type="tel"
-                value={adminData.phone}
-                onChange={(e) =>
-                  setAdminData({ ...adminData, phone: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <button
-              onClick={() => {
-                handleUpdateProfile(adminData);
-                console.log("Profile updated:", adminData);
-              }}
-              className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition cursor-pointer"
-            >
-              Update Profile
-            </button>
+    <div className="min-h-screen bg-[#FFE8D6] py-12">
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 bg-white shadow-md rounded-xl p-4">
+          <div className="flex items-center w-full sm:w-auto">
+            <img
+              src="/search.webp"
+              alt="search"
+              className="w-5 h-5 sm:w-6 sm:h-6 ml-2 cursor-pointer"
+              onClick={() => document.getElementById("search").focus()}
+            />
+            <input
+              type="text"
+              id="search"
+              value={searchTerm}
+              placeholder="Search for product"
+              className="ml-3 py-1 px-3 border border-[#DDBEA9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#CB997E] text-sm sm:text-base"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
+          <Link
+            to="/admin/add-product"
+            className="mt-4 sm:mt-0 bg-[#CB997E] hover:bg-[#B98B73] text-white px-4 py-2 rounded transition duration-200"
+          >
+            Add Product
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-6">
+          {loading ? (
+            <p className="text-[#6B705C] text-2xl">Loading...</p>
+          ) : (
+            products
+              .filter((product) =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((product) => (
+                <div
+                  key={product._id}
+                  className="bg-[#DDBEA9] rounded-lg shadow-lg w-64 p-4 hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="flex gap-2 overflow-x-auto rounded-md">
+                    {product.images?.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img}
+                        alt={`product-${idx}`}
+                        className="w-40 h-32 object-cover rounded border"
+                      />
+                    ))}
+                  </div>
+
+                  <hr className="my-2 border-[#B7B7A4]" />
+                  <h2 className="text-lg font-semibold text-[#3F4238]">
+                    {product.name}
+                  </h2>
+                  <p className="text-[#6B705C] font-medium">₹{product.price}</p>
+                  <p
+                    className={
+                      product.inStock ? "text-green-600" : "text-red-600"
+                    }
+                  >
+                    {product.inStock ? "In Stock" : "Out of Stock"}
+                  </p>
+                  <p className="text-[#A5A58D]">Stock: {product.stock}</p>
+
+                  <div className="mt-4 space-y-2">
+                    <Link
+                      to={`/admin/edit-product/${product._id}`}
+                      className="block bg-[#6B705C] text-white text-center py-2 rounded hover:bg-[#3F4238] transition"
+                    >
+                      Edit Product
+                    </Link>
+                    <button
+                      onClick={() => deleteProduct(product._id)}
+                      className="block bg-red-500 text-white text-center py-2 rounded hover:bg-red-600 transition w-full"
+                    >
+                      Delete Product
+                    </button>
+                  </div>
+                </div>
+              ))
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default AdminProfile;
+export default AdminProducts;
