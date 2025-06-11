@@ -78,7 +78,7 @@ export default function Header() {
 
         {/* Profile & Auth */}
         <div className="flex items-center gap-4">
-          <NavLink to="/admin/profile">
+          <NavLink to="/admin/products">
             <img
               src="/user.webp"
               alt="Admin Avatar"
