@@ -8,9 +8,12 @@ function UserForm({
   handleDeleteUser,
   changed = false,
 }) {
+  const inputBaseClasses =
+    "mb-4 p-2 rounded bg-[#DDBEA9] border border-[#D4C7B0] text-[#3F4238] placeholder-[#A5A58D]";
+
   return userData ? (
-    <div className="flex flex-col border p-6 text-xl font-semibold py-6">
-      <label htmlFor="name" className="mb-2 font-semibold">
+    <div className="flex flex-col bg-[#FFE8D6] border border-[#D4C7B0] p-6 rounded-md shadow-md text-xl font-semibold text-[#6B705C]">
+      <label htmlFor="name" className="mb-1">
         Name:
       </label>
       <input
@@ -24,7 +27,7 @@ function UserForm({
             name: e.target.value,
           }));
         }}
-        className="mb-4 p-2 border border-gray-300 rounded"
+        className={inputBaseClasses}
         placeholder="Enter your name"
         max={50}
         min={8}
@@ -40,7 +43,7 @@ function UserForm({
         required
       />
 
-      <label htmlFor="email" className="mb-2 font-semibold">
+      <label htmlFor="email" className="mb-1">
         Email:
       </label>
       <input
@@ -64,12 +67,12 @@ function UserForm({
             }));
           }
         }}
-        className="mb-4 p-2 border border-gray-300 rounded"
+        className={inputBaseClasses}
         placeholder="Enter your email"
         required
       />
 
-      <label htmlFor="address" className="mb-2 font-semibold">
+      <label htmlFor="address" className="mb-1">
         Address:
       </label>
       <input
@@ -83,12 +86,12 @@ function UserForm({
             address: e.target.value,
           }));
         }}
-        className="mb-4 p-2 border border-gray-300 rounded"
+        className={inputBaseClasses}
         placeholder="Enter your address"
         required
       />
 
-      <label htmlFor="phone" className="mb-2 font-semibold">
+      <label htmlFor="phone" className="mb-1">
         Phone:
       </label>
       <input
@@ -102,7 +105,7 @@ function UserForm({
             phone: e.target.value,
           }));
         }}
-        className="mb-4 p-2 border border-gray-300 rounded"
+        className={inputBaseClasses}
         placeholder="Enter your phone number"
         minLength="10"
         maxLength="10"
@@ -118,23 +121,23 @@ function UserForm({
         required
       />
 
-      <div className="flex flex-col justify-center">
+      <div className="flex flex-col mt-4">
         {changed && (
-          <p className="text-green-500 mb-4">
-            Changes have been made. Please save.
+          <p className="text-[#6B705C] mb-3">
+            ✅ Changes have been made. Please save.
           </p>
         )}
-        <div>
+        <div className="flex flex-wrap gap-3">
           {changed && (
             <button
-              className="bg-blue-500 text-white px-4 py-2 mx-2 rounded hover:bg-blue-600 cursor-pointer"
+              className="bg-[#CB997E] hover:bg-[#B98B73] text-white px-4 py-2 rounded transition"
               onClick={handleSaveChanges}
             >
               Save Changes
             </button>
           )}
           <button
-            className="bg-red-500 text-white px-4 py-2 mx-2 rounded hover:bg-red-600 cursor-pointer"
+            className="bg-[#3F4238] hover:bg-[#6B705C] text-white px-4 py-2 rounded transition"
             onClick={handleDeleteUser}
           >
             Delete Account
@@ -143,8 +146,8 @@ function UserForm({
       </div>
     </div>
   ) : (
-    <div className="flex flex-col border p-6 text-xl font-semibold py-6">
-      <p className="text-red-500">User data not available.</p>
+    <div className="flex flex-col bg-[#FFE8D6] border border-[#D4C7B0] p-6 rounded-md text-xl font-semibold text-[#6B705C]">
+      <p className="text-[#B98B73]">⚠️ User data not available.</p>
     </div>
   );
 }
