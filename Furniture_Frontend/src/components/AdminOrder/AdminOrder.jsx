@@ -12,13 +12,7 @@ function AdminOrder() {
 
   useEffect(() => {
     fetch(
-      "https://furniture-website-backend-yubt.onrender.com/api/owner/purchases",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      "https://furniture-website-backend-yubt.onrender.com/api/owner/purchases"
     )
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
@@ -33,9 +27,7 @@ function AdminOrder() {
         }
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
+      .catch((error) => console.error("Fetch error:", error));
   }, []);
 
   const fetchProductDetails = async (ordersData) => {
@@ -48,10 +40,7 @@ function AdminOrder() {
                 `https://furniture-website-backend-yubt.onrender.com/api/products/${item.productId}`
               );
               const productData = await res.json();
-              return {
-                ...item,
-                productDetails: productData,
-              };
+              return { ...item, productDetails: productData };
             } catch (err) {
               console.error("Product fetch failed:", err);
               return item;
@@ -71,37 +60,34 @@ function AdminOrder() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(update),
         }
       );
       if (!res.ok) throw new Error("Network error");
-      const data = await res.json();
-      console.log(data);
+      await res.json();
       window.location.reload();
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: update.status } : order
-        )
-      );
     } catch (err) {
       console.error(`${action} failed:`, err);
     }
   };
 
   return !empty ? (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-25 shadow-lg">
-      <h1 className="text-3xl font-bold">Admin Orders</h1>
-      <div className="mt-4 w-full justify-center flex p-4 rounded-lg">
+    <div className="min-h-screen bg-[#FFE8D6] flex flex-col items-center justify-start px-4 py-10">
+      <h1 className="text-4xl font-bold text-[#3F4238] mb-6">Admin Orders</h1>
+
+      <div className="w-full max-w-4xl mb-6">
         <input
           type="search"
-          placeholder="Search orders by name"
-          className="border p-2 rounded-lg"
+          placeholder="Search orders by customer name"
+          className="w-full border border-[#A5A58D] bg-[#DDBEA9] text-[#3F4238] px-4 py-2 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-[#CB997E]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="mt-4 flex flex-col w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
+
+      <div className="w-full max-w-4xl space-y-6">
         {loading ? (
-          <p className="text-gray-500 text-3xl">Loading...</p>
+          <p className="text-2xl text-[#6B705C] text-center">Loading...</p>
         ) : (
           orders
             .filter((order) =>
@@ -110,112 +96,119 @@ function AdminOrder() {
                 .includes(searchTerm.toLowerCase())
             )
             .map((order) => (
-              <div key={order._id} className="border p-4 mb-4 rounded-xl">
-                <h2 className="text-xl font-semibold">
-                  {order.userId?.name || "Unknown Customer"}
-                </h2>
-                <p className="text-gray-600">
-                  {new Date(
-                    order.orderDate || order.createdAt
-                  ).toLocaleString()}
-                </p>
+              <div
+                key={order._id}
+                className="bg-[#DDBEA9] p-6 rounded-lg shadow-md"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h2 className="text-xl font-semibold text-[#3F4238]">
+                    {order.userId?.name || "Unknown Customer"}
+                  </h2>
+                  <span className="text-sm text-[#6B705C]">
+                    {new Date(
+                      order.orderDate || order.createdAt
+                    ).toLocaleString()}
+                  </span>
+                </div>
 
-                {/* Product Image Slider */}
-                <div className="mt-2">
-                  <h3 className="font-semibold">Products:</h3>
-                  <div className="overflow-x-auto flex space-x-4 py-2">
+                <div className="mt-3">
+                  <h3 className="font-semibold text-[#3F4238]">Products:</h3>
+                  <div className="flex overflow-x-auto gap-4 py-2">
                     {order.items?.map((item, idx) => (
                       <div
                         key={idx}
-                        className="min-w-[200px] bg-gray-100 p-2 rounded-lg shadow"
+                        className="bg-[#FFE8D6] p-3 rounded-lg min-w-[200px] shadow-sm"
                       >
                         <img
-                          src={item.productDetails?.image || ""}
-                          alt={item.productDetails?.name || "Product"}
-                          className="w-full h-32 object-contain rounded mb-2"
+                          src={item.productDetails?.image}
+                          alt={item.productDetails?.name}
+                          className="w-full h-32 object-contain mb-2 rounded"
                         />
-                        <p className="font-medium">
+                        <p className="text-sm font-medium text-[#3F4238]">
                           {item.productDetails?.name || "Loading..."}
                         </p>
-                        <p>Qty: {item.quantity}</p>
+                        <p className="text-sm text-[#6B705C]">
+                          Qty: {item.quantity}
+                        </p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <p className="font-bold mt-2">Total: ₹{order.totalPrice}</p>
-                <p className="font-bold">
-                  Contact Number: {order.userId.phone || "N/A"}
-                </p>
-
-                <div className="mt-2">
-                  <span className="font-semibold text-blue-500">
-                    Status: {order.status || "Pending"}
-                  </span>
+                <div className="mt-3 text-[#3F4238]">
+                  <p className="font-bold">Total: ₹{order.totalPrice}</p>
+                  <p className="font-bold">
+                    Contact: {order.userId?.phone || "N/A"}
+                  </p>
+                  <p className="mt-1 font-medium">
+                    Status:{" "}
+                    <span className="text-[#6B705C]">
+                      {order.status || "Pending"}
+                    </span>
+                  </p>
                 </div>
 
-                <div className="mt-3 space-y-2">
-                  {order.status === "Pending" && (
-                    <div className="flex justify-between">
-                      <button
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer"
-                        onClick={() =>
-                          confirm(`Accept order ${order._id}?`) &&
-                          handleOrderAction(order._id, "accept", {
-                            status: "Accepted",
-                          })
-                        }
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
-                        onClick={() =>
-                          confirm(`Reject order ${order._id}?`) &&
-                          handleOrderAction(order._id, "reject", {
-                            status: "Rejected",
-                          })
-                        }
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-                  {order.status === "Accepted" && (
-                    <div className="flex justify-between">
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
-                        onClick={() =>
-                          confirm(`Deliver order ${order._id}?`) &&
-                          handleOrderAction(order._id, "deliver", {
-                            status: "Delivered",
-                          })
-                        }
-                      >
-                        Deliver
-                      </button>
-                      <button
-                        className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 cursor-pointer"
-                        onClick={() =>
-                          confirm(`Cancel order ${order._id}?`) &&
-                          handleOrderAction(order._id, "cancel", {
-                            status: "Cancelled",
-                          })
-                        }
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  )}
-                </div>
+                {order.status === "Pending" && (
+                  <div className="mt-4 flex gap-4">
+                    <button
+                      onClick={() =>
+                        confirm(`Accept order ${order._id}?`) &&
+                        handleOrderAction(order._id, "accept", {
+                          status: "Accepted",
+                        })
+                      }
+                      className="bg-[#6B705C] text-white px-4 py-2 rounded hover:bg-[#3F4238] transition"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() =>
+                        confirm(`Reject order ${order._id}?`) &&
+                        handleOrderAction(order._id, "reject", {
+                          status: "Rejected",
+                        })
+                      }
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                )}
+
+                {order.status === "Accepted" && (
+                  <div className="mt-4 flex gap-4">
+                    <button
+                      onClick={() =>
+                        confirm(`Deliver order ${order._id}?`) &&
+                        handleOrderAction(order._id, "deliver", {
+                          status: "Delivered",
+                        })
+                      }
+                      className="bg-[#CB997E] text-white px-4 py-2 rounded hover:bg-[#B98B73] transition"
+                    >
+                      Deliver
+                    </button>
+                    <button
+                      onClick={() =>
+                        confirm(`Cancel order ${order._id}?`) &&
+                        handleOrderAction(order._id, "cancel", {
+                          status: "Cancelled",
+                        })
+                      }
+                      className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
             ))
         )}
       </div>
     </div>
   ) : (
-    <div className="flex items-center justify-center min-h-screen">
-      <p className="text-gray-500 text-3xl">No orders found</p>
+    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center">
+      <p className="text-2xl text-[#6B705C]">No orders found</p>
     </div>
   );
 }
