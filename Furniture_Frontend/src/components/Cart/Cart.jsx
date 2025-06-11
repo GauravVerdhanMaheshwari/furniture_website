@@ -26,7 +26,6 @@ function Cart() {
       if (!res.ok) throw new Error("Failed to fetch cart");
       const data = await res.json();
 
-      // Adjust quantity if more than stock
       let adjusted = false;
       const updatedItems = data.items.map((item) => {
         if (item.quantity > item.productId.stock) {
@@ -89,9 +88,7 @@ function Cart() {
       if (!res.ok) throw new Error("Failed to update cart");
 
       alert("Cart updated successfully");
-
       fetchCart();
-
       setChange(false);
     } catch (err) {
       console.error("Failed to save changes:", err);
@@ -140,8 +137,8 @@ function Cart() {
 
   if (!isLoggedIn) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-red-500 text-xl">
+      <div className="flex justify-center items-center min-h-screen bg-[#FFE8D6]">
+        <p className="text-[#B98B73] text-xl font-semibold">
           You must be logged in to view your Cart
         </p>
       </div>
@@ -150,30 +147,32 @@ function Cart() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-3xl font-bold">Loading cart...</p>
+      <div className="flex justify-center items-center min-h-screen bg-[#FFE8D6]">
+        <p className="text-3xl font-bold text-[#6B705C]">Loading cart...</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-20 flex flex-col items-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-4xl font-bold py-5">🛒 Cart</h1>
+    <div className="mt-20 flex flex-col items-center min-h-screen bg-[#FFE8D6] p-4 text-[#3F4238]">
+      <h1 className="text-4xl font-bold py-5 text-[#6B705C]">🛒 Your Cart</h1>
 
-      <div className="bg-white shadow-md rounded-lg p-6 mt-6 w-full max-w-2xl">
-        {error && <p className="text-red-500">{error}</p>}
+      <div className="bg-[#DDBEA9] shadow-lg rounded-2xl p-6 mt-6 w-full max-w-3xl">
+        {error && <p className="text-red-600">{error}</p>}
 
         {!cart || !Array.isArray(cart.items) ? (
           <p className="text-xl font-semibold">Loading cart...</p>
         ) : cart.items.length === 0 ? (
-          <p className="text-lg text-center">Your cart is empty.</p>
+          <p className="text-lg text-center text-[#6B705C]">
+            Your cart is empty.
+          </p>
         ) : (
           <>
             <ul>
               {cart.items.map((item) => (
                 <li
                   key={item.productId._id}
-                  className="flex flex-col items-center mb-4 w-full border-b border-gray-300 pb-4"
+                  className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 border-b pb-4 border-[#B7B7A4]"
                 >
                   <img
                     src={
@@ -183,41 +182,47 @@ function Cart() {
                     onError={(e) => {
                       e.target.src = "https://picsum.photos/200/300";
                     }}
-                    className="w-40 h-40 object-cover rounded-lg mb-2"
+                    className="w-32 h-32 object-cover rounded-lg"
                   />
-                  <p className="text-xl font-semibold">{item.productId.name}</p>
-                  <div className="flex items-center space-x-4 mt-2">
-                    <button
-                      className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      onClick={() => updateItemQuantity(item.productId._id, -1)}
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-semibold">
-                      {item.quantity}
-                    </span>
-                    <button
-                      className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      onClick={() => updateItemQuantity(item.productId._id, 1)}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 ml-4"
-                      onClick={() => handleRemoveItem(item.productId._id)}
-                    >
-                      Remove
-                    </button>
+                  <div className="flex-1">
+                    <p className="text-xl font-semibold">
+                      {item.productId.name}
+                    </p>
+                    <div className="flex items-center space-x-3 mt-2">
+                      <button
+                        className="px-2 py-1 bg-[#A5A58D] text-white rounded hover:bg-[#6B705C]"
+                        onClick={() =>
+                          updateItemQuantity(item.productId._id, -1)
+                        }
+                      >
+                        −
+                      </button>
+                      <span className="text-lg">{item.quantity}</span>
+                      <button
+                        className="px-2 py-1 bg-[#A5A58D] text-white rounded hover:bg-[#6B705C]"
+                        onClick={() =>
+                          updateItemQuantity(item.productId._id, 1)
+                        }
+                      >
+                        +
+                      </button>
+                      <button
+                        className="ml-4 px-3 py-1 bg-[#B98B73] text-white rounded hover:bg-[#CB997E]"
+                        onClick={() => handleRemoveItem(item.productId._id)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <p className="mt-2">
+                      Price: ₹{item.productId.price * item.quantity}
+                    </p>
                   </div>
-                  <p className="text-lg mt-2">
-                    Price: ₹{item.productId.price * item.quantity}
-                  </p>
                 </li>
               ))}
             </ul>
 
-            <div className="flex flex-col items-center my-4 space-y-4">
-              <p className="text-2xl font-bold">
+            <div className="flex flex-col items-center mt-6 space-y-4">
+              <p className="text-2xl font-bold text-[#3F4238]">
                 Total: ₹
                 {cart.items.reduce(
                   (acc, item) => acc + item.productId.price * item.quantity,
@@ -227,7 +232,7 @@ function Cart() {
 
               {change && (
                 <button
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  className="px-4 py-2 bg-[#6B705C] text-white rounded hover:bg-[#3F4238]"
                   onClick={handleSaveChanges}
                 >
                   Save Changes
@@ -236,10 +241,10 @@ function Cart() {
 
               <button
                 disabled={change}
-                className={`px-4 py-2 rounded ${
+                className={`px-4 py-2 rounded font-medium transition ${
                   change
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
+                    ? "bg-[#B7B7A4] text-white cursor-not-allowed"
+                    : "bg-[#CB997E] text-white hover:bg-[#B98B73]"
                 }`}
                 onClick={() => {
                   if (change) {
@@ -253,7 +258,7 @@ function Cart() {
               </button>
 
               <button
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                className="px-4 py-2 bg-[#B98B73] text-white rounded hover:bg-[#3F4238]"
                 onClick={handleClearCart}
               >
                 Clear Cart
