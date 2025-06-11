@@ -2,65 +2,69 @@ import React from "react";
 
 function Contacts() {
   return (
-    <div className="flex flex-col md:flex-row gap-4 justify-center items-center min-h-[85vh] mt-3 px-4">
-      {/* <div className="flex flex-col gap-4 md:mr-5 border-b-2 md:border-b-0 md:border-r-2 border-gray-300 p-4 md:p-10 w-full md:flex-1 mt-20">
-        <h1 className="text-xl md:text-2xl font-bold text-center mb-1">
-          Contact Us
+    <div className="flex flex-col md:flex-row justify-center items-start min-h-[85vh] bg-[#FFE8D6] px-6 md:px-16 py-10 mt-20">
+      {/* Contact Info Section */}
+      <div className="w-full md:flex-1 bg-white rounded-xl shadow-md p-6 md:p-10 border border-[#B7B7A4]">
+        <h1 className="text-2xl md:text-3xl font-bold text-[#3F4238] mb-6 text-center md:text-left">
+          Contact Details
         </h1>
-        <form action="" className="flex flex-col gap-4 w-full max-w-md mx-auto">
-          <label htmlFor="name" className="text-lg md:text-xl font-bold">
-            Name 📝
-          </label>
+
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-xl font-semibold text-[#3F4238]">
+              🏬 Address:
+            </h2>
+            <p className="text-[#6B705C] text-base mt-1">
+              209/1, Bajarngnagar, Thakorvas, Mahadevnagar Tekro, Vastral Road,
+              Vastral, Tal. Dashkoi.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-[#3F4238]">
+              📞 Contact:
+            </h2>
+            <p className="text-[#6B705C] text-base mt-1">+91 9662199988</p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-[#3F4238]">📧 Email:</h2>
+            <p className="text-[#6B705C] text-base mt-1">
+              jaidev_prashad@yahoo.com
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Optional: Uncomment this to restore form */}
+      {/* <div className="w-full md:flex-1 mt-10 md:mt-0 md:ml-10">
+        <form className="bg-white border border-[#B7B7A4] shadow-md rounded-xl p-6 md:p-10 space-y-5">
+          <h2 className="text-2xl font-bold text-[#3F4238] text-center md:text-left mb-4">
+            Get in Touch
+          </h2>
           <input
             type="text"
             placeholder="Name"
-            className="border-2 border-gray-300 rounded-md p-2 w-full focus:outline-none"
+            className="w-full p-3 rounded-md border border-[#B7B7A4] focus:outline-none"
           />
-          <label htmlFor="email" className="text-lg md:text-xl font-bold">
-            Email 📧
-          </label>
           <input
             type="email"
             placeholder="Email"
-            className="border-2 border-gray-300 rounded-md p-2 w-full focus:outline-none"
+            className="w-full p-3 rounded-md border border-[#B7B7A4] focus:outline-none"
           />
-          <label htmlFor="phone" className="text-lg md:text-xl font-bold">
-            Phone Number 📞
-          </label>
           <input
             type="number"
             placeholder="Phone Number"
-            className="border-2 border-gray-300 rounded-md p-2 w-full focus:outline-none"
+            className="w-full p-3 rounded-md border border-[#B7B7A4] focus:outline-none"
           />
           <button
             type="submit"
-            className="bg-red-500 text-white p-2 rounded-md w-full hover:bg-red-600 transition-all duration-300"
+            className="bg-[#B98B73] text-white px-4 py-2 rounded-md hover:bg-[#DDBEA9] transition duration-300"
           >
             Send
           </button>
         </form>
       </div> */}
-      <div className="flex flex-col w-full md:flex-1 p-4 md:p-10">
-        <div className="p-2 md:p-4">
-          <h1 className="text-xl md:text-2xl font-bold">Address 🏬 : </h1>
-          <p className="text-sm md:text-base text-wrap">
-            209/1, Bajarngnagar, Thakorvas, mahadevnagar Tekro, Vastral Road,
-            Vastral, Tal. Dashkoi.
-          </p>
-        </div>
-        <div className="p-2 md:p-4">
-          <h1 className="text-xl md:text-2xl font-bold">
-            Contact Number 📞 :{" "}
-          </h1>
-          <p className="text-sm md:text-base text-wrap">+91 9662199988</p>
-        </div>
-        <div className="p-2 md:p-4">
-          <h1 className="text-xl md:text-2xl font-bold">Email 📧 : </h1>
-          <p className="text-sm md:text-base text-wrap">
-            jaidev_prashad@yahoo.com
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
