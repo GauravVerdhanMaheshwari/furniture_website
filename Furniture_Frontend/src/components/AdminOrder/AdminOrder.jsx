@@ -72,7 +72,7 @@ function AdminOrder() {
   };
 
   return !empty ? (
-    <div className="min-h-screen bg-[#FFE8D6] flex flex-col items-center justify-start px-4 py-10">
+    <div className="min-h-screen bg-[#FFE8D6] flex flex-col items-center justify-start px-4 py-10 mt-25">
       <h1 className="text-4xl font-bold text-[#3F4238] mb-6">Admin Orders</h1>
 
       <div className="w-full max-w-4xl mb-6">
