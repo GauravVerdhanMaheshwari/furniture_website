@@ -95,13 +95,15 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
 
   return (
-    <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4">
+    <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4 bg-[#FFE8D6] text-[#3F4238]">
       {loading ? (
-        <p className="my-2 text-3xl font-bold">Loading...</p>
+        <p className="my-2 text-3xl font-bold text-[#6B705C]">Loading...</p>
       ) : error ? (
         <p className="my-2 text-3xl font-bold text-red-500">{error}</p>
       ) : filteredProducts.length === 0 ? (
-        <p className="my-2 text-3xl font-bold">No Products Found</p>
+        <p className="my-2 text-3xl font-bold text-[#6B705C]">
+          No Products Found
+        </p>
       ) : (
         filteredProducts.map(
           ({
@@ -123,8 +125,8 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
               description={description}
               inStock={inStock}
               stock={stock}
-              images={images} // ✅ pass all images
-              imageURL={images?.[0]} // optional fallback
+              images={images}
+              imageURL={images?.[0]}
               quantities={quantities}
               handleAddToCart={() =>
                 handleAddToCart(userId, _id, quantities[_id] || 1)
