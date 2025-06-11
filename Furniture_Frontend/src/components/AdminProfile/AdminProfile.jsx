@@ -3,14 +3,19 @@ import React, { useEffect, useState } from "react";
 function AdminProfile() {
   const handleUpdateProfile = async (data) => {
     try {
-      const response = await fetch("http://localhost:3000/api/owner/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
       if (!response.ok) throw new Error("Failed to update profile");
+
       const result = await response.json();
       console.log("Profile updated successfully:", result);
       alert("Profile updated successfully!");
@@ -31,7 +36,6 @@ function AdminProfile() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Redirect if admin is not logged in
     if (!localStorage.getItem("admin")) {
       window.location.href = "/admin/login";
       return;
@@ -73,7 +77,11 @@ function AdminProfile() {
   }, []);
 
   if (loading)
-    return <p className="text-center mt-20 text-xl font-medium">Loading...</p>;
+    return (
+      <p className="text-center mt-20 text-xl font-medium text-[#6B705C]">
+        Loading...
+      </p>
+    );
 
   if (error)
     return (
@@ -83,15 +91,17 @@ function AdminProfile() {
     );
 
   return (
-    <div className="mt-25 min-h-screen pt-20 bg-gradient-to-br from-gray-100 to-gray-200 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="min-h-screen pt-20 bg-[#FFE8D6] px-4">
+      <div className="max-w-2xl mx-auto bg-[#DDBEA9] rounded-xl shadow-lg">
         <div className="p-6">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          <h1 className="text-3xl font-bold text-center text-[#3F4238] mb-6">
             Admin Profile
           </h1>
+
           <div className="space-y-5">
+            {/* Name Field */}
             <div>
-              <label className="block text-sm font-semibold text-gray-600 mb-1">
+              <label className="block text-sm font-semibold text-[#6B705C] mb-1">
                 Name
               </label>
               <input
@@ -100,11 +110,13 @@ function AdminProfile() {
                 onChange={(e) =>
                   setAdminData({ ...adminData, name: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-[#B7B7A4] rounded-md bg-[#FDF6EF] focus:outline-none focus:ring-2 focus:ring-[#CB997E]"
               />
             </div>
+
+            {/* Email Field */}
             <div>
-              <label className="block text-sm font-semibold text-gray-600 mb-1">
+              <label className="block text-sm font-semibold text-[#6B705C] mb-1">
                 Email
               </label>
               <input
@@ -113,11 +125,13 @@ function AdminProfile() {
                 onChange={(e) =>
                   setAdminData({ ...adminData, email: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-[#B7B7A4] rounded-md bg-[#FDF6EF] focus:outline-none focus:ring-2 focus:ring-[#CB997E]"
               />
             </div>
+
+            {/* Phone Field */}
             <div>
-              <label className="block text-sm font-semibold text-gray-600 mb-1">
+              <label className="block text-sm font-semibold text-[#6B705C] mb-1">
                 Phone
               </label>
               <input
@@ -126,15 +140,14 @@ function AdminProfile() {
                 onChange={(e) =>
                   setAdminData({ ...adminData, phone: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-[#B7B7A4] rounded-md bg-[#FDF6EF] focus:outline-none focus:ring-2 focus:ring-[#CB997E]"
               />
             </div>
+
+            {/* Update Button */}
             <button
-              onClick={() => {
-                handleUpdateProfile(adminData);
-                console.log("Profile updated:", adminData);
-              }}
-              className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition cursor-pointer"
+              onClick={() => handleUpdateProfile(adminData)}
+              className="w-full bg-[#CB997E] text-white py-2 rounded-md mt-4 hover:bg-[#B98B73] transition-colors duration-200 cursor-pointer"
             >
               Update Profile
             </button>
