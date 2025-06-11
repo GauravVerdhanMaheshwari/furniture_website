@@ -3,23 +3,29 @@ import { NavLink } from "react-router-dom";
 
 function Page404() {
   return (
-    <div className="mt-30 h-[70vh] flex flex-col items-center justify-center">
-      <h1 className="text-4xl text-red-500 my-3 ">404 - Page Not Found</h1>
-      <p className="text-gray-500 my-5 text-xl">
-        Oops! The page you are looking for does not exist.
-      </p>
-      <p className="text-gray-500 my-5 text-xl">
-        It might have been removed, or the URL might be incorrect.
-      </p>
-      <p className="text-gray-500 my-5 text-xl">
-        Please check the URL or go back to the home page.
-      </p>
-      <NavLink
-        to="/"
-        className="text-blue-500 my-3 text-2xl hover:underline duration-200 ease-in-out"
-      >
-        Go to Home
-      </NavLink>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFE8D6] text-[#3F4238] px-4">
+      <h1 className="text-5xl font-bold text-[#B98B73] mb-4">
+        404 - Page Not Found
+      </h1>
+
+      <div className="text-center max-w-xl">
+        <p className="text-xl text-[#6B705C] mb-4">
+          Oops! The page you're looking for doesn't exist.
+        </p>
+        <p className="text-xl text-[#6B705C] mb-4">
+          It may have been moved or deleted, or the URL might be incorrect.
+        </p>
+        <p className="text-xl text-[#6B705C] mb-6">
+          Please double-check the URL or head back to the home page.
+        </p>
+
+        <NavLink
+          to="/"
+          className="inline-block px-6 py-2 bg-[#CB997E] text-white rounded-lg shadow hover:bg-[#3F4238] transition duration-200 text-lg"
+        >
+          Go to Home
+        </NavLink>
+      </div>
     </div>
   );
 }
