@@ -18,34 +18,30 @@ function Register() {
     } else if (password && (password.length < 8 || password.length > 20)) {
       alert("Password must be between 8 and 20 characters long");
       return;
-    } else if (!password && !confirmPassword && !username && !email) {
+    } else if (!password || !confirmPassword || !username || !email) {
       alert("Please fill in all fields");
       return;
     }
+
     const data = {
       name: username,
-      email: email,
-      password: password,
-      address: address,
-      phone: phone,
+      email,
+      password,
+      address,
+      phone,
     };
-
-    console.log("Register data:", data);
 
     try {
       const response = await fetch(
         "https://furniture-website-backend-yubt.onrender.com/api/users",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }
       );
 
       const result = await response.json();
-      console.log("Server response:", result);
       if (response.ok) {
         setUsername("");
         setEmail("");
@@ -57,158 +53,169 @@ function Register() {
         location.href = "/login";
       }
     } catch (error) {
-      alert("Registration failed. Please try again. May be use another email");
-      console.error("Failed to send register data to server:", error);
+      alert("Registration failed. Please try again. Maybe use another email.");
+      console.error("Error:", error);
     }
   };
 
   return (
-    <div className="mt-20 py-7 bg-gray-100 min-h-[70vh] flex items-center justify-center">
-      <form className="flex flex-col items-center justify-center w-full max-w-sm mx-auto bg-white shadow-md rounded px-15 py-10 mb-4">
-        <h2 className="text-2xl font-bold mb-6">Register</h2>
-        <div className="mb-4">
+    <div className="mt-20 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleRegister();
+        }}
+        className="flex flex-col items-center w-full max-w-md bg-[#DDBEA9] shadow-xl rounded-xl px-10 py-10"
+      >
+        <h2 className="text-3xl font-bold mb-6 text-[#3F4238]">Register</h2>
+
+        {/* Username */}
+        <div className="mb-4 w-full">
           <label
             htmlFor="username"
-            className="block text-m font-medium text-gray-700 "
+            className="block text-base font-medium text-[#3F4238] mb-1"
           >
             Username:
           </label>
           <input
-            type="text"
             id="username"
-            name="username"
-            required
-            className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
-            placeholder="Enter your username"
+            type="text"
             value={username}
+            required
+            placeholder="Enter your username"
             onChange={(e) => setUsername(e.target.value)}
+            className="w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
           />
         </div>
-        <div className="mb-4">
+
+        {/* Email */}
+        <div className="mb-4 w-full">
           <label
             htmlFor="email"
-            className="block text-m font-medium text-gray-700"
+            className="block text-base font-medium text-[#3F4238] mb-1"
           >
             Email:
           </label>
           <input
-            type="email"
             id="email"
-            name="email"
-            required
-            className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
-            placeholder="Enter your email"
+            type="email"
             value={email}
+            required
+            placeholder="Enter your email"
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
           />
         </div>
-        <div className="mb-4">
+
+        {/* Password */}
+        <div className="mb-4 w-full">
           <label
             htmlFor="password"
-            className="block text-m font-medium text-gray-700"
+            className="block text-base font-medium text-[#3F4238] mb-1"
           >
             Password:
           </label>
-          <div className="flex flex-row items-center">
+          <div className="flex items-center">
             <input
-              type={showPassword ? "text" : "password"}
               id="password"
-              name="password"
-              min={8}
-              max={20}
-              required
-              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
-              placeholder="Enter your password"
+              type={showPassword ? "text" : "password"}
               value={password}
+              minLength={8}
+              maxLength={20}
+              required
+              placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
               alt={showPassword ? "Hide" : "View"}
-              className=" cursor-pointer inline w-7 h-7 mt-1"
               onClick={() => setShowPassword(!showPassword)}
+              className="ml-2 w-6 h-6 cursor-pointer"
             />
           </div>
         </div>
-        <div className="mb-4">
+
+        {/* Confirm Password */}
+        <div className="mb-4 w-full">
           <label
             htmlFor="confirm-password"
-            className="block text-m font-medium text-gray-700"
+            className="block text-base font-medium text-[#3F4238] mb-1"
           >
             Confirm Password:
           </label>
-          <div className="flex flex-row items-center">
+          <div className="flex items-center">
             <input
-              type={showConfirmPassword ? "text" : "password"}
               id="confirm-password"
-              name="confirm-password"
-              required
-              min={8}
-              max={20}
-              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
-              placeholder="Confirm your password"
+              type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
+              minLength={8}
+              maxLength={20}
+              required
+              placeholder="Confirm your password"
               onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
             />
             <img
               src={showConfirmPassword ? "hide.webp" : "view.webp"}
               alt={showConfirmPassword ? "Hide" : "View"}
-              className=" cursor-pointer inline w-7 h-7 mt-1"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            />
-          </div>
-          <div className="mb-4 mt-4">
-            <label
-              htmlFor="address"
-              className="block text-m font-medium text-gray-700"
-            >
-              Address:
-            </label>
-            <textarea
-              id="address"
-              placeholder="Enter your address"
-              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
-              name="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              rows={3}
-            ></textarea>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="phone"
-              className="block text-m font-medium text-gray-700"
-            >
-              Phone:
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              pattern="[0-9]{10}"
-              maxLength={10}
-              minLength={10}
-              required
-              className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
-              placeholder="Enter your phone number"
-              onChange={(e) => setPhone(e.target.value)}
-              value={phone}
+              className="ml-2 w-6 h-6 cursor-pointer"
             />
           </div>
         </div>
+
+        {/* Address */}
+        <div className="mb-4 w-full">
+          <label
+            htmlFor="address"
+            className="block text-base font-medium text-[#3F4238] mb-1"
+          >
+            Address:
+          </label>
+          <textarea
+            id="address"
+            value={address}
+            placeholder="Enter your address"
+            onChange={(e) => setAddress(e.target.value)}
+            className="w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
+            rows={3}
+          ></textarea>
+        </div>
+
+        {/* Phone */}
+        <div className="mb-4 w-full">
+          <label
+            htmlFor="phone"
+            className="block text-base font-medium text-[#3F4238] mb-1"
+          >
+            Phone:
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            value={phone}
+            pattern="[0-9]{10}"
+            maxLength={10}
+            required
+            placeholder="Enter your phone number"
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
+          />
+        </div>
+
+        {/* Register Button */}
         <button
           type="submit"
-          onClick={(e) => {
-            e.preventDefault();
-            handleRegister();
-          }}
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4 mb-4 cursor-pointer active:bg-blue-800 transition duration-300 ease-in-out"
+          className="w-full bg-[#CB997E] text-white font-semibold py-2 rounded-md hover:bg-[#B98B73] transition duration-300"
         >
           Register
         </button>
+
+        {/* Login Link */}
         <NavLink
           to="/login"
-          className="text-blue-500 hover:underline mt-2 transition duration-300 ease-in-out hover:text-blue-700"
+          className="mt-4 text-sm text-[#6B705C] hover:text-[#3F4238] hover:underline transition duration-200"
         >
           Already have an account? Login
         </NavLink>
