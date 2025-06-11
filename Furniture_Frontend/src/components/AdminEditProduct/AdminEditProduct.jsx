@@ -69,7 +69,7 @@ function AdminEditProduct() {
       })
       .then((data) => {
         data.isNew = data.isNew || data.new || false;
-        delete data.new; // In case old data uses 'new'
+        delete data.new;
         setProduct(data);
         setLoading(false);
       })
@@ -79,26 +79,26 @@ function AdminEditProduct() {
   }, [id]);
 
   return loading ? (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <p className="text-gray-500 text-3xl">Loading...</p>
+    <div className="flex items-center justify-center min-h-screen bg-[#FFE8D6]">
+      <p className="text-[#6B705C] text-3xl">Loading...</p>
     </div>
   ) : product ? (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 mt-25">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFE8D6] mt-25">
       <form onSubmit={handleSaveChanges}>
-        <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-xl p-6 w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
+        <div className="flex flex-col items-center justify-center bg-[#FFF] shadow-md rounded-xl p-6 w-full max-w-md border border-[#D4C7B0]">
+          <h2 className="text-2xl font-bold mb-4 text-[#3F4238]">
+            Edit Product
+          </h2>
 
-          {/* Name */}
           <input
             type="text"
             value={product.name}
             onChange={(e) => setProduct({ ...product, name: e.target.value })}
             placeholder="Product Name"
             required
-            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+            className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
           />
 
-          {/* Description */}
           <textarea
             value={product.description}
             onChange={(e) =>
@@ -106,10 +106,9 @@ function AdminEditProduct() {
             }
             placeholder="Product Description"
             required
-            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+            className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
           />
 
-          {/* Price */}
           <input
             type="number"
             value={product.price}
@@ -118,22 +117,20 @@ function AdminEditProduct() {
             }
             placeholder="Product Price"
             required
-            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+            className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
           />
 
-          {/* In Stock */}
           <select
             value={product.inStock ? "Yes" : "No"}
             onChange={(e) =>
               setProduct({ ...product, inStock: e.target.value === "Yes" })
             }
-            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+            className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
           >
             <option value="Yes">In Stock</option>
             <option value="No">Out of Stock</option>
           </select>
 
-          {/* Stock Quantity */}
           <input
             type="number"
             value={product.stock}
@@ -142,21 +139,19 @@ function AdminEditProduct() {
             }
             placeholder="Stock Quantity"
             required
-            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+            className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
           />
 
-          {/* Image */}
           <input
             type="file"
             onChange={(e) =>
               setProduct({ ...product, image: e.target.files[0] })
             }
-            className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+            className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
           />
 
-          {/* Checkboxes */}
           <div className="flex items-center mb-4 w-full">
-            <label className="mr-2">Hot</label>
+            <label className="mr-2 text-[#3F4238]">Hot</label>
             <input
               type="checkbox"
               checked={product.hot}
@@ -168,7 +163,7 @@ function AdminEditProduct() {
           </div>
 
           <div className="flex items-center mb-4 w-full">
-            <label className="mr-2">New</label>
+            <label className="mr-2 text-[#3F4238]">New</label>
             <input
               type="checkbox"
               checked={product.isNew}
@@ -180,7 +175,7 @@ function AdminEditProduct() {
           </div>
 
           <div className="flex items-center mb-4 w-full">
-            <label className="mr-2">Package</label>
+            <label className="mr-2 text-[#3F4238]">Package</label>
             <input
               type="checkbox"
               checked={product.package}
@@ -191,7 +186,6 @@ function AdminEditProduct() {
             />
           </div>
 
-          {/* Package Name */}
           {product.package && (
             <input
               type="text"
@@ -200,15 +194,14 @@ function AdminEditProduct() {
                 setProduct({ ...product, packageName: e.target.value })
               }
               placeholder="Package Name"
-              className="border border-gray-300 rounded-lg py-2 px-3 w-full mb-4"
+              className="border border-[#B7B7A4] bg-[#FFF] text-[#3F4238] rounded-lg py-2 px-3 w-full mb-4"
               required
             />
           )}
 
-          {/* Submit */}
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+            className="bg-[#6B705C] text-white px-4 py-2 rounded hover:bg-[#3F4238] transition w-full"
           >
             Save Changes
           </button>
@@ -216,8 +209,8 @@ function AdminEditProduct() {
       </form>
     </div>
   ) : (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <p className="text-gray-500 text-3xl">Product not found</p>
+    <div className="flex items-center justify-center min-h-screen bg-[#FFE8D6]">
+      <p className="text-[#6B705C] text-3xl">Product not found</p>
     </div>
   );
 }
