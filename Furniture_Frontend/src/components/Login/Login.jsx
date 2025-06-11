@@ -58,21 +58,18 @@ function Login() {
   };
 
   return (
-    <div className="mt-20 py-7 bg-gray-100 min-h-[70vh] flex items-center justify-center">
+    <div className="mt-20 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center">
       <form
-        className="flex flex-col items-center justify-center w-full max-w-sm mx-auto bg-white shadow-md rounded px-15 py-10 mb-4"
+        className="flex flex-col items-center w-full max-w-sm bg-[#DDBEA9] shadow-xl rounded-lg px-10 py-10"
         onSubmit={(e) => {
           e.preventDefault();
           handleLogin();
         }}
       >
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
+        <h2 className="text-3xl font-bold mb-6 text-[#3F4238]">Login</h2>
 
-        <div className="mb-4">
-          <label
-            htmlFor="username"
-            className="block text-m font-medium text-gray-700"
-          >
+        <div className="mb-4 w-full">
+          <label htmlFor="username" className="block text-base font-medium text-[#3F4238] mb-1">
             Username:
           </label>
           <input
@@ -80,17 +77,14 @@ function Login() {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+            className="block w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
             placeholder="Enter your username"
             required
           />
         </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-m font-medium text-gray-700"
-          >
+        <div className="mb-4 w-full">
+          <label htmlFor="email" className="block text-base font-medium text-[#3F4238] mb-1">
             Email:
           </label>
           <input
@@ -98,26 +92,23 @@ function Login() {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+            className="block w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
             placeholder="Enter your email"
             required
           />
         </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="password"
-            className="block text-m font-medium text-gray-700"
-          >
+        <div className="mb-6 w-full">
+          <label htmlFor="password" className="block text-base font-medium text-[#3F4238] mb-1">
             Password:
           </label>
-          <div className="flex flex-row items-center">
+          <div className="flex items-center">
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 inline w-80 border border-gray-300 rounded-md shadow-sm py-2 px-2 text-start"
+              className="block w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
               placeholder="Enter your password"
               minLength={8}
               maxLength={20}
@@ -126,8 +117,8 @@ function Login() {
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
-              alt=""
-              className="cursor-pointer inline w-7 h-7 mt-1 ml-2"
+              alt="toggle password"
+              className="cursor-pointer w-6 h-6 ml-2"
               onClick={() => setShowPassword(!showPassword)}
             />
           </div>
@@ -135,16 +126,16 @@ function Login() {
 
         <button
           type="submit"
-          className="bg-blue-500 text-white font-bold py-2 my-1 px-8 rounded hover:bg-blue-700 transition duration-300 ease-in-out"
+          className="w-full bg-[#6B705C] text-white font-semibold py-2 rounded-md hover:bg-[#3F4238] transition duration-300"
         >
           Login
         </button>
 
         <NavLink
           to="/register"
-          className="text-blue-500 hover:underline mt-2 transition duration-300 ease-in-out"
+          className="mt-4 text-sm text-[#CB997E] hover:underline transition duration-200"
         >
-          Don't have an account? Register here
+          Don’t have an account? Register here
         </NavLink>
       </form>
     </div>
