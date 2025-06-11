@@ -7,21 +7,21 @@ function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Hero />
 
-        <section className="mt-12">
+        <section className="mt-9">
           <h2 className="text-2xl font-bold text-[#6B705C] mb-4">✨ New</h2>
           <div className="bg-[#DDBEA9] rounded-lg shadow-md p-4">
             <Suggestions api="https://furniture-website-backend-yubt.onrender.com/api/products/new" />
           </div>
         </section>
 
-        <section className="mt-12">
+        <section className="mt-9">
           <h2 className="text-2xl font-bold text-[#6B705C] mb-4">🔥 Hot</h2>
           <div className="bg-[#DDBEA9] rounded-lg shadow-md p-4">
             <Suggestions api="https://furniture-website-backend-yubt.onrender.com/api/products/hot" />
           </div>
         </section>
 
-        <section className="mt-12">
+        <section className="mt-9">
           <h2 className="text-2xl font-bold text-[#6B705C] mb-4">
             📦 Packages
           </h2>

@@ -23,7 +23,7 @@ function Hero() {
 
       <div className="w-full md:w-1/2 flex justify-center items-center min-h-[300px] md:min-h-0">
         <img
-          src="hero_image.jpg"
+          src="hero_img.webp"
           alt="Hero furniture"
           className="h-full w-full object-cover"
         />
