@@ -13,76 +13,74 @@ function FurnitureCard({
   handleAddToCart,
   handleIncrement,
   handleDecrement,
-  images = [], // Accept multiple images
+  images = [],
 }) {
-  const stockCSS = inStock
-    ? "bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 transition-transform hover:scale-105"
-    : "bg-white shadow-md rounded-lg p-3 md:p-4 m-2 md:m-4 w-full sm:w-64 md:w-72 opacity-50 cursor-not-allowed";
+  const baseCardStyle = inStock
+    ? "bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 transform transition-transform hover:scale-105"
+    : "bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 opacity-60 cursor-not-allowed";
 
-  const inStockCSS = inStock
-    ? "text-green-500 mt-2 text-base md:text-lg mx-2"
-    : "text-red-500 mt-2 text-base md:text-lg mx-2";
+  const stockTextColor = inStock ? "text-green-700" : "text-red-600";
 
   return (
-    <div className={stockCSS}>
-      {/* Slider Section */}
-      <div className="overflow-x-auto whitespace-nowrap flex space-x-2 mb-2">
+    <div className={baseCardStyle}>
+      {/* Image Carousel */}
+      <div className="overflow-x-auto flex space-x-3 mb-3">
         {(images.length > 0 ? images : [imageURL || "/fallback-image.jpg"]).map(
-          (img, idx) => (
+          (img, index) => (
             <img
-              key={idx}
+              key={index}
               src={img}
-              alt={`${name} ${idx + 1}`}
-              className="inline-block h-36 md:h-48 w-auto object-cover rounded"
+              alt={`${name}-${index + 1}`}
+              className="h-36 md:h-44 object-cover rounded-lg"
             />
           )
         )}
       </div>
 
-      <hr />
-      <h2 className="text-lg md:text-xl font-bold mt-2 mx-2">{name}</h2>
-      <p className="text-gray-700 text-sm md:text-base line-clamp-2 md:line-clamp-3 mx-2">
-        {description}
+      {/* Info Section */}
+      <h2 className="text-lg md:text-xl font-semibold text-[#3F4238]">
+        {name}
+      </h2>
+      <p className="text-sm text-[#6B705C] line-clamp-2 my-1">{description}</p>
+
+      <p className="text-sm text-[#A5A58D] mt-1">
+        {company ? `Company: ${company}` : "Made in factory"}
       </p>
-      <div>
-        <p className="text-gray-500 text-sm md:text-base mx-2 my-1">
-          {company ? `Company: ${company}` : "Made in factory"}
-        </p>
-        <p className={inStockCSS}>
-          {inStock ? `In Stock: ${stock}` : "Out of Stock"}
-        </p>
-      </div>
-      <p className="text-red-500 font-bold mt-2 text-base md:text-lg mx-2">
-        ₹ {price}
+      <p className={`text-sm font-medium mt-1 ${stockTextColor}`}>
+        {inStock ? `In Stock: ${stock}` : "Out of Stock"}
       </p>
 
-      <div className="flex items-center justify-between space-x-2 mb-2 px-2">
+      <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price}</p>
+
+      {/* Quantity Controls */}
+      <div className="flex items-center justify-between my-3">
         <button
           onClick={() => handleDecrement(id)}
-          className="w-1/5 py-1 border-2 border-gray-300 rounded hover:cursor-pointer"
+          className="w-1/5 py-1 border border-[#A5A58D] rounded hover:bg-[#FFE8D6]"
           disabled={!inStock}
         >
           -
         </button>
-        <p className="w-1/5 text-center py-1 border-2 border-gray-300 rounded">
+        <p className="w-1/5 text-center border border-[#A5A58D] py-1 rounded bg-white">
           {quantities[id] || 1}
         </p>
         <button
           onClick={() => handleIncrement(id, stock)}
-          className="w-1/5 py-1 border-2 border-gray-300 rounded hover:cursor-pointer"
+          className="w-1/5 py-1 border border-[#A5A58D] rounded hover:bg-[#FFE8D6]"
           disabled={!inStock}
         >
           +
         </button>
       </div>
 
+      {/* Add to Cart Button */}
       <button
         onClick={() => handleAddToCart(id, quantities[id] || 1)}
-        className={
+        className={`w-full py-2 rounded font-medium transition-all ${
           inStock
-            ? "w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 active:scale-95 transition-all hover:cursor-pointer"
-            : "w-full bg-gray-500 text-white py-2 rounded transition-all hover:cursor-not-allowed"
-        }
+            ? "bg-[#CB997E] hover:bg-[#B98B73] text-white active:scale-95"
+            : "bg-[#B7B7A4] text-white cursor-not-allowed"
+        }`}
         disabled={!inStock}
       >
         Add to Cart
