@@ -113,7 +113,6 @@ function Profile() {
         }
       );
       alert("Account deleted.");
-      // Optionally: Redirect or logout
       localStorage.removeItem("user");
       window.location.href = "/";
     } catch (err) {
@@ -123,15 +122,19 @@ function Profile() {
   };
 
   if (!isLoggedIn || !userID) {
-    return <p className="text-red-500">Please log in to view your profile.</p>;
+    return (
+      <p className="text-[#B98B73] bg-[#FFE8D6] p-4 rounded-md shadow">
+        Please log in to view your profile.
+      </p>
+    );
   }
 
   return (
-    <div className="mt-25 min-h-screen p-4 bg-white text-center">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div className="min-h-screen px-4 py-8 bg-[#FFE8D6] text-[#3F4238]">
+      <h1 className="text-3xl font-bold mb-6 text-[#6B705C]">Your Profile</h1>
 
       {loading ? (
-        <p className="text-black text-xl">Loading...</p>
+        <p className="text-[#3F4238] text-lg">Loading...</p>
       ) : userData && userData._id ? (
         <>
           <UserForm
@@ -149,7 +152,7 @@ function Profile() {
           <HistoryBuys userID={userID} userHistory={userHistory} />
         </>
       ) : (
-        <p className="text-red-500">User not found.</p>
+        <p className="text-[#B98B73] text-lg">User not found.</p>
       )}
     </div>
   );
