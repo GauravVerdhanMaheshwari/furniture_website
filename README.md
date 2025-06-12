@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 👋 Hello!
 
 ### This repository contains a Furniture Website built using React, Node.js, Express, and MongoDB.
@@ -72,7 +71,13 @@ The main source folder for the frontend.
 
 ##### `components/`
 
-Houses all components such as login, 404 page, place order, logout, etc. It’s essentially the heart of the frontend.
+Houses all components such as Footer, Header, FurnitureCard, etc. It’s essentially the heart of the frontend.
+Also it includes indexComponents.js which includes all the components.
+
+#### `pages/`
+
+Houses all pages such as Login, Profile, Cart, etc. It’s essentially the heart of the frontend.
+Also it includes indexComponents.js which includes all the pages.
 
 ##### `App.jsx`
 
@@ -142,8 +147,6 @@ The main entry point of the backend. Sets up middleware, routes, port configurat
 
 ## 🙏 Special Thanks
 
-Big thanks to the open-source community for your support and contributions!
-=======
->>>>>>> parent of 24c2c92 (feat: add comprehensive README file with project setup instructions and structure overview)
-=======
->>>>>>> parent of 24c2c92 (feat: add comprehensive README file with project setup instructions and structure overview)
+# Big thanks to the open-source community for your support and contributions!
+
+> > > > > > > parent of 24c2c92 (feat: add comprehensive README file with project setup instructions and structure overview)
