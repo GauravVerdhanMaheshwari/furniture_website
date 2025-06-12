@@ -69,7 +69,10 @@ function Login() {
         <h2 className="text-3xl font-bold mb-6 text-[#3F4238]">Login</h2>
 
         <div className="mb-4 w-full">
-          <label htmlFor="username" className="block text-base font-medium text-[#3F4238] mb-1">
+          <label
+            htmlFor="username"
+            className="block text-base font-medium text-[#3F4238] mb-1"
+          >
             Username:
           </label>
           <input
@@ -84,7 +87,10 @@ function Login() {
         </div>
 
         <div className="mb-4 w-full">
-          <label htmlFor="email" className="block text-base font-medium text-[#3F4238] mb-1">
+          <label
+            htmlFor="email"
+            className="block text-base font-medium text-[#3F4238] mb-1"
+          >
             Email:
           </label>
           <input
@@ -99,7 +105,10 @@ function Login() {
         </div>
 
         <div className="mb-6 w-full">
-          <label htmlFor="password" className="block text-base font-medium text-[#3F4238] mb-1">
+          <label
+            htmlFor="password"
+            className="block text-base font-medium text-[#3F4238] mb-1"
+          >
             Password:
           </label>
           <div className="flex items-center">
