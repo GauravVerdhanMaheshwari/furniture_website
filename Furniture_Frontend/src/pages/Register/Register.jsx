@@ -41,7 +41,6 @@ function Register() {
         }
       );
 
-      const result = await response.json();
       if (response.ok) {
         setUsername("");
         setEmail("");
