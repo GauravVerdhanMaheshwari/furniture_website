@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FurnitureCard } from "./../../index.js";
+import { FurnitureCard } from "../indexComponents.js";
 import { useSelector } from "react-redux";
 
 function Suggestions({ title, api }) {
