@@ -1,5 +1,5 @@
 import React from "react";
-import { Hero, Suggestions } from "./index.js";
+import { Hero, Suggestions } from "../../components/indexComponents.js";
 
 function Home() {
   return (
