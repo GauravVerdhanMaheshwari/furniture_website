@@ -8,7 +8,7 @@ import AdminOrder from "./AdminOrder/AdminOrder";
 import AdminProducts from "./AdminProducts/AdminProducts";
 import AdminProfile from "./AdminProfile/AdminProfile";
 import Cart from "./Cart/Cart";
-import CheckOut from "./Checkout/Checkout";
+import CheckOut from "./CheckOut/CheckOut";
 import Contacts from "./Contacts/Contacts";
 import Furniture from "./Furniture/Furniture";
 import Home from "./Home/Home";
