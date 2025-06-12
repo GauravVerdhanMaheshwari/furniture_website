@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FurnitureCard from "../../FurnitureCard/FurnitureCard";
+import { FurnitureCard } from "../../components/indexComponents.js";
 import { useSelector } from "react-redux";
 
 function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
