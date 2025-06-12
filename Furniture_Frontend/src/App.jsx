@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { Footer, Header, AdminFooter, AdminHeader } from "./components";
+import {
+  Footer,
+  Header,
+  AdminFooter,
+  AdminHeader,
+} from "./components/indexComponents";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/userSlice";
