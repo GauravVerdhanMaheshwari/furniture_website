@@ -20,12 +20,12 @@ import {
   AdminLogin,
   AdminHome,
   AdminProducts,
-  AdminOrders,
+  AdminOrder,
   AdminProfile,
   AdminAddProduct,
   AdminEditProduct,
   Page404,
-} from "./components/index.js";
+} from "./pages/indexPage.js";
 import App from "./App.jsx";
 import { Provider } from "react-redux";
 import { store } from "../app/store.js";
@@ -46,7 +46,7 @@ const router = createBrowserRouter(
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/home" element={<AdminHome />} />
       <Route path="/admin/products" element={<AdminProducts />} />
-      <Route path="/admin/orders" element={<AdminOrders />} />
+      <Route path="/admin/orders" element={<AdminOrder />} />
       <Route path="/admin/profile" element={<AdminProfile />} />
       <Route path="/admin/add-product" element={<AdminAddProduct />} />
       <Route path="/admin/edit-product/:id" element={<AdminEditProduct />} />
