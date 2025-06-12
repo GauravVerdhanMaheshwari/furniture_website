@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import UserForm from "./UserForm/UserForm";
-import HistoryBuys from "./UserForm/HistoryBuys";
-import Purchase from "./UserForm/Purchase";
+import {
+  UserForm,
+  HistoryBuys,
+  Purchase,
+} from "../../components/indexComponents.js";
 
 function Profile() {
   const userID = useSelector((state) => state.user.userID);
