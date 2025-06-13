@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const purchase = require("../Models/purchase");
 const HistoryBought = require("../Models/history");
 
@@ -11,15 +12,20 @@ exports.getAllPurchases = async (req, res, next) => {
   }
 };
 
-// Get a purchase by ID
+// Get purchases by user ID
 exports.getPurchaseById = async (req, res, next) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid user ID format" });
+  }
+
   try {
-    const purchaseData = await purchase
-      .find({ userId: req.params.id })
-      .populate("userId");
-    if (!purchaseData) {
+    const purchaseData = await purchase.find({ userId: id }).populate("userId");
+
+    if (!purchaseData || purchaseData.length === 0) {
       return res.status(404).json({ message: "Purchase not found" });
     }
+
     res.json(purchaseData);
   } catch (error) {
     next(error);
@@ -37,11 +43,18 @@ exports.addPurchase = async (req, res, next) => {
   }
 };
 
+// Delete purchase and log to history
 exports.deletePurchase = async (req, res, next) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid purchase ID format" });
+  }
+
   try {
     const deletedPurchase = await purchase
-      .findByIdAndDelete(req.params.id)
+      .findByIdAndDelete(id)
       .populate("items.productId");
+
     if (!deletedPurchase) {
       return res.status(404).json({ message: "Purchase not found" });
     }
@@ -55,7 +68,9 @@ exports.deletePurchase = async (req, res, next) => {
 
     await HistoryBought.insertMany(historyEntries);
 
-    res.json({ message: "Purchase deleted and moved to history successfully" });
+    res.json({
+      message: "Purchase deleted and moved to history successfully",
+    });
   } catch (error) {
     console.error("Error in deletePurchase:", error);
     res.status(500).json({ message: "Internal server error" });
