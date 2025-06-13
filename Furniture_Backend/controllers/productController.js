@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Product = require("../Models/product");
 
 // Fetch all products
@@ -10,6 +11,7 @@ exports.getAllProducts = async (req, res, next) => {
   }
 };
 
+// New products
 exports.getNewProducts = async (req, res, next) => {
   try {
     const newProducts = await Product.find({ New: true })
@@ -28,6 +30,7 @@ exports.getNewProducts = async (req, res, next) => {
   }
 };
 
+// Hot products
 exports.getHotProducts = async (req, res, next) => {
   try {
     const hotProducts = await Product.find({ Hot: true })
@@ -46,6 +49,7 @@ exports.getHotProducts = async (req, res, next) => {
   }
 };
 
+// Package products
 exports.getPackageProducts = async (req, res, next) => {
   try {
     const packageProducts = await Product.find({ Package: true })
@@ -64,8 +68,12 @@ exports.getPackageProducts = async (req, res, next) => {
   }
 };
 
-// products.js
+// Get product by ID with validation
 exports.getProductById = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid product ID format" });
+  }
+
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -77,31 +85,41 @@ exports.getProductById = async (req, res, next) => {
   }
 };
 
-// Add a new product
-// exports.addProduct = async (req, res, next) => {
-//   try {
-//     const newProduct = new Product(req.body);
-//     await newProduct.save();
-//     res.status(201).json({ message: "Product added successfully" });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// Update a product
+// Update a product with ID validation
 exports.updateProduct = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid product ID format" });
+  }
+
   try {
-    await Product.findByIdAndUpdate(req.params.id, req.body);
-    res.json({ message: "Product updated successfully" });
+    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updated) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({ message: "Product updated successfully", data: updated });
   } catch (error) {
     next(error);
   }
 };
 
-// Delete a product
+// Delete a product with ID validation
 exports.deleteProduct = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid product ID format" });
+  }
+
   try {
-    await Product.findByIdAndDelete(req.params.id);
+    const deleted = await Product.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
     next(error);
