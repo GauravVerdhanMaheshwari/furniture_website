@@ -13,12 +13,13 @@ function Products() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const URL = import.meta.env.VITE_BACK_END_API;
 
   const minPrice = 100;
   const maxPrice = 10000;
 
   useEffect(() => {
-    fetch("https://furniture-website-backend-yubt.onrender.com/api/products/")
+    fetch(`${URL}/api/products/`)
       .then((res) => res.json())
       .then((data) => {
         const items = data?.items || [];
