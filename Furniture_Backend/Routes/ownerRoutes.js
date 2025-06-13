@@ -1,21 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const ownerController = require("../controllers/ownerController");
+const ownerController = require("../Controllers/ownerController");
 
-router.get("/purchases", ownerController.getAllPurchases);
-router.put("/purchases/accept/:id", ownerController.acceptPurchase);
-router.put("/purchases/reject/:id", ownerController.rejectPurchase);
-router.put("/purchases/deliver/:id", ownerController.deliverPurchase);
-router.put("/purchases/cancel/:id", ownerController.cancelPurchase);
-
-router.get("/product", ownerController.getAllProducts);
+// Product Management
+router.get("/products", ownerController.getAllProducts);
+router.get("/products/new", ownerController.getNewProducts);
+router.get("/products/hot", ownerController.getHotProducts);
+router.get("/products/package", ownerController.getPackageProducts);
 router.get("/product/:id", ownerController.getProductById);
-router.post("/product/add", ownerController.addProduct);
 router.put("/product/:id", ownerController.updateProduct);
 router.delete("/product/:id", ownerController.deleteProduct);
+router.patch("/product/reject/:id", ownerController.rejectProduct);
 
-router.get("/profile", ownerController.getOwnerProfile);
-router.post("/profile", ownerController.loginOwner);
-router.put("/profile", ownerController.updateOwnerProfile);
+// Purchase Management
+router.patch("/purchase/accept/:id", ownerController.acceptPurchase);
+router.patch("/purchase/reject/:id", ownerController.rejectPurchase);
+router.patch("/purchase/deliver/:id", ownerController.deliverPurchase);
+router.patch("/purchase/cancel/:id", ownerController.cancelPurchase);
 
 module.exports = router;
