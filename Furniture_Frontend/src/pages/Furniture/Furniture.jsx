@@ -8,17 +8,19 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
   const [error, setError] = useState(null);
-  const URL = import.meta.env.VITE_BACK_END_API || "https://localhost:3000";
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
+  // 🛒 Add product to cart handler
   const handleAddToCart = async (userId, productId, quantity) => {
     if (!isLoggedIn || !userId) {
       alert("You must be logged in to add items to the cart.");
       window.location.href = "/login";
       return;
     }
+
     try {
       const response = await fetch(`${URL}/api/cart/add`, {
         method: "POST",
@@ -27,12 +29,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
         },
         body: JSON.stringify({
           userId: userId,
-          items: [
-            {
-              productId: productId,
-              quantity: quantity,
-            },
-          ],
+          items: [{ productId, quantity }],
         }),
       });
 
@@ -43,9 +40,11 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
       alert("Item added to cart successfully!");
     } catch (error) {
       console.error("Failed to send cart data to server:", error);
+      alert("Something went wrong while adding to cart.");
     }
   };
 
+  // ➕ Quantity increment
   const handleIncrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
@@ -53,6 +52,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     }));
   };
 
+  // ➖ Quantity decrement
   const handleDecrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
@@ -60,6 +60,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     }));
   };
 
+  // 🔄 Fetch product data on initial render
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -77,27 +78,36 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     fetchProducts();
   }, []);
 
+  // 🔍 Apply filters whenever products or filter values change
   useEffect(() => {
     const filtered = products.filter((product) => {
+      const matchesCompany = !company || product.company === company;
+      const matchesProduct =
+        !furnitureProduct ||
+        product.name.toLowerCase().includes(furnitureProduct.toLowerCase());
       const matchesPrice = !priceValue || product.price <= priceValue;
       const matchesSearch =
         !searchTerm ||
         product.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesPrice && matchesSearch;
+      return matchesCompany && matchesProduct && matchesPrice && matchesSearch;
     });
 
     setFilteredProducts(filtered);
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
 
   return (
-    <div className="flex flex-wrap justify-center pt-0 px-2 md:px-4 pb-2 md:pb-4 bg-[#FFE8D6] text-[#3F4238]">
+    <div className="flex flex-wrap justify-center pt-4 px-2 md:px-6 pb-10 bg-[#FFE8D6] min-h-[85vh] text-[#3F4238]">
       {loading ? (
-        <p className="my-2 text-3xl font-bold text-[#6B705C]">Loading...</p>
+        <p className="my-10 text-2xl md:text-3xl font-semibold text-[#6B705C] animate-pulse">
+          Loading products...
+        </p>
       ) : error ? (
-        <p className="my-2 text-3xl font-bold text-red-500">{error}</p>
+        <p className="my-10 text-2xl md:text-3xl font-semibold text-red-500">
+          {error}
+        </p>
       ) : filteredProducts.length === 0 ? (
-        <p className="my-2 text-3xl font-bold text-[#6B705C]">
+        <p className="my-10 text-2xl md:text-3xl font-semibold text-[#6B705C]">
           No Products Found
         </p>
       ) : (
