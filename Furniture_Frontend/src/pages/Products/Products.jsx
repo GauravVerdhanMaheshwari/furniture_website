@@ -22,6 +22,7 @@ function Products() {
     fetch(`${URL}/api/products/`)
       .then((res) => res.json())
       .then((data) => {
+        console.log("Fetched products:", data);
         const items = data?.items || [];
         setProducts(items);
 
