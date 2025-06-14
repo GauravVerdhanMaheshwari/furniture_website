@@ -74,6 +74,13 @@ function Products() {
     );
   });
 
+  useEffect(() => {
+    if (filteredProducts.length === 0 && searchTerm) {
+      console.warn("No products found for the current search term.");
+    }
+    console.log("Filtered products:", filteredProducts);
+  }, [filteredProducts, searchTerm]);
+
   return (
     <div className="flex flex-col items-center justify-center mt-10 px-4 bg-[#FFE8D6] min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
