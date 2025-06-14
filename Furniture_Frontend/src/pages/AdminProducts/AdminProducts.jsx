@@ -1,6 +1,6 @@
 // src/pages/admin/AdminProducts.jsx
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // ← Make sure this is here
+import { Link } from "react-router-dom";
 import { Product, Search } from "../../components/indexComponents.js"; // Adjust the import path as needed
 
 function AdminProducts() {
