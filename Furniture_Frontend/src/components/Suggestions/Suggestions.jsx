@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FurnitureCard, Product } from "../indexComponents.js";
+import { FurnitureCard } from "../indexComponents.js";
 import { useSelector } from "react-redux";
 
 function Suggestions({ title, api }) {
@@ -12,6 +12,7 @@ function Suggestions({ title, api }) {
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
+  // Add product to user's cart
   const handleAddToCart = async (id, quantities) => {
     if (!isLoggedIn || !userId) {
       alert("Please log in to add items to the cart.");
@@ -40,6 +41,7 @@ function Suggestions({ title, api }) {
     }
   };
 
+  // Increase quantity handler
   const handleIncrement = (id, stock) => {
     if (stock > 0 && (quantities[id] || 1) >= stock) return;
     setQuantities((prev) => ({
@@ -48,6 +50,7 @@ function Suggestions({ title, api }) {
     }));
   };
 
+  // Decrease quantity handler
   const handleDecrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
@@ -55,25 +58,23 @@ function Suggestions({ title, api }) {
     }));
   };
 
+  // Fetch product suggestions based on `api` prop
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(api);
-        if (response.length === 0) {
-          setError(`No products found in "${title}" category`);
-          setProducts([]);
-          setLoading(false);
-          return;
-        }
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
         const data = await response.json();
         const normalizedProducts = Array.isArray(data)
           ? data
           : data.products || [];
 
         setProducts(normalizedProducts);
+
         if (normalizedProducts.length === 0 && data.message) {
           setError(`No products found in "${title}" category`);
         }
@@ -88,23 +89,16 @@ function Suggestions({ title, api }) {
     fetchProducts();
   }, [title, api]);
 
+  // Show loading message
   if (loading) {
     return (
       <div className="text-center p-6 bg-[#FFE8D6] text-[#3F4238]">
-        <p className="text-lg">Loading products...</p>
+        <p className="text-lg animate-pulse">Loading products...</p>
       </div>
     );
   }
 
-  if (products.length === 0 && !error) {
-    return (
-      <div className="text-center p-6 bg-[#FFE8D6] text-[#6B705C]">
-        <h2 className="text-2xl font-semibold mb-2">{title}</h2>
-        <p className="text-lg italic">No products available at the moment.</p>
-      </div>
-    );
-  }
-
+  // Handle fetch error
   if (error) {
     return (
       <div className="text-center p-6 bg-[#FFE8D6] text-[#6B705C]">
@@ -115,14 +109,16 @@ function Suggestions({ title, api }) {
   }
 
   return (
-    <div className="bg-[#FFE8D6] flex flex-col items-center px-4 py-6">
-      <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#CB997E] text-center">
+    <section className="bg-[#FFE8D6] px-4 py-6 flex flex-col items-center">
+      {/* Section Title */}
+      <h1 className="text-3xl md:text-4xl font-bold mb-6 text-[#CB997E] text-center">
         {title}
       </h1>
 
-      <div className="flex flex-wrap justify-center gap-6">
+      {/* Product Grid */}
+      <div className="flex flex-wrap justify-center gap-6 w-full">
         {products.length === 0 ? (
-          <p className="my-4 text-xl font-semibold text-[#6B705C]">
+          <p className="text-xl font-medium text-[#6B705C]">
             No Products Found
           </p>
         ) : (
@@ -158,7 +154,7 @@ function Suggestions({ title, api }) {
           )
         )}
       </div>
-    </div>
+    </section>
   );
 }
 
