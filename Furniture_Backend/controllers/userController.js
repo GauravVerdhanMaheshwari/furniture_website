@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const user = require("../Models/user");
 
+const URL = process.env.URL || "http://localhost:5000";
+
 // Get all users
 exports.getAllUsers = async (req, res, next) => {
   try {
@@ -125,7 +127,7 @@ exports.deleteUser = async (req, res, next) => {
     }
 
     // Cascade delete cart
-    fetch(`http://localhost:3000/api/cart/delete/${req.params.id}`, {
+    fetch(`${URL}/api/cart/delete/${req.params.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -133,7 +135,7 @@ exports.deleteUser = async (req, res, next) => {
     }).catch((error) => console.error("Error deleting cart:", error));
 
     // Cascade delete orders
-    fetch(`http://localhost:3000/api/orders/delete/${req.params.id}`, {
+    fetch(`${URL}/api/orders/delete/${req.params.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
