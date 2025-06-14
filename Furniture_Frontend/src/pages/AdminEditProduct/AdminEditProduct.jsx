@@ -5,6 +5,7 @@ function AdminEditProduct() {
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
   }
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const id = useParams().id;
   const [product, setProduct] = React.useState(null);
@@ -19,16 +20,13 @@ function AdminEditProduct() {
       updatedProduct.image = base64Image;
     }
 
-    fetch(
-      `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProduct),
-      }
-    )
+    fetch(`${URL}/api/owner/product/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedProduct),
+    })
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
@@ -54,15 +52,12 @@ function AdminEditProduct() {
   }
 
   useEffect(() => {
-    fetch(
-      `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`${URL}/api/owner/product/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
