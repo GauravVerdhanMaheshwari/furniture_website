@@ -1,6 +1,7 @@
 import React from "react";
 
 function AdminAddProduct() {
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
   }
@@ -48,14 +49,11 @@ function AdminAddProduct() {
             : "",
       };
 
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/owner/product/add",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${URL}/api/owner/product/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       const result = await response.json();
       if (!response.ok) {
