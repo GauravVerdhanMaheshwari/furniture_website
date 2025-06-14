@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 function AdminProfile() {
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+  if (!localStorage.getItem("admin")) {
+    window.location.href = "/admin/login";
+  }
+
   const handleUpdateProfile = async (data) => {
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${URL}/api/owner/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) throw new Error("Failed to update profile");
 
@@ -43,16 +45,13 @@ function AdminProfile() {
 
     const fetchAdminProfile = async () => {
       try {
-        const response = await fetch(
-          "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-            },
-          }
-        );
+        const response = await fetch(`${URL}/api/owner/profile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        });
 
         if (!response.ok) throw new Error("Failed to fetch admin profile");
 
