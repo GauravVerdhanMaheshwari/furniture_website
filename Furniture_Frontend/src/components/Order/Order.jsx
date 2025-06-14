@@ -1,14 +1,16 @@
 import React from "react";
-// Optional: Uncomment below if using icons
+// Optional: Uncomment if you want to add icons for better visuals
 // import { FaCheck, FaTimes, FaTruck, FaBan } from "react-icons/fa";
 
 export default function Order({ order, handleOrderAction }) {
+  // Confirm & trigger an order status update
   const handleClick = (action, statusLabel) => {
     if (confirm(`${statusLabel} order ${order._id}?`)) {
       handleOrderAction(order._id, action, { status: statusLabel });
     }
   };
 
+  // Color mapping for different order statuses
   const statusColors = {
     Pending: "text-yellow-600",
     Accepted: "text-blue-600",
@@ -17,20 +19,19 @@ export default function Order({ order, handleOrderAction }) {
     Cancelled: "text-gray-500",
   };
 
-  console.log("Order Component Rendered:", order);
   return (
     <div className="bg-[#FDFCFB] border border-[#E3D5CA] p-6 rounded-xl shadow-lg transition hover:shadow-xl">
-      {/* Header */}
+      {/* Order Header */}
       <div className="flex justify-between items-center border-b pb-2 mb-4">
-        <h2 className="text-2xl font-bold text-[#3F4238]">
+        <h2 className="text-2xl font-bold text-[#3F4238] truncate">
           {order.userId?.name || "Unknown Customer"}
         </h2>
-        <span className="text-sm text-[#6B705C]">
+        <span className="text-sm text-[#6B705C] whitespace-nowrap">
           {new Date(order.orderDate || order.createdAt).toLocaleString()}
         </span>
       </div>
 
-      {/* Product List */}
+      {/* Ordered Items Preview */}
       <div>
         <h3 className="font-semibold text-[#3F4238] mb-2">Ordered Items:</h3>
         <div className="flex overflow-x-auto gap-4 py-2 scrollbar-thin scrollbar-thumb-[#DDBEA9]">
@@ -40,8 +41,11 @@ export default function Order({ order, handleOrderAction }) {
               className="bg-[#FFE8D6] p-4 rounded-lg min-w-[220px] shadow-md"
             >
               <img
-                src={item.productDetails?.image}
-                alt={item.productDetails?.name}
+                src={
+                  item.productDetails?.image ||
+                  "https://via.placeholder.com/100"
+                }
+                alt={item.productDetails?.name || "Product"}
                 className="w-full h-32 object-contain mb-3 rounded"
               />
               <p className="text-base font-medium text-[#3F4238] truncate">
@@ -53,7 +57,7 @@ export default function Order({ order, handleOrderAction }) {
         </div>
       </div>
 
-      {/* Order Details */}
+      {/* Order Info */}
       <div className="mt-4 text-[#3F4238] space-y-1">
         <p>
           <span className="font-semibold">Total:</span> ₹{order.totalPrice}
@@ -70,7 +74,7 @@ export default function Order({ order, handleOrderAction }) {
         </p>
       </div>
 
-      {/* Actions */}
+      {/* Admin Action Buttons */}
       <div className="mt-5 flex flex-wrap gap-3">
         {order.status === "Pending" && (
           <>
