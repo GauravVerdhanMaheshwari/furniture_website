@@ -12,138 +12,141 @@ function Login() {
   const navigate = useNavigate();
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
+  // Handles login logic and validation
   const handleLogin = async () => {
     if (!username || !email || !password) {
-      alert("Please fill in all fields");
+      alert("Please fill in all fields.");
       return;
     }
-
-    const data = { username, email, password };
 
     try {
       const response = await fetch(`${URL}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const result = await response.json();
       console.log("Server response:", result);
 
-      if (response.ok) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            userID: result.user._id,
-            isAuthenticated: true,
-          })
-        );
+      if (!response.ok) throw new Error(result.message || "Login failed");
 
-        dispatch(
-          setUser({
-            userID: result.user._id,
-            isAuthenticated: true,
-          })
-        );
+      // Save user to local storage and Redux
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ userID: result.user._id, isAuthenticated: true })
+      );
 
-        navigate("/");
-      } else {
-        alert("Login failed. Please check your credentials.");
-      }
+      dispatch(setUser({ userID: result.user._id, isAuthenticated: true }));
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
+      alert("Login failed. Please check your credentials.");
     }
   };
 
   return (
     <div className="mt-20 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center">
+      {/* Login Form Container */}
       <form
-        className="flex flex-col items-center w-full max-w-sm bg-[#DDBEA9] shadow-xl rounded-lg px-10 py-10"
+        className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-2xl px-8 py-10 space-y-6"
         onSubmit={(e) => {
           e.preventDefault();
           handleLogin();
         }}
       >
-        <h2 className="text-3xl font-bold mb-6 text-[#3F4238]">Login</h2>
+        <h2 className="text-3xl font-bold text-center text-[#3F4238] mb-2">
+          Welcome Back 👋
+        </h2>
+        <p className="text-center text-sm text-[#6B705C] mb-6">
+          Please login to continue
+        </p>
 
-        <div className="mb-4 w-full">
+        {/* Username Field */}
+        <div>
           <label
             htmlFor="username"
-            className="block text-base font-medium text-[#3F4238] mb-1"
+            className="block text-sm font-medium text-[#3F4238] mb-1"
           >
-            Username:
+            Username
           </label>
           <input
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="block w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
-            placeholder="Enter your username"
+            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+            placeholder="e.g. johndoe"
             required
           />
         </div>
 
-        <div className="mb-4 w-full">
+        {/* Email Field */}
+        <div>
           <label
             htmlFor="email"
-            className="block text-base font-medium text-[#3F4238] mb-1"
+            className="block text-sm font-medium text-[#3F4238] mb-1"
           >
-            Email:
+            Email
           </label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="block w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
-            placeholder="Enter your email"
+            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+            placeholder="you@example.com"
             required
           />
         </div>
 
-        <div className="mb-6 w-full">
+        {/* Password Field */}
+        <div>
           <label
             htmlFor="password"
-            className="block text-base font-medium text-[#3F4238] mb-1"
+            className="block text-sm font-medium text-[#3F4238] mb-1"
           >
-            Password:
+            Password
           </label>
-          <div className="flex items-center">
+          <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full border border-[#D4C7B0] rounded-md shadow-sm py-2 px-3 focus:outline-none"
-              placeholder="Enter your password"
+              className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+              placeholder="••••••••"
               minLength={8}
               maxLength={20}
-              autoComplete="on"
               required
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
-              alt="toggle password"
-              className="cursor-pointer w-6 h-6 ml-2"
-              onClick={() => setShowPassword(!showPassword)}
+              alt="toggle password visibility"
+              className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}
             />
           </div>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-[#6B705C] text-white font-semibold py-2 rounded-md hover:bg-[#3F4238] transition duration-300"
+          className="w-full bg-[#6B705C] hover:bg-[#3F4238] text-white font-semibold py-2 rounded-md transition duration-300"
         >
           Login
         </button>
 
-        <NavLink
-          to="/register"
-          className="mt-4 text-sm text-[#CB997E] hover:underline transition duration-200"
-        >
-          Don’t have an account? Register here
-        </NavLink>
+        {/* Register Link */}
+        <p className="text-center text-sm mt-4">
+          Don’t have an account?{" "}
+          <NavLink
+            to="/register"
+            className="text-[#CB997E] font-medium hover:underline"
+          >
+            Register here
+          </NavLink>
+        </p>
       </form>
     </div>
   );
