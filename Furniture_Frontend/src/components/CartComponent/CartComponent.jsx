@@ -1,43 +1,63 @@
 import React from "react";
 
 function CartComponent({ item, updateItemQuantity, handleRemoveItem }) {
+  const { productId, quantity } = item;
+  const { _id, name, price, image } = productId;
+
   return (
     <li
-      key={item.productId._id}
+      key={_id}
       className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 border-b pb-4 border-[#B7B7A4]"
     >
+      {/* Product Image */}
       <img
-        src={item.productId.image || "https://picsum.photos/200/300"}
-        alt={item.productId.name}
+        src={image || "https://picsum.photos/200/300"}
+        alt={name}
         onError={(e) => {
           e.target.src = "https://picsum.photos/200/300";
         }}
-        className="w-32 h-32 object-cover rounded-lg"
+        className="w-32 h-32 object-cover rounded-lg shadow-sm border border-[#DDBEA9]"
       />
-      <div className="flex-1">
-        <p className="text-xl font-semibold">{item.productId.name}</p>
-        <div className="flex items-center space-x-3 mt-2">
+
+      {/* Product Details and Controls */}
+      <div className="flex-1 w-full md:w-auto">
+        {/* Product Name */}
+        <p className="text-xl font-semibold text-[#3F4238]">{name}</p>
+
+        {/* Quantity Controls */}
+        <div className="flex items-center flex-wrap space-x-3 mt-3">
           <button
-            className="px-2 py-1 bg-[#A5A58D] text-white rounded hover:bg-[#6B705C]"
-            onClick={() => updateItemQuantity(item.productId._id, -1)}
+            className="w-8 h-8 flex items-center justify-center bg-[#A5A58D] text-white text-xl rounded hover:bg-[#6B705C] active:scale-95 transition-all duration-200"
+            onClick={() => updateItemQuantity(_id, -1)}
+            aria-label="Decrease Quantity"
           >
             −
           </button>
-          <span className="text-lg">{item.quantity}</span>
+          <span className="text-lg font-medium">{quantity}</span>
           <button
-            className="px-2 py-1 bg-[#A5A58D] text-white rounded hover:bg-[#6B705C]"
-            onClick={() => updateItemQuantity(item.productId._id, 1)}
+            className="w-8 h-8 flex items-center justify-center bg-[#A5A58D] text-white text-xl rounded hover:bg-[#6B705C] active:scale-95 transition-all duration-200"
+            onClick={() => updateItemQuantity(_id, 1)}
+            aria-label="Increase Quantity"
           >
             +
           </button>
+
+          {/* Remove Button */}
           <button
-            className="ml-4 px-3 py-1 bg-[#B98B73] text-white rounded hover:bg-[#CB997E]"
-            onClick={() => handleRemoveItem(item.productId._id)}
+            className="ml-4 px-4 py-1.5 bg-[#B98B73] text-white text-sm rounded hover:bg-[#CB997E] active:scale-95 transition-all duration-200"
+            onClick={() => handleRemoveItem(_id)}
           >
             Remove
           </button>
         </div>
-        <p className="mt-2">Price: ₹{item.productId.price * item.quantity}</p>
+
+        {/* Price Info */}
+        <p className="mt-2 text-[#6B705C] font-medium">
+          Price:{" "}
+          <span className="text-[#3F4238] font-semibold">
+            ₹{price * quantity}
+          </span>
+        </p>
       </div>
     </li>
   );
