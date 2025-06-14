@@ -7,19 +7,17 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(true);
   const [thankYou, setThankYou] = useState(false);
   const [cart, setCart] = useState(null);
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const userId = useSelector((state) => state.user.userID);
 
   const clearCartForUser = async (userId) => {
     try {
-      const res = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/cart/clear",
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId }),
-        }
-      );
+      const res = await fetch(`${URL}/api/cart/clear`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
       if (!res.ok) throw new Error("Failed to clear cart");
     } catch (error) {
       console.error("Error clearing cart:", error);
@@ -29,9 +27,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await fetch(
-          `https://furniture-website-backend-yubt.onrender.com/api/cart/${userId}`
-        );
+        const res = await fetch(`${URL}/api/cart/${userId}`);
         if (!res.ok) throw new Error("Failed to fetch cart");
         const data = await res.json();
         setCart(data);
@@ -79,14 +75,11 @@ const CheckoutPage = () => {
     };
 
     try {
-      const res = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/purchases",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(purchaseData),
-        }
-      );
+      const res = await fetch(`${URL}/api/purchases`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(purchaseData),
+      });
 
       if (res.ok) {
         setThankYou(true);
