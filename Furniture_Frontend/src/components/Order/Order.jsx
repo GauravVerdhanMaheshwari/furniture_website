@@ -17,7 +17,7 @@ export default function Order({ order, handleOrderAction }) {
     Cancelled: "text-gray-500",
   };
 
-  console.log("Order Component Rendered:", order.userId);
+  console.log("Order Component Rendered:", order);
   return (
     <div className="bg-[#FDFCFB] border border-[#E3D5CA] p-6 rounded-xl shadow-lg transition hover:shadow-xl">
       {/* Header */}
