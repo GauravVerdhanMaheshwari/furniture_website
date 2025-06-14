@@ -319,3 +319,41 @@ exports.loginOwner = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update owner profile
+exports.updateOwnerProfile = async (req, res, next) => {
+  const { name, email, phone } = req.body;
+
+  if (!name || !email || !phone) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const owner = await Admin.findByIdAndUpdate(
+      req.params.id,
+      { name, email, phone },
+      { new: true }
+    );
+
+    if (!owner) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+
+    res.json({ message: "Owner profile updated successfully", owner });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get owner profile
+exports.getOwnerProfile = async (req, res, next) => {
+  try {
+    const owner = await Admin.find();
+    if (!owner || owner.length === 0) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+    res.json(owner);
+  } catch (error) {
+    next(error);
+  }
+};
