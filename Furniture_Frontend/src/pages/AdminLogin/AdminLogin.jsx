@@ -9,6 +9,13 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACK_END_API;
+  if (!URL) {
+    console.error(
+      "VITE_BACK_END_API is not defined in the environment variables."
+    );
+    return;
+  }
 
   const handleAdminLogin = async () => {
     if (!email || !password) {
@@ -17,16 +24,15 @@ function AdminLogin() {
     }
 
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/owner/profile",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await fetch(`${URL}/api/auth/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       const result = await response.json();
+      console.log("Admin login response:", result);
+
       if (response.ok) {
         const adminID = result._id;
         localStorage.setItem(
@@ -88,7 +94,11 @@ function AdminLogin() {
                 className="mt-1 w-full border border-[#A5A58D] rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
               />
               <img
-                src={showPassword ? "hide.webp" : "view.webp"}
+                src={
+                  showPassword
+                    ? "../../../public/hide.webp"
+                    : "../../../public/view.webp"
+                }
                 alt={showPassword ? "Hide" : "View"}
                 className="w-7 h-7 mt-1 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
@@ -98,6 +108,7 @@ function AdminLogin() {
           <button
             type="submit"
             className="w-full bg-[#CB997E] text-white font-semibold py-2 rounded-md hover:bg-[#B98B73] transition duration-300"
+            onClick={handleAdminLogin}
           >
             Login
           </button>
