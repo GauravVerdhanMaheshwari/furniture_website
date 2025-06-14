@@ -7,6 +7,7 @@ function Suggestions({ title, api }) {
   const [quantities, setQuantities] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
@@ -18,17 +19,14 @@ function Suggestions({ title, api }) {
     }
 
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/cart/add",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: userId,
-            items: [{ productId: id, quantity: quantities[id] || 1 }],
-          }),
-        }
-      );
+      const response = await fetch(`${URL}/api/cart/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userId,
+          items: [{ productId: id, quantity: quantities[id] || 1 }],
+        }),
+      });
 
       const result = await response.json();
       if (!response.ok) {
