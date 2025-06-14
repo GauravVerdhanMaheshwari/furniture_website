@@ -10,6 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const handleLogin = async () => {
     if (!username || !email || !password) {
@@ -20,14 +21,11 @@ function Login() {
     const data = { username, email, password };
 
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/users/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${URL}/api/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       const result = await response.json();
       console.log("Server response:", result);
