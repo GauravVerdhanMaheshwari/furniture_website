@@ -7,13 +7,17 @@ import {
 } from "../../components/indexComponents.js";
 
 function Profile() {
+  // Redux state selectors
   const userID = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+
+  // Redirect if not authenticated
   if (!isLoggedIn || !userID) {
     window.location.href = "/login";
   }
 
+  // Local state
   const [userData, setUserData] = useState(null);
   const [userHistory, setUserHistory] = useState([]);
   const [purchaseData, setPurchaseData] = useState([]);
@@ -21,12 +25,15 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
 
+  // Fetch profile-related data
   useEffect(() => {
     if (!userID) return;
 
     const fetchData = async () => {
       setLoading(true);
+
       try {
+        // Fetch user, history, and purchase data in parallel
         const [userRes, historyRes, purchaseRes] = await Promise.all([
           fetch(`${URL}/api/users/${userID}`),
           fetch(`${URL}/api/history/user/${userID}`),
@@ -44,8 +51,8 @@ function Profile() {
         setUserHistory(Array.isArray(history) ? history : []);
         setPurchaseData(purchaseArray);
 
+        // Fetch detailed product info for each item in each purchase
         const details = [];
-
         for (const purchase of purchaseArray) {
           for (const item of purchase.items) {
             try {
@@ -61,6 +68,7 @@ function Profile() {
             }
           }
         }
+
         setDetailedPurchaseProducts(details);
       } catch (err) {
         console.error("Error fetching profile data:", err);
@@ -72,6 +80,7 @@ function Profile() {
     fetchData();
   }, [userID]);
 
+  // Handle profile update
   const handleSaveChanges = async () => {
     if (!userData || Object.values(userData).includes("")) {
       return alert("All fields must be filled out.");
@@ -96,6 +105,7 @@ function Profile() {
     }
   };
 
+  // Handle account deletion
   const handleDeleteUser = async () => {
     if (!window.confirm("Are you sure you want to delete your account?"))
       return;
@@ -104,6 +114,7 @@ function Profile() {
       await fetch(`${URL}/api/users/${userID}`, {
         method: "DELETE",
       });
+
       alert("Account deleted.");
       localStorage.removeItem("user");
       window.location.href = "/";
@@ -113,39 +124,59 @@ function Profile() {
     }
   };
 
+  // Safety fallback (edge case)
   if (!isLoggedIn || !userID) {
     return (
-      <p className="text-[#B98B73] bg-[#FFE8D6] p-4 rounded-md shadow">
-        Please log in to view your profile.
-      </p>
+      <div className="bg-[#FFE8D6] min-h-screen flex items-center justify-center p-4">
+        <p className="text-[#B98B73] text-lg font-medium bg-white px-6 py-3 rounded-lg shadow">
+          Please log in to view your profile.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-4 py-8 bg-[#FFE8D6] text-[#3F4238]">
-      <h1 className="text-3xl font-bold mb-6 text-[#6B705C]">Your Profile</h1>
+    <div className="min-h-screen px-4 py-10 bg-[#FFE8D6] text-[#3F4238]">
+      <div className="max-w-4xl mx-auto">
+        {/* Page Header */}
+        <h1 className="text-4xl font-bold mb-8 text-[#6B705C] text-center">
+          Your Profile
+        </h1>
 
-      {loading ? (
-        <p className="text-[#3F4238] text-lg">Loading...</p>
-      ) : userData && userData._id ? (
-        <>
-          <UserForm
-            userData={userData}
-            setUserData={setUserData}
-            handleSaveChanges={handleSaveChanges}
-            handleDeleteUser={handleDeleteUser}
-            changed={changed}
-            setChanged={setChanged}
-          />
-          <Purchase
-            userPurchases={purchaseData}
-            PurchaseProductDetail={detailedPurchaseProducts}
-          />
-          <HistoryBuys userID={userID} userHistory={userHistory} />
-        </>
-      ) : (
-        <p className="text-[#B98B73] text-lg">User not found.</p>
-      )}
+        {/* Loading Spinner or Profile Content */}
+        {loading ? (
+          <p className="text-[#3F4238] text-lg text-center">Loading...</p>
+        ) : userData && userData._id ? (
+          <>
+            {/* Editable user form */}
+            <div className="mb-10">
+              <UserForm
+                userData={userData}
+                setUserData={setUserData}
+                handleSaveChanges={handleSaveChanges}
+                handleDeleteUser={handleDeleteUser}
+                changed={changed}
+                setChanged={setChanged}
+              />
+            </div>
+
+            {/* Purchase section */}
+            <div className="mb-10">
+              <Purchase
+                userPurchases={purchaseData}
+                PurchaseProductDetail={detailedPurchaseProducts}
+              />
+            </div>
+
+            {/* History section */}
+            <div className="mb-10">
+              <HistoryBuys userID={userID} userHistory={userHistory} />
+            </div>
+          </>
+        ) : (
+          <p className="text-[#B98B73] text-lg text-center">User not found.</p>
+        )}
+      </div>
     </div>
   );
 }
