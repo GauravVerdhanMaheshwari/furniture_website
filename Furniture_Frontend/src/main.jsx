@@ -11,6 +11,7 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import { store } from "../app/store.js";
 import Loading from "./components/Loading/Loading.jsx";
+import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home/Home.jsx"));
@@ -42,25 +43,151 @@ const Page404 = lazy(() => import("./pages/404/Page404.jsx"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="" element={<Home />} />
-      <Route path="/products" element={<Products />} />
-      <Route path="/about" element={<AboutUs />} />
-      <Route path="/contact" element={<Contacts />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<CheckOut />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/admin" element={<AdminLogin />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin/home" element={<AdminHome />} />
-      <Route path="/admin/products" element={<AdminProducts />} />
-      <Route path="/admin/orders" element={<AdminOrder />} />
-      <Route path="/admin/profile" element={<AdminProfile />} />
-      <Route path="/admin/add-product" element={<AdminAddProduct />} />
-      <Route path="/admin/edit-product/:id" element={<AdminEditProduct />} />
-      <Route path="*" element={<Page404 />} />
+    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+      <Route
+        index
+        element={
+          <Suspense fallback={<Loading />}>
+            <Home />
+          </Suspense>
+        }
+      />
+      <Route
+        path="products"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Products />
+          </Suspense>
+        }
+      />
+      <Route
+        path="about"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AboutUs />
+          </Suspense>
+        }
+      />
+      <Route
+        path="contact"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Contacts />
+          </Suspense>
+        }
+      />
+      <Route
+        path="cart"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Cart />
+          </Suspense>
+        }
+      />
+      <Route
+        path="checkout"
+        element={
+          <Suspense fallback={<Loading />}>
+            <CheckOut />
+          </Suspense>
+        }
+      />
+      <Route
+        path="profile"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Profile />
+          </Suspense>
+        }
+      />
+      <Route
+        path="login"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Login />
+          </Suspense>
+        }
+      />
+      <Route
+        path="register"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Register />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminLogin />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/login"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminLogin />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/home"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminHome />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/products"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminProducts />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/orders"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminOrder />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/profile"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminProfile />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/add-product"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminAddProduct />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/edit-product/:id"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminEditProduct />
+          </Suspense>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Suspense fallback={<Loading />}>
+            <Page404 />
+          </Suspense>
+        }
+      />
     </Route>
   )
 );
@@ -68,9 +195,7 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <Suspense fallback={<Loading />}>
-        <RouterProvider router={router} />
-      </Suspense>
+      <RouterProvider router={router} />
     </Provider>
   </StrictMode>
 );
