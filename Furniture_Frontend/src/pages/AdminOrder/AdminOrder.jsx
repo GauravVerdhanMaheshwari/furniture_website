@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Order } from "../../components/indexComponents.js";
 
+/**
+ * AdminOrder Component
+ * Displays and manages all customer orders for admin users.
+ */
 function AdminOrder() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,10 +12,12 @@ function AdminOrder() {
   const [empty, setEmpty] = useState(false);
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
+  // Redirect to login if not authenticated
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
   }
 
+  // Fetch orders on mount
   useEffect(() => {
     fetch(`${URL}/api/owner/purchases`)
       .then((response) => {
@@ -27,9 +33,13 @@ function AdminOrder() {
         }
         setLoading(false);
       })
-      .catch((error) => console.error("Fetch error:", error));
-  }, []);
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        setLoading(false);
+      });
+  }, [URL]);
 
+  // Fetch detailed product info for each item in orders
   const fetchProductDetails = async (ordersData) => {
     const updatedOrders = await Promise.all(
       ordersData.map(async (order) => {
@@ -51,6 +61,7 @@ function AdminOrder() {
     setOrders(updatedOrders);
   };
 
+  // Handle order actions like approve/cancel/ship
   const handleOrderAction = async (orderId, action, update) => {
     try {
       const res = await fetch(
@@ -63,29 +74,39 @@ function AdminOrder() {
       );
       if (!res.ok) throw new Error("Network error");
       await res.json();
-      window.location.reload();
+      window.location.reload(); // Refresh to reflect updates
     } catch (err) {
       console.error(`${action} failed:`, err);
     }
   };
 
-  return !empty ? (
-    <div className="min-h-screen bg-[#FFE8D6] flex flex-col items-center justify-start px-4 py-10 mt-15">
-      <h1 className="text-4xl font-bold text-[#3F4238] mb-6">Admin Orders</h1>
+  return (
+    <div className="min-h-screen bg-[#FFE8D6] px-4 py-10 flex flex-col items-center">
+      <h1 className="text-4xl font-bold text-[#3F4238] mb-8 text-center">
+        Admin Orders
+      </h1>
 
+      {/* Search Input */}
       <div className="w-full max-w-4xl mb-6">
         <input
           type="search"
-          placeholder="Search orders by customer name"
-          className="w-full border border-[#A5A58D] bg-[#DDBEA9] text-[#3F4238] px-4 py-2 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-[#CB997E]"
+          placeholder="Search by customer name..."
+          className="w-full border border-[#A5A58D] bg-[#F2E9DC] text-[#3F4238] px-4 py-3 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#CB997E] transition"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
+      {/* Orders Section */}
       <div className="w-full max-w-4xl space-y-6">
         {loading ? (
-          <p className="text-2xl text-[#6B705C] text-center">Loading...</p>
+          <div className="text-xl text-[#6B705C] text-center animate-pulse">
+            Loading orders...
+          </div>
+        ) : empty ? (
+          <div className="text-xl text-[#6B705C] text-center">
+            No orders found.
+          </div>
         ) : (
           orders
             .filter((order) =>
@@ -102,10 +123,6 @@ function AdminOrder() {
             ))
         )}
       </div>
-    </div>
-  ) : (
-    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center">
-      <p className="text-2xl text-[#6B705C]">No orders found</p>
     </div>
   );
 }
