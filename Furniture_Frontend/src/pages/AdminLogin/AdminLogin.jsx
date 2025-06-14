@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAdmin } from "../../../features/adminSlice";
-import viewIcon from "../../../dist/assets/view.webp"; // move to assets folder
-import hideIcon from "../../../dist/assets/hide.webp"; // move to assets folder
+import viewIcon from "../../../public/view.webp"; // move to assets folder
+import hideIcon from "../../../public/hide.webp"; // move to assets folder
 
 /**
  * AdminLogin Component
