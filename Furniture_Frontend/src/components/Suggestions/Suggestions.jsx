@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FurnitureCard } from "../indexComponents.js";
+import { FurnitureCard, Product } from "../indexComponents.js";
 import { useSelector } from "react-redux";
 
 function Suggestions({ title, api }) {
@@ -59,6 +59,12 @@ function Suggestions({ title, api }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(api);
+        if (response.length === 0) {
+          setError(`No products found in "${title}" category`);
+          setProducts([]);
+          setLoading(false);
+          return;
+        }
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -86,6 +92,15 @@ function Suggestions({ title, api }) {
     return (
       <div className="text-center p-6 bg-[#FFE8D6] text-[#3F4238]">
         <p className="text-lg">Loading products...</p>
+      </div>
+    );
+  }
+
+  if (products.length === 0 && !error) {
+    return (
+      <div className="text-center p-6 bg-[#FFE8D6] text-[#6B705C]">
+        <h2 className="text-2xl font-semibold mb-2">{title}</h2>
+        <p className="text-lg italic">No products available at the moment.</p>
       </div>
     );
   }
