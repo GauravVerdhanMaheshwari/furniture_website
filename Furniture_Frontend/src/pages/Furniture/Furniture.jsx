@@ -8,8 +8,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
   const [error, setError] = useState(null);
-  const api =
-    "https://furniture-website-backend-yubt.onrender.com/api/products";
+  const URL = import.meta.env.VITE_BACK_END_API || "https://localhost:3000";
 
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
@@ -21,24 +20,21 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
       return;
     }
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/cart/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-            items: [
-              {
-                productId: productId,
-                quantity: quantity,
-              },
-            ],
-          }),
-        }
-      );
+      const response = await fetch(`${URL}/api/cart/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          items: [
+            {
+              productId: productId,
+              quantity: quantity,
+            },
+          ],
+        }),
+      });
 
       const result = await response.json();
       if (!response.ok)
@@ -67,7 +63,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(api);
+        const response = await fetch(`${URL}/api/products`);
         const data = await response.json();
         setProducts(data);
       } catch (err) {
