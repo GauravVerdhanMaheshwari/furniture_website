@@ -11,7 +11,7 @@ function Products() {
   const [showFilter, setShowFilter] = useState(false);
   const [priceValue, setPriceValue] = useState(10000);
   const [selectedType, setSelectedType] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState("");
+  // const [selectedCompany, setSelectedCompany] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const URL = import.meta.env.VITE_BACK_END_API;
 
@@ -38,13 +38,12 @@ function Products() {
         if (!types.includes(selectedType)) setSelectedType("");
       })
       .catch((err) => console.error("Failed to fetch products:", err));
-  }, [selectedType]);
+  }, [selectedType, URL]);
 
   // Reset filters
   const handleClearFilter = () => {
     setPriceValue(maxPrice);
     setSelectedType("");
-    setSelectedCompany("");
     setSearchTerm("");
     setShowFilter(false);
   };
@@ -73,7 +72,6 @@ function Products() {
   const filteredProducts = products.filter((item) => {
     return (
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!selectedCompany || item.company === selectedCompany) &&
       (!selectedType || item.name === selectedType) &&
       item.price <= priceValue
     );
@@ -90,7 +88,6 @@ function Products() {
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Page Heading */}
         <h1 className="text-4xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
-
         {/* Search bar and filter toggle */}
         <SearchFilter
           searchTerm={searchTerm}
@@ -98,7 +95,6 @@ function Products() {
           showFilter={showFilter}
           setShowFilter={setShowFilter}
         />
-
         {/* Filter panel */}
         {showFilter && (
           <FilterPanel
@@ -108,16 +104,15 @@ function Products() {
             setPriceValue={setPriceValue}
             selectedType={selectedType}
             setSelectedType={setSelectedType}
-            selectedCompany={selectedCompany}
-            setSelectedCompany={setSelectedCompany}
             handleClearFilter={handleClearFilter}
             products={products}
           />
         )}
 
+        {console.log("Filtered Products:", filteredProducts)}
+
         {/* Divider */}
         <hr className="w-full border-[#D4C7B0] my-6" />
-
         {/* Product Grid */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredProducts.map((item) => (
@@ -126,7 +121,6 @@ function Products() {
               id={item._id}
               imageURL={item.imageURL}
               name={item.name}
-              description={item.description}
               company={item.company}
               price={item.price}
               stock={item.stock}
@@ -139,7 +133,6 @@ function Products() {
             />
           ))}
         </div>
-
         {/* No results message */}
         {filteredProducts.length === 0 && (
           <p className="mt-8 text-lg text-[#6B705C] font-medium">
