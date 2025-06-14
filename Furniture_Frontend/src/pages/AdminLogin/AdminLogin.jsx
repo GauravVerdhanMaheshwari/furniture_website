@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAdmin } from "../../../features/adminSlice";
+import viewIcon from "../../../assets/view.webp"; // move to assets folder
+import hideIcon from "../../../assets/hide.webp"; // move to assets folder
 
+/**
+ * AdminLogin Component
+ * Handles admin authentication and redirects to dashboard on success.
+ */
 function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -10,13 +16,16 @@ function AdminLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const URL = import.meta.env.VITE_BACK_END_API;
+
+  // Return early if the API URL is not defined
   if (!URL) {
     console.error(
       "VITE_BACK_END_API is not defined in the environment variables."
     );
-    return;
+    return null;
   }
 
+  // Handles admin login logic
   const handleAdminLogin = async () => {
     if (!email || !password) {
       alert("Please fill in all fields");
@@ -46,24 +55,32 @@ function AdminLogin() {
       }
     } catch (error) {
       console.error("Admin login error:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
   return (
     <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-[#DDBEA9] rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-[#3F4238] text-center mb-6">
+      <div className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-xl p-8 border border-[#C9B8A3]">
+        {/* Title */}
+        <h1 className="text-3xl font-extrabold text-[#3F4238] text-center mb-6">
           Admin Login
         </h1>
+
+        {/* Login Form */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleAdminLogin();
           }}
-          className="space-y-5"
+          className="space-y-6"
         >
+          {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block font-medium text-[#6B705C]">
+            <label
+              htmlFor="email"
+              className="block font-semibold text-[#6B705C] mb-1"
+            >
               Email
             </label>
             <input
@@ -73,13 +90,15 @@ function AdminLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="mt-1 w-full border border-[#A5A58D] rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+              className="w-full border border-[#A5A58D] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73] transition"
             />
           </div>
+
+          {/* Password Field with Show/Hide Toggle */}
           <div>
             <label
               htmlFor="password"
-              className="block font-medium text-[#6B705C]"
+              className="block font-semibold text-[#6B705C] mb-1"
             >
               Password
             </label>
@@ -91,24 +110,21 @@ function AdminLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="mt-1 w-full border border-[#A5A58D] rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+                className="w-full border border-[#A5A58D] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73] transition"
               />
               <img
-                src={
-                  showPassword
-                    ? "../../../public/hide.webp"
-                    : "../../../public/view.webp"
-                }
-                alt={showPassword ? "Hide" : "View"}
-                className="w-7 h-7 mt-1 cursor-pointer"
+                src={showPassword ? hideIcon : viewIcon}
+                alt={showPassword ? "Hide password" : "Show password"}
+                className="w-6 h-6 cursor-pointer select-none"
                 onClick={() => setShowPassword(!showPassword)}
               />
             </div>
           </div>
+
+          {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-[#CB997E] text-white font-semibold py-2 rounded-md hover:bg-[#B98B73] transition duration-300"
-            onClick={handleAdminLogin}
+            className="w-full bg-[#CB997E] text-white font-bold py-2 rounded-lg hover:bg-[#B98B73] transition duration-300"
           >
             Login
           </button>
