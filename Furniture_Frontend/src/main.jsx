@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import {
@@ -7,28 +7,38 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
-import {
-  Home,
-  Products,
-  AboutUs,
-  Contacts,
-  Cart,
-  CheckOut,
-  Profile,
-  Login,
-  Register,
-  AdminLogin,
-  AdminHome,
-  AdminProducts,
-  AdminOrder,
-  AdminProfile,
-  AdminAddProduct,
-  AdminEditProduct,
-  Page404,
-} from "./pages/indexPage.js";
 import App from "./App.jsx";
 import { Provider } from "react-redux";
 import { store } from "../app/store.js";
+import Loading from "./components/Loading/Loading.jsx";
+
+// Lazy-loaded pages
+const Home = lazy(() => import("./pages/Home/Home.jsx"));
+const Products = lazy(() => import("./pages/Products/Products.jsx"));
+const AboutUs = lazy(() => import("./pages/AboutUs/AboutUs.jsx"));
+const Contacts = lazy(() => import("./pages/Contacts/Contacts.jsx"));
+const Cart = lazy(() => import("./pages/Cart/Cart.jsx"));
+const CheckOut = lazy(() => import("./pages/CheckOut/CheckOut.jsx"));
+const Profile = lazy(() => import("./pages/Profile/Profile.jsx"));
+const Login = lazy(() => import("./pages/Login/Login.jsx"));
+const Register = lazy(() => import("./pages/Register/Register.jsx"));
+
+const AdminLogin = lazy(() => import("./pages/AdminLogin/AdminLogin.jsx"));
+const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome.jsx"));
+const AdminProducts = lazy(() =>
+  import("./pages/AdminProducts/AdminProducts.jsx")
+);
+const AdminOrder = lazy(() => import("./pages/AdminOrder/AdminOrder.jsx"));
+const AdminProfile = lazy(() =>
+  import("./pages/AdminProfile/AdminProfile.jsx")
+);
+const AdminAddProduct = lazy(() =>
+  import("./pages/AdminAddProduct/AdminAddProduct.jsx")
+);
+const AdminEditProduct = lazy(() =>
+  import("./pages/AdminEditProduct/AdminEditProduct.jsx")
+);
+const Page404 = lazy(() => import("./pages/404/Page404.jsx"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,7 +68,9 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <Suspense fallback={<Loading />}>
+        <RouterProvider router={router} />
+      </Suspense>
     </Provider>
   </StrictMode>
 );
