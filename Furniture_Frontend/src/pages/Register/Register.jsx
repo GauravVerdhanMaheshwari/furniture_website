@@ -10,6 +10,7 @@ function Register() {
   const [email, setEmail] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -32,14 +33,11 @@ function Register() {
     };
 
     try {
-      const response = await fetch(
-        "https://furniture-website-backend-yubt.onrender.com/api/users",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${URL}/api/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       if (response.ok) {
         setUsername("");
