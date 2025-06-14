@@ -7,6 +7,7 @@ function Cart() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [change, setChange] = useState(false);
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
@@ -21,9 +22,7 @@ function Cart() {
 
   const fetchCart = async () => {
     try {
-      const res = await fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/cart/${userId}`
-      );
+      const res = await fetch(`${URL}/api/cart/${userId}`);
       if (!res.ok) throw new Error("Failed to fetch cart");
       const data = await res.json();
 
@@ -74,7 +73,7 @@ function Cart() {
 
   const handleSaveChanges = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/cart/update`, {
+      const res = await fetch(`${URL}/api/cart/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,7 +100,7 @@ function Cart() {
     if (!window.confirm("Are you sure you want to clear your cart?")) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/cart/clear`, {
+      const res = await fetch(`${URL}/api/cart/clear`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
@@ -119,7 +118,7 @@ function Cart() {
 
   const handleRemoveItem = async (productId) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/cart/remove`, {
+      const res = await fetch(`${URL}/api/cart/remove`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, productId }),
