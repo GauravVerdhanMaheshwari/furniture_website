@@ -7,6 +7,7 @@ function AdminProducts() {
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
   }
+  const URL = import.meta.env.VITE_BACK_END_API;
 
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -14,13 +15,10 @@ function AdminProducts() {
 
   const deleteProduct = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/owner/product/${id}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+      fetch(`${URL}/api/owner/product/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      })
         .then((res) => {
           if (!res.ok) throw new Error("Failed to delete product");
           return res.json();
@@ -37,9 +35,7 @@ function AdminProducts() {
   };
 
   React.useEffect(() => {
-    fetch(
-      "https://furniture-website-backend-yubt.onrender.com/api/owner/product"
-    )
+    fetch(`${URL}/api/owner/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
