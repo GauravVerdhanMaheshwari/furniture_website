@@ -9,6 +9,10 @@ import {
 function Profile() {
   const userID = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+  if (!isLoggedIn || !userID) {
+    window.location.href = "/login";
+  }
 
   const [userData, setUserData] = useState(null);
   const [userHistory, setUserHistory] = useState([]);
@@ -24,15 +28,9 @@ function Profile() {
       setLoading(true);
       try {
         const [userRes, historyRes, purchaseRes] = await Promise.all([
-          fetch(
-            `https://furniture-website-backend-yubt.onrender.com/api/users/${userID}`
-          ),
-          fetch(
-            `https://furniture-website-backend-yubt.onrender.com/api/history/user/${userID}`
-          ),
-          fetch(
-            `https://furniture-website-backend-yubt.onrender.com/api/purchases/${userID}`
-          ),
+          fetch(`${URL}/api/users/${userID}`),
+          fetch(`${URL}/api/history/user/${userID}`),
+          fetch(`${URL}/api/purchases/${userID}`),
         ]);
 
         const user = await userRes.json();
@@ -51,9 +49,7 @@ function Profile() {
         for (const purchase of purchaseArray) {
           for (const item of purchase.items) {
             try {
-              const res = await fetch(
-                `https://furniture-website-backend-yubt.onrender.com/api/products/${item.productId}`
-              );
+              const res = await fetch(`${URL}/api/products/${item.productId}`);
               const product = await res.json();
               details.push({
                 ...product,
@@ -84,14 +80,11 @@ function Profile() {
     if (!window.confirm("Are you sure you want to save changes?")) return;
 
     try {
-      const response = await fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/users/${userID}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-        }
-      );
+      const response = await fetch(`${URL}/api/users/${userID}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
       const updatedUser = await response.json();
       setUserData(updatedUser);
@@ -108,12 +101,9 @@ function Profile() {
       return;
 
     try {
-      await fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/users/${userID}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await fetch(`${URL}/api/users/${userID}`, {
+        method: "DELETE",
+      });
       alert("Account deleted.");
       localStorage.removeItem("user");
       window.location.href = "/";
