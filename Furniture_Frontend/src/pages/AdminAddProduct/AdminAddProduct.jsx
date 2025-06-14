@@ -2,6 +2,8 @@ import React from "react";
 
 function AdminAddProduct() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+
+  // Redirect unauthorized users
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
   }
@@ -9,6 +11,17 @@ function AdminAddProduct() {
   const [showPackageName, setShowPackageName] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  // Convert file to base64 string
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+    });
+  }
+
+  // Handle product form submission
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -24,11 +37,9 @@ function AdminAddProduct() {
     }
 
     try {
+      // Convert images to base64
       const images = await Promise.all(
-        imageFiles.map(async (file) => {
-          const base64 = await convertToBase64(file);
-          return base64;
-        })
+        imageFiles.map(async (file) => await convertToBase64(file))
       );
 
       const data = {
@@ -36,7 +47,7 @@ function AdminAddProduct() {
         description: formData.get("description"),
         price: Number(formData.get("price")),
         stock: Number(formData.get("stock")),
-        images: images,
+        images,
         company: formData.get("company") || "Made in Factory",
         inStock: true,
         New: formData.get("newProduct") === "on",
@@ -49,6 +60,7 @@ function AdminAddProduct() {
             : "",
       };
 
+      // Send product data to server
       const response = await fetch(`${URL}/api/owner/product/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,44 +68,37 @@ function AdminAddProduct() {
       });
 
       const result = await response.json();
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(result.message || "Failed to add product");
-      }
 
       alert("Product added successfully!");
       form.reset();
       setShowPackageName(false);
 
+      // Redirect after a short delay
       setTimeout(() => {
         window.location.href = "/admin/products";
       }, 1000);
     } catch (error) {
-      console.error("Failed to send product data to server:", error);
+      console.error("Product submission error:", error);
       alert("Failed to add product. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  function convertToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (err) => reject(err);
-    });
-  }
-
   return (
-    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center py-10 px-4">
+    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4 py-12">
       <form
         onSubmit={handleAddProduct}
-        className="w-full max-w-xl bg-[#DDBEA9] p-8 rounded-xl shadow-lg text-[#3F4238]"
+        className="w-full max-w-2xl bg-[#DDBEA9] rounded-2xl shadow-2xl p-8 space-y-6 text-[#3F4238]"
       >
-        <h1 className="text-3xl font-bold mb-6 text-[#B98B73] text-center">
-          Add Product
+        {/* Title */}
+        <h1 className="text-3xl font-extrabold text-center text-[#B98B73]">
+          Add New Product
         </h1>
 
+        {/* Text Inputs */}
         {[
           { label: "Product Name", name: "name", type: "text", required: true },
           {
@@ -103,107 +108,110 @@ function AdminAddProduct() {
             required: true,
           },
           {
-            label: "Product Price",
+            label: "Product Price (₹)",
             name: "price",
             type: "number",
             required: true,
           },
           {
-            label: "Product Stock",
+            label: "Stock Quantity",
             name: "stock",
             type: "number",
             required: true,
           },
           {
-            label: "Product Company",
+            label: "Company / Brand",
             name: "company",
             type: "text",
             required: false,
           },
         ].map((field, idx) => (
-          <div key={idx} className="mb-4">
-            <label className="block text-lg font-semibold mb-1">
-              {field.label}
-            </label>
+          <div key={idx}>
+            <label className="block font-medium mb-1">{field.label}</label>
             {field.type === "textarea" ? (
               <textarea
                 name={field.name}
-                placeholder={field.label}
                 required={field.required}
-                className="w-full p-2 border border-[#A5A58D] rounded"
+                placeholder={field.label}
+                className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
               />
             ) : (
               <input
                 type={field.type}
                 name={field.name}
-                placeholder={field.label}
                 required={field.required}
-                className="w-full p-2 border border-[#A5A58D] rounded"
+                placeholder={field.label}
+                className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
               />
             )}
           </div>
         ))}
 
-        <div className="mb-4">
-          <label className="block text-lg font-semibold mb-1">
-            Product Images (max 4)
+        {/* Image Upload */}
+        <div>
+          <label className="block font-medium mb-1">
+            Upload Images (Max 4)
           </label>
           <input
             type="file"
             name="images"
             accept="image/*"
             multiple
-            className="w-full p-2 border border-[#A5A58D] rounded"
             required
+            className="w-full border border-[#A5A58D] p-2 rounded bg-white"
           />
         </div>
 
-        <div className="flex flex-col gap-3 mb-4">
+        {/* Checkboxes */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { name: "hot", label: "Product Hot" },
-            { name: "newProduct", label: "Product New" },
+            { name: "hot", label: "🔥 Mark as Hot" },
+            { name: "newProduct", label: "🆕 Mark as New" },
             {
               name: "packageProduct",
-              label: "Product Package",
+              label: "📦 Is a Package?",
               onChange: (e) => setShowPackageName(e.target.checked),
             },
-          ].map((checkbox, idx) => (
-            <label key={idx} className="flex items-center text-lg">
+          ].map((item, idx) => (
+            <label
+              key={idx}
+              className="flex items-center space-x-2 text-base font-medium"
+            >
               <input
                 type="checkbox"
-                name={checkbox.name}
-                className="mr-2"
-                onChange={checkbox.onChange}
+                name={item.name}
+                onChange={item.onChange}
+                className="accent-[#B5838D]"
               />
-              {checkbox.label}
+              <span>{item.label}</span>
             </label>
           ))}
         </div>
 
+        {/* Conditional Field: Package Name */}
         {showPackageName && (
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-1">
-              Product Package Name
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Package Name</label>
             <input
               type="text"
               name="packageName"
-              placeholder="Package Name"
-              className="w-full p-2 border border-[#A5A58D] rounded"
+              placeholder="Enter Package Name"
+              className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
             />
           </div>
         )}
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-2 px-4 mt-4 rounded text-white font-semibold transition ${
+          className={`w-full py-2 text-white font-semibold rounded transition duration-300 ${
             isSubmitting
               ? "bg-[#CB997E] opacity-70 cursor-not-allowed"
               : "bg-[#CB997E] hover:bg-[#6B705C]"
           }`}
         >
-          {isSubmitting ? "Adding..." : "Add Product"}
+          {isSubmitting ? "Adding Product..." : "Add Product"}
         </button>
       </form>
     </div>
