@@ -1,10 +1,27 @@
 import React from "react";
+// Optional: Uncomment below if using icons
+// import { FaCheck, FaTimes, FaTruck, FaBan } from "react-icons/fa";
 
 export default function Order({ order, handleOrderAction }) {
+  const handleClick = (action, statusLabel) => {
+    if (confirm(`${statusLabel} order ${order._id}?`)) {
+      handleOrderAction(order._id, action, { status: statusLabel });
+    }
+  };
+
+  const statusColors = {
+    Pending: "text-yellow-600",
+    Accepted: "text-blue-600",
+    Delivered: "text-green-600",
+    Rejected: "text-red-600",
+    Cancelled: "text-gray-500",
+  };
+
   return (
-    <div key={order._id} className="bg-[#DDBEA9] p-6 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-xl font-semibold text-[#3F4238]">
+    <div className="bg-[#FDFCFB] border border-[#E3D5CA] p-6 rounded-xl shadow-lg transition hover:shadow-xl">
+      {/* Header */}
+      <div className="flex justify-between items-center border-b pb-2 mb-4">
+        <h2 className="text-2xl font-bold text-[#3F4238]">
           {order.userId?.name || "Unknown Customer"}
         </h2>
         <span className="text-sm text-[#6B705C]">
@@ -12,20 +29,21 @@ export default function Order({ order, handleOrderAction }) {
         </span>
       </div>
 
-      <div className="mt-3">
-        <h3 className="font-semibold text-[#3F4238]">Products:</h3>
-        <div className="flex overflow-x-auto gap-4 py-2">
+      {/* Product List */}
+      <div>
+        <h3 className="font-semibold text-[#3F4238] mb-2">Ordered Items:</h3>
+        <div className="flex overflow-x-auto gap-4 py-2 scrollbar-thin scrollbar-thumb-[#DDBEA9]">
           {order.items?.map((item, idx) => (
             <div
               key={idx}
-              className="bg-[#FFE8D6] p-3 rounded-lg min-w-[200px] shadow-sm"
+              className="bg-[#FFE8D6] p-4 rounded-lg min-w-[220px] shadow-md"
             >
               <img
                 src={item.productDetails?.image}
                 alt={item.productDetails?.name}
-                className="w-full h-32 object-contain mb-2 rounded"
+                className="w-full h-32 object-contain mb-3 rounded"
               />
-              <p className="text-sm font-medium text-[#3F4238]">
+              <p className="text-base font-medium text-[#3F4238] truncate">
                 {item.productDetails?.name || "Loading..."}
               </p>
               <p className="text-sm text-[#6B705C]">Qty: {item.quantity}</p>
@@ -34,68 +52,63 @@ export default function Order({ order, handleOrderAction }) {
         </div>
       </div>
 
-      <div className="mt-3 text-[#3F4238]">
-        <p className="font-bold">Total: ₹{order.totalPrice}</p>
-        <p className="font-bold">Contact: {order.userId?.phone || "N/A"}</p>
-        <p className="mt-1 font-medium">
-          Status:{" "}
-          <span className="text-[#6B705C]">{order.status || "Pending"}</span>
+      {/* Order Details */}
+      <div className="mt-4 text-[#3F4238] space-y-1">
+        <p>
+          <span className="font-semibold">Total:</span> ₹{order.totalPrice}
+        </p>
+        <p>
+          <span className="font-semibold">Contact:</span>{" "}
+          {order.userId?.phone || "N/A"}
+        </p>
+        <p>
+          <span className="font-semibold">Status:</span>{" "}
+          <span className={`font-semibold ${statusColors[order.status]}`}>
+            {order.status || "Pending"}
+          </span>
         </p>
       </div>
 
-      {order.status === "Pending" && (
-        <div className="mt-4 flex gap-4">
-          <button
-            onClick={() =>
-              confirm(`Accept order ${order._id}?`) &&
-              handleOrderAction(order._id, "accept", {
-                status: "Accepted",
-              })
-            }
-            className="bg-[#6B705C] text-white px-4 py-2 rounded hover:bg-[#3F4238] transition"
-          >
-            Accept
-          </button>
-          <button
-            onClick={() =>
-              confirm(`Reject order ${order._id}?`) &&
-              handleOrderAction(order._id, "reject", {
-                status: "Rejected",
-              })
-            }
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-          >
-            Reject
-          </button>
-        </div>
-      )}
+      {/* Actions */}
+      <div className="mt-5 flex flex-wrap gap-3">
+        {order.status === "Pending" && (
+          <>
+            <button
+              onClick={() => handleClick("accept", "Accepted")}
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+            >
+              {/* <FaCheck className="inline mr-2" /> */}
+              Accept
+            </button>
+            <button
+              onClick={() => handleClick("reject", "Rejected")}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+            >
+              {/* <FaTimes className="inline mr-2" /> */}
+              Reject
+            </button>
+          </>
+        )}
 
-      {order.status === "Accepted" && (
-        <div className="mt-4 flex gap-4">
-          <button
-            onClick={() =>
-              confirm(`Deliver order ${order._id}?`) &&
-              handleOrderAction(order._id, "deliver", {
-                status: "Delivered",
-              })
-            }
-            className="bg-[#CB997E] text-white px-4 py-2 rounded hover:bg-[#B98B73] transition"
-          >
-            Deliver
-          </button>
-          <button
-            onClick={() =>
-              confirm(`Cancel order ${order._id}?`) &&
-              handleOrderAction(order._id, "cancel", {
-                status: "Cancelled",
-              })
-            }
-            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
+        {order.status === "Accepted" && (
+          <>
+            <button
+              onClick={() => handleClick("deliver", "Delivered")}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              {/* <FaTruck className="inline mr-2" /> */}
+              Deliver
+            </button>
+            <button
+              onClick={() => handleClick("cancel", "Cancelled")}
+              className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
+            >
+              {/* <FaBan className="inline mr-2" /> */}
+              Cancel
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
