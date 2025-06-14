@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Product = require("../Models/product");
 const Purchase = require("../Models/purchase");
 const HistoryBought = require("../Models/history");
+const Admin = require("../Models/admin");
 
 // Fetch all products
 exports.getAllProducts = async (req, res, next) => {
@@ -9,6 +10,43 @@ exports.getAllProducts = async (req, res, next) => {
     const products = await Product.find();
     res.json(products);
   } catch (error) {
+    next(error);
+  }
+};
+
+// Add a new product
+exports.addProduct = async (req, res, next) => {
+  const { name, description, price, stock, New, Hot, Package } = req.body;
+  const images = req.body.images || [];
+  const company = req.body.company || "Made in Factory";
+  const AddedDate = new Date().toISOString();
+  const PackageName = Package ? req.body.PackageName : "";
+  if (!name || !description || !price || !stock) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+  try {
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      stock,
+      images,
+      company,
+      inStock: stock > 0,
+      New: New || false,
+      Hot: Hot || false,
+      Package: Package || false,
+      AddedDate,
+      PackageName,
+    });
+    await newProduct.save();
+    res
+      .status(201)
+      .json({ message: "Product added successfully", product: newProduct });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: error.message });
+    }
     next(error);
   }
 };
@@ -78,6 +116,21 @@ exports.getProductById = async (req, res, next) => {
       return res.status(404).json({ message: "Product not found" });
     }
     res.json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Fetch all purchases
+exports.getAllPurchases = async (req, res, next) => {
+  try {
+    const purchases = await Purchase.find().populate("userId", "name email");
+    if (purchases.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No purchases found", purchases: [] });
+    }
+    res.json(purchases);
   } catch (error) {
     next(error);
   }
@@ -232,6 +285,36 @@ exports.cancelPurchase = async (req, res, next) => {
     purchase.status = "Cancelled";
     await purchase.save();
     res.json({ message: "Purchase cancelled successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.loginOwner = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  try {
+    // Assuming you have an Owner model for owner authentication
+    const owner = await Admin.findOne({ email, password });
+    const ownerCheck = await Admin.find();
+    console.log("Owner login attempt:", { email, password });
+    console.log("Owner data:", ownerCheck);
+
+    // if (!owner) {
+    //   return res.status(401).json({ message: "Invalid credentials" });
+    // }
+
+    res.json({
+      message: "Admin logged in successfully",
+      owner: ownerCheck,
+      isAuthenticated: true,
+    });
+    // Here you can generate a token or session for the admin
+    // res.json({ message: "Admin logged in successfully", adminId: owner._id });
   } catch (error) {
     next(error);
   }
