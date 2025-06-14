@@ -45,7 +45,7 @@ function AdminProducts() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFE8D6] py-12">
+    <div className="mt-25 min-h-screen bg-[#FFE8D6] py-12">
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-8 bg-white shadow-md rounded-xl p-4">
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
