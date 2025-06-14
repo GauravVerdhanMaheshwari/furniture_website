@@ -19,4 +19,8 @@ router.patch("/purchase/reject/:id", ownerController.rejectPurchase);
 router.patch("/purchase/deliver/:id", ownerController.deliverPurchase);
 router.patch("/purchase/cancel/:id", ownerController.cancelPurchase);
 
+// Owner Management
+router.get("/profile", ownerController.getOwnerProfile);
+router.put("/profile", ownerController.updateOwnerProfile);
+
 module.exports = router;
