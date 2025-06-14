@@ -49,12 +49,15 @@ function AdminProducts() {
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-8 bg-white shadow-md rounded-xl p-4">
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <Link
-            to="/admin/add-product"
-            className="mt-4 sm:mt-0 bg-[#CB997E] hover:bg-[#B98B73] text-white px-4 py-2 rounded transition duration-200"
-          >
-            Add Product
-          </Link>
+          <div className="mt-4 sm:mt-0">
+            {/* Ensures Link is rendered regardless of loading state */}
+            <Link
+              to="/admin/add-product"
+              className="bg-[#CB997E] hover:bg-[#B98B73] text-white px-4 py-2 rounded transition duration-200"
+            >
+              Add Product
+            </Link>
+          </div>
         </div>
 
         <div className="flex flex-wrap justify-center gap-6">
