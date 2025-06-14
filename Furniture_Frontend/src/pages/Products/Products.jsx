@@ -18,34 +18,38 @@ function Products() {
   const minPrice = 100;
   const maxPrice = 10000;
 
+  // Fetch products from backend
   useEffect(() => {
     fetch(`${URL}/api/products/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetched products:", data);
         const items = data?.items || [];
         setProducts(items);
 
+        // Initialize quantity for each product
         const defaultQuantities = {};
         items.forEach((item) => {
           defaultQuantities[item._id] = 1;
         });
         setQuantities(defaultQuantities);
 
+        // Reset selected type if it no longer exists
         const types = [...new Set(items.map((item) => item.name))];
         if (!types.includes(selectedType)) setSelectedType("");
       })
       .catch((err) => console.error("Failed to fetch products:", err));
   }, [selectedType]);
 
+  // Reset filters
   const handleClearFilter = () => {
     setPriceValue(maxPrice);
     setSelectedType("");
     setSelectedCompany("");
-    setShowFilter(false);
     setSearchTerm("");
+    setShowFilter(false);
   };
 
+  // Quantity handlers
   const handleIncrement = (id, maxStock) => {
     setQuantities((prev) => ({
       ...prev,
@@ -62,9 +66,10 @@ function Products() {
 
   const handleAddToCart = (id, quantity) => {
     console.log(`Added ${quantity} of product ${id} to cart.`);
-    // Actual logic goes here
+    // Cart functionality to be added
   };
 
+  // Filter logic
   const filteredProducts = products.filter((item) => {
     return (
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -78,52 +83,69 @@ function Products() {
     if (filteredProducts.length === 0 && searchTerm) {
       console.warn("No products found for the current search term.");
     }
-    console.log("Filtered products:", filteredProducts);
   }, [filteredProducts, searchTerm]);
 
   return (
-    <div className="flex flex-col items-center justify-center mt-10 px-4 bg-[#FFE8D6] min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
+    <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
+      <div className="max-w-7xl mx-auto flex flex-col items-center">
+        {/* Page Heading */}
+        <h1 className="text-4xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
 
-      {/* Search & Filter */}
-      <SearchFilter
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        showFilter={showFilter}
-        setShowFilter={setShowFilter}
-      />
-
-      {showFilter && (
-        <FilterPanel
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          priceValue={priceValue}
-          setPriceValue={setPriceValue}
-          handleClearFilter={handleClearFilter}
+        {/* Search bar and filter toggle */}
+        <SearchFilter
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
         />
-      )}
 
-      <hr className="w-full border-[#D4C7B0] mb-6" />
-
-      <div className="flex flex-wrap justify-center">
-        {filteredProducts.map((item) => (
-          <FurnitureCard
-            key={item._id}
-            id={item._id}
-            imageURL={item.imageURL}
-            name={item.name}
-            description={item.description}
-            company={item.company}
-            price={item.price}
-            stock={item.stock}
-            inStock={item.stock > 0}
-            quantities={quantities}
-            images={item.images}
-            handleAddToCart={handleAddToCart}
-            handleIncrement={handleIncrement}
-            handleDecrement={handleDecrement}
+        {/* Filter panel */}
+        {showFilter && (
+          <FilterPanel
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            priceValue={priceValue}
+            setPriceValue={setPriceValue}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedCompany={selectedCompany}
+            setSelectedCompany={setSelectedCompany}
+            handleClearFilter={handleClearFilter}
+            products={products}
           />
-        ))}
+        )}
+
+        {/* Divider */}
+        <hr className="w-full border-[#D4C7B0] my-6" />
+
+        {/* Product Grid */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {filteredProducts.map((item) => (
+            <FurnitureCard
+              key={item._id}
+              id={item._id}
+              imageURL={item.imageURL}
+              name={item.name}
+              description={item.description}
+              company={item.company}
+              price={item.price}
+              stock={item.stock}
+              inStock={item.stock > 0}
+              quantities={quantities}
+              images={item.images}
+              handleAddToCart={handleAddToCart}
+              handleIncrement={handleIncrement}
+              handleDecrement={handleDecrement}
+            />
+          ))}
+        </div>
+
+        {/* No results message */}
+        {filteredProducts.length === 0 && (
+          <p className="mt-8 text-lg text-[#6B705C] font-medium">
+            No products match your search.
+          </p>
+        )}
       </div>
     </div>
   );
