@@ -6,15 +6,16 @@ function AdminOrder() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [empty, setEmpty] = useState(false);
+  const URL =
+    import.meta.env.VITE_BACK_END_API ||
+    "https://furniture-website-backend-yubt.onrender.com";
 
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
   }
 
   useEffect(() => {
-    fetch(
-      "https://furniture-website-backend-yubt.onrender.com/api/owner/purchases"
-    )
+    fetch(`${URL}/api/owner/purchases`)
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
@@ -37,9 +38,7 @@ function AdminOrder() {
         const updatedItems = await Promise.all(
           order.items.map(async (item) => {
             try {
-              const res = await fetch(
-                `https://furniture-website-backend-yubt.onrender.com/api/products/${item.productId}`
-              );
+              const res = await fetch(`${URL}/api/products/${item.productId}`);
               const productData = await res.json();
               return { ...item, productDetails: productData };
             } catch (err) {
@@ -57,7 +56,7 @@ function AdminOrder() {
   const handleOrderAction = async (orderId, action, update) => {
     try {
       const res = await fetch(
-        `https://furniture-website-backend-yubt.onrender.com/api/owner/purchases/${action}/${orderId}`,
+        `${URL}/api/owner/purchases/${action}/${orderId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
