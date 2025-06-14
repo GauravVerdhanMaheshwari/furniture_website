@@ -10,14 +10,20 @@ function Home() {
         <section className="mt-9">
           <h2 className="text-2xl font-bold text-[#6B705C] mb-4">✨ New</h2>
           <div className="bg-[#DDBEA9] rounded-lg shadow-md p-4">
-            <Suggestions api="https://furniture-website-backend-yubt.onrender.com/api/products/new" />
+            <Suggestions
+              title={"✨ New"}
+              api="https://furniture-website-backend-yubt.onrender.com/api/products/new"
+            />
           </div>
         </section>
 
         <section className="mt-9">
           <h2 className="text-2xl font-bold text-[#6B705C] mb-4">🔥 Hot</h2>
           <div className="bg-[#DDBEA9] rounded-lg shadow-md p-4">
-            <Suggestions api="https://furniture-website-backend-yubt.onrender.com/api/products/hot" />
+            <Suggestions
+              title={"🔥 Hot"}
+              api="https://furniture-website-backend-yubt.onrender.com/api/products/hot"
+            />
           </div>
         </section>
 
@@ -26,7 +32,10 @@ function Home() {
             📦 Packages
           </h2>
           <div className="bg-[#DDBEA9] rounded-lg shadow-md p-4">
-            <Suggestions api="https://furniture-website-backend-yubt.onrender.com/api/products/package" />
+            <Suggestions
+              title={"📦 Packages"}
+              api="https://furniture-website-backend-yubt.onrender.com/api/products/package"
+            />
           </div>
         </section>
       </div>
