@@ -6,9 +6,7 @@ function AdminOrder() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [empty, setEmpty] = useState(false);
-  const URL =
-    import.meta.env.VITE_BACK_END_API ||
-    "https://furniture-website-backend-yubt.onrender.com";
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   if (!localStorage.getItem("admin")) {
     window.location.href = "/admin/login";
@@ -72,7 +70,7 @@ function AdminOrder() {
   };
 
   return !empty ? (
-    <div className="min-h-screen bg-[#FFE8D6] flex flex-col items-center justify-start px-4 py-10 mt-20">
+    <div className="min-h-screen bg-[#FFE8D6] flex flex-col items-center justify-start px-4 py-10 mt-15">
       <h1 className="text-4xl font-bold text-[#3F4238] mb-6">Admin Orders</h1>
 
       <div className="w-full max-w-4xl mb-6">
