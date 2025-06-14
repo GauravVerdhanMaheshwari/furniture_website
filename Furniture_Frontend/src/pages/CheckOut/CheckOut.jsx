@@ -11,6 +11,7 @@ const CheckoutPage = () => {
 
   const userId = useSelector((state) => state.user.userID);
 
+  // Clear cart from backend after successful order
   const clearCartForUser = async (userId) => {
     try {
       const res = await fetch(`${URL}/api/cart/clear`, {
@@ -24,6 +25,7 @@ const CheckoutPage = () => {
     }
   };
 
+  // Fetch user's cart data on component mount
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -40,8 +42,9 @@ const CheckoutPage = () => {
     fetchCart();
   }, [userId]);
 
+  // Calculate total price when cart updates
   useEffect(() => {
-    if (!cart || !cart.items) return;
+    if (!cart?.items) return;
     const total = cart.items.reduce(
       (acc, item) => acc + item.productId.price * item.quantity,
       0
@@ -49,18 +52,20 @@ const CheckoutPage = () => {
     setTotalPrice(total);
   }, [cart]);
 
+  // Redirect to profile after "Thank You" message
   useEffect(() => {
     if (thankYou) {
       const timer = setTimeout(() => {
         window.location.href = "/profile";
-      }, 500);
+      }, 1200);
       return () => clearTimeout(timer);
     }
   }, [thankYou]);
 
+  // Handle order confirmation
   const handleConfirmOrder = async () => {
     if (!paymentMethod) return alert("Please select a payment method.");
-    if (!cart || !cart.items.length) return alert("Cart is empty.");
+    if (!cart?.items?.length) return alert("Your cart is empty.");
 
     setLoading(true);
 
@@ -85,22 +90,23 @@ const CheckoutPage = () => {
         setThankYou(true);
         await clearCartForUser(userId);
       } else {
-        alert("Failed to place order");
+        alert("Failed to place the order.");
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("Something went wrong");
+      alert("Something went wrong while placing the order.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Show thank-you message after successful checkout
   if (thankYou) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6]">
-        <div className="bg-white p-8 rounded-xl shadow-md text-center max-w-md w-full">
-          <h2 className="text-2xl font-bold mb-4 text-[#6B705C]">Thank you!</h2>
-          <p className="text-[#3F4238]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
+        <div className="bg-white p-8 rounded-xl shadow-xl text-center w-full max-w-md border border-[#E0CFC0]">
+          <h2 className="text-3xl font-bold mb-4 text-[#6B705C]">Thank you!</h2>
+          <p className="text-[#3F4238] text-lg">
             Your order has been placed successfully.
           </p>
         </div>
@@ -108,15 +114,16 @@ const CheckoutPage = () => {
     );
   }
 
+  // If cart is empty
   if (!loading && cart?.items?.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6]">
-        <div className="text-center bg-white p-6 rounded shadow-md">
+      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
+        <div className="text-center bg-white p-6 rounded-xl shadow-md w-full max-w-sm">
           <h2 className="text-xl font-semibold mb-2 text-[#3F4238]">
             Your cart is empty.
           </h2>
-          <a href="/" className="text-[#B98B73] hover:underline">
-            Go shopping
+          <a href="/" className="text-[#B98B73] hover:underline font-medium">
+            Go shopping →
           </a>
         </div>
       </div>
@@ -125,13 +132,14 @@ const CheckoutPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md border border-[#D4C7B0]">
-        <h2 className="text-xl font-bold mb-6 text-center text-[#3F4238]">
-          Checkout
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-[#D4C7B0]">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#3F4238]">
+          🧾 Checkout
         </h2>
 
-        <div className="mb-4">
-          <p className="font-semibold mb-2 text-[#3F4238]">
+        {/* Payment Method Selection */}
+        <div className="mb-6">
+          <p className="font-semibold mb-3 text-[#3F4238]">
             Select Payment Method:
           </p>
           <div className="space-y-2 text-[#6B705C]">
@@ -142,7 +150,7 @@ const CheckoutPage = () => {
                   value={method}
                   checked={paymentMethod === method}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="mr-2 cursor-pointer accent-[#B98B73]"
+                  className="mr-2 accent-[#B98B73]"
                 />
                 {method}
               </label>
@@ -156,19 +164,21 @@ const CheckoutPage = () => {
           </div>
         </div>
 
+        {/* Price Display */}
         <div className="mb-6">
           <p className="font-semibold text-[#3F4238]">Total Price:</p>
-          <p className="text-lg font-bold text-[#6B705C]">
+          <p className="text-2xl font-bold text-[#6B705C]">
             ₹{Math.round(totalPrice)}
           </p>
         </div>
 
+        {/* Confirm Order Button */}
         <button
           onClick={handleConfirmOrder}
           disabled={loading || !cart}
-          className="w-full bg-[#B98B73] hover:bg-[#CB997E] text-white font-semibold py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-[#B98B73] hover:bg-[#CB997E] text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? "Processing..." : "Confirm Order"}
+          {loading ? "Processing..." : "✅ Confirm Order"}
         </button>
       </div>
     </div>
