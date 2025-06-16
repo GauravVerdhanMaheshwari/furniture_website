@@ -12,6 +12,7 @@ function Products() {
   const [priceValue, setPriceValue] = useState(10000);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const URL = import.meta.env.VITE_BACK_END_API;
 
   const minPrice = 100;
@@ -68,13 +69,22 @@ function Products() {
   };
 
   // Filter logic
-  const filteredProducts = products.filter((item) => {
-    return (
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!selectedType || item.type === selectedType) &&
-      item.price <= priceValue
+  useEffect(() => {
+    setFilteredProducts(
+      products.filter((item) => {
+        return (
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (!selectedType || item.type === selectedType) &&
+          item.price <= priceValue
+        );
+      })
     );
-  });
+  }, [products, searchTerm, selectedType, priceValue]);
+
+  // Ensure filteredProducts is set initially
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   return (
     <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
