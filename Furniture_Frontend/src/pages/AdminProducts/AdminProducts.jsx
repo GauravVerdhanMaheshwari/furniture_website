@@ -59,7 +59,7 @@ function AdminProducts() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFE8D6] py-12 mt-15">
+    <div className="min-h-screen bg-[#FFE8D6] py-12 mt-20">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header Section: Search + Add Product Button */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-10 bg-white shadow-md rounded-xl p-6 gap-4">
