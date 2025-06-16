@@ -81,7 +81,7 @@ function AdminOrder() {
   };
 
   return (
-    <div className="mt-20 min-h-screen bg-[#FFE8D6] px-4 py-10 flex flex-col items-center">
+    <div className="mt-17 min-h-screen bg-[#FFE8D6] px-4 py-10 flex flex-col items-center">
       <h1 className="text-4xl font-bold text-[#3F4238] mb-8 text-center">
         Admin Orders
       </h1>
