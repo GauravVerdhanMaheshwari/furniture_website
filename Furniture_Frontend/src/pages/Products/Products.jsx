@@ -23,12 +23,7 @@ function Products() {
     fetch(`${URL}/api/products/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetched Products:", data);
-        if (!data || !data.items) {
-          console.error("Invalid data format:", data);
-          return;
-        }
-        const items = data?.items || [];
+        const items = data || [];
         setProducts(items);
 
         // Initialize quantity for each product
