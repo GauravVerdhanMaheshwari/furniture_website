@@ -68,6 +68,12 @@ function Products() {
     // To be implemented: Add to cart logic
   };
 
+  // Ensure filteredProducts is set initially
+  useEffect(() => {
+    setFilteredProducts(products);
+    console.log("Filtered Products:", filteredProducts);
+  }, [products, filteredProducts]);
+
   // Filter logic
   useEffect(() => {
     setFilteredProducts(
@@ -79,12 +85,8 @@ function Products() {
         );
       })
     );
-  }, [products, searchTerm, selectedType, priceValue]);
-
-  // Ensure filteredProducts is set initially
-  useEffect(() => {
-    setFilteredProducts(products);
-  }, [products]);
+    console.log("Filtered Products:", filteredProducts);
+  }, [products, searchTerm, selectedType, priceValue, filteredProducts]);
 
   return (
     <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
