@@ -71,8 +71,6 @@ function Products() {
   // Ensure filteredProducts is set initially
   useEffect(() => {
     setFilteredProducts(products);
-    console.log("Filtered Products:", filteredProducts);
-    console.log("Products:", products);
   }, [products]);
 
   // Filter logic
@@ -86,8 +84,6 @@ function Products() {
         );
       })
     );
-    console.log("Filtered Products:", filteredProducts);
-    console.log("Products:", products);
   }, [products, searchTerm, selectedType, priceValue]);
 
   return (
