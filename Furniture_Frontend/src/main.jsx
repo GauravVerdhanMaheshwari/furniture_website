@@ -13,33 +13,48 @@ import { store } from "../app/store.js";
 import Loading from "./components/Loading/Loading.jsx";
 import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
 
-// Lazy-loaded pages
-const Home = lazy(() => import("./pages/Home/Home.jsx"));
-const Products = lazy(() => import("./pages/Products/Products.jsx"));
-const AboutUs = lazy(() => import("./pages/AboutUs/AboutUs.jsx"));
-const Contacts = lazy(() => import("./pages/Contacts/Contacts.jsx"));
-const Cart = lazy(() => import("./pages/Cart/Cart.jsx"));
-const CheckOut = lazy(() => import("./pages/CheckOut/CheckOut.jsx"));
-const Profile = lazy(() => import("./pages/Profile/Profile.jsx"));
-const Login = lazy(() => import("./pages/Login/Login.jsx"));
-const Register = lazy(() => import("./pages/Register/Register.jsx"));
+// Delay wrapper for lazy loading
+const lazyWithDelay = (importFunc, delay = 1500) =>
+  lazy(() =>
+    Promise.all([
+      importFunc(),
+      new Promise((resolve) => setTimeout(resolve, delay)),
+    ]).then(([moduleExports]) => moduleExports)
+  );
 
-const AdminLogin = lazy(() => import("./pages/AdminLogin/AdminLogin.jsx"));
-const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome.jsx"));
-const AdminProducts = lazy(() =>
+// Lazy-loaded pages with delay
+const Home = lazyWithDelay(() => import("./pages/Home/Home.jsx"));
+const Products = lazyWithDelay(() => import("./pages/Products/Products.jsx"));
+const AboutUs = lazyWithDelay(() => import("./pages/AboutUs/AboutUs.jsx"));
+const Contacts = lazyWithDelay(() => import("./pages/Contacts/Contacts.jsx"));
+const Cart = lazyWithDelay(() => import("./pages/Cart/Cart.jsx"));
+const CheckOut = lazyWithDelay(() => import("./pages/CheckOut/CheckOut.jsx"));
+const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
+const Login = lazyWithDelay(() => import("./pages/Login/Login.jsx"));
+const Register = lazyWithDelay(() => import("./pages/Register/Register.jsx"));
+
+const AdminLogin = lazyWithDelay(() =>
+  import("./pages/AdminLogin/AdminLogin.jsx")
+);
+const AdminHome = lazyWithDelay(() =>
+  import("./pages/AdminHome/AdminHome.jsx")
+);
+const AdminProducts = lazyWithDelay(() =>
   import("./pages/AdminProducts/AdminProducts.jsx")
 );
-const AdminOrder = lazy(() => import("./pages/AdminOrder/AdminOrder.jsx"));
-const AdminProfile = lazy(() =>
+const AdminOrder = lazyWithDelay(() =>
+  import("./pages/AdminOrder/AdminOrder.jsx")
+);
+const AdminProfile = lazyWithDelay(() =>
   import("./pages/AdminProfile/AdminProfile.jsx")
 );
-const AdminAddProduct = lazy(() =>
+const AdminAddProduct = lazyWithDelay(() =>
   import("./pages/AdminAddProduct/AdminAddProduct.jsx")
 );
-const AdminEditProduct = lazy(() =>
+const AdminEditProduct = lazyWithDelay(() =>
   import("./pages/AdminEditProduct/AdminEditProduct.jsx")
 );
-const Page404 = lazy(() => import("./pages/404/Page404.jsx"));
+const Page404 = lazyWithDelay(() => import("./pages/404/Page404.jsx"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
