@@ -72,7 +72,8 @@ function Products() {
   useEffect(() => {
     setFilteredProducts(products);
     console.log("Filtered Products:", filteredProducts);
-  }, [products, filteredProducts]);
+    console.log("Products:", products);
+  }, [products]);
 
   // Filter logic
   useEffect(() => {
@@ -86,7 +87,8 @@ function Products() {
       })
     );
     console.log("Filtered Products:", filteredProducts);
-  }, [products, searchTerm, selectedType, priceValue, filteredProducts]);
+    console.log("Products:", products);
+  }, [products, searchTerm, selectedType, priceValue]);
 
   return (
     <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
