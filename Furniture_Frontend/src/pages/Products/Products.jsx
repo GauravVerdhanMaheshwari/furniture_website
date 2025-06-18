@@ -13,6 +13,7 @@ function Products() {
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const URL = import.meta.env.VITE_BACK_END_API;
 
   const minPrice = 100;
@@ -36,6 +37,8 @@ function Products() {
         // Reset selectedType if not available
         const types = [...new Set(items.map((item) => item.type))];
         if (!types.includes(selectedType)) setSelectedType("");
+        setFilteredProducts(items);
+        setLoading(false);
       })
       .catch((err) => console.error("Failed to fetch products:", err));
   }, [selectedType, URL]);
@@ -68,11 +71,6 @@ function Products() {
     // To be implemented: Add to cart logic
   };
 
-  // Ensure filteredProducts is set initially
-  useEffect(() => {
-    setFilteredProducts(products);
-  }, [products]);
-
   // Filter logic
   useEffect(() => {
     setFilteredProducts(
@@ -86,7 +84,19 @@ function Products() {
     );
   }, [products, searchTerm, selectedType, priceValue]);
 
-  return (
+  return loading ? (
+    <div className="flex items-center justify-center min-h-screen bg-[#F8F1EB]">
+      <div className="text-center">
+        <div className="relative w-16 h-16 mx-auto mb-4">
+          <div className="absolute inset-0 rounded-full border-4 border-t-[#DDBEA9] border-b-[#A68A64] border-l-transparent border-r-transparent animate-spin"></div>
+          <div className="absolute inset-4 rounded-full bg-[#F8F1EB]"></div>
+        </div>
+        <p className="text-[#7A5C3E] font-semibold text-lg">
+          Loading products...
+        </p>
+      </div>
+    </div>
+  ) : (
     <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Page Heading */}
