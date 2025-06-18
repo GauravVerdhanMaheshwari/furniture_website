@@ -14,7 +14,7 @@ import Loading from "./components/Loading/Loading.jsx";
 import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
 
 // Delay wrapper for lazy loading
-const lazyWithDelay = (importFunc, delay = 5000) =>
+const lazyWithDelay = (importFunc, delay = 8500) =>
   lazy(() =>
     Promise.all([
       importFunc(),
