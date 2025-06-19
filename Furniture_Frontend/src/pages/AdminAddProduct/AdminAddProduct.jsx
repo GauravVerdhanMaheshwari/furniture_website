@@ -1,27 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminAddProduct() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+  const navigate = useNavigate();
 
-  // Redirect unauthorized users
-  if (!localStorage.getItem("admin")) {
-    window.location.href = "/admin/login";
-  }
+  const [showPackageName, setShowPackageName] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [showPackageName, setShowPackageName] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  /**
+   * Redirect to login if user is not an admin
+   */
+  useEffect(() => {
+    if (!localStorage.getItem("admin")) {
+      navigate("/admin/login");
+    }
+  }, [navigate]);
 
-  // Convert file to base64 string
-  function convertToBase64(file) {
-    return new Promise((resolve, reject) => {
+  /**
+   * Convert image file to base64 string
+   */
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
-      reader.onerror = (err) => reject(err);
+      reader.onerror = (error) => reject(error);
     });
-  }
 
-  // Handle product form submission
+  /**
+   * Handles form submission for adding a new product
+   */
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -37,50 +46,47 @@ function AdminAddProduct() {
     }
 
     try {
-      // Convert images to base64
       const images = await Promise.all(
-        imageFiles.map(async (file) => await convertToBase64(file))
+        imageFiles.map((file) => convertToBase64(file))
       );
 
-      const data = {
+      const newProduct = {
         name: formData.get("name"),
         description: formData.get("description"),
         price: Number(formData.get("price")),
         stock: Number(formData.get("stock")),
-        images,
         company: formData.get("company") || "Made in Factory",
+        images,
         inStock: true,
-        New: formData.get("newProduct") === "on",
         Hot: formData.get("hot") === "on",
+        New: formData.get("newProduct") === "on",
         Package: formData.get("packageProduct") === "on",
-        AddedDate: new Date().toISOString(),
         PackageName:
           formData.get("packageProduct") === "on"
             ? formData.get("packageName")
             : "",
+        AddedDate: new Date().toISOString(),
       };
 
-      // Send product data to server
       const response = await fetch(`${URL}/api/owner/product/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(newProduct),
       });
 
       const result = await response.json();
-      if (!response.ok)
-        throw new Error(result.message || "Failed to add product");
 
-      alert("Product added successfully!");
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to add product");
+      }
+
+      alert("✅ Product added successfully!");
       form.reset();
       setShowPackageName(false);
 
-      // Redirect after a short delay
-      setTimeout(() => {
-        window.location.href = "/admin/products";
-      }, 1000);
-    } catch (error) {
-      console.error("Product submission error:", error);
+      setTimeout(() => navigate("/admin/products"), 800);
+    } catch (err) {
+      console.error("❌ Product submission failed:", err);
       alert("Failed to add product. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -98,7 +104,7 @@ function AdminAddProduct() {
           Add New Product
         </h1>
 
-        {/* Text Inputs */}
+        {/* Standard Input Fields */}
         {[
           { label: "Product Name", name: "name", type: "text", required: true },
           {
@@ -147,7 +153,7 @@ function AdminAddProduct() {
           </div>
         ))}
 
-        {/* Image Upload */}
+        {/* Image Upload Field */}
         <div>
           <label className="block font-medium mb-1">
             Upload Images (Max 4)
@@ -162,7 +168,7 @@ function AdminAddProduct() {
           />
         </div>
 
-        {/* Checkboxes */}
+        {/* Feature Toggles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
             { name: "hot", label: "🔥 Mark as Hot" },
@@ -172,18 +178,18 @@ function AdminAddProduct() {
               label: "📦 Is a Package?",
               onChange: (e) => setShowPackageName(e.target.checked),
             },
-          ].map((item, idx) => (
+          ].map(({ name, label, onChange }, idx) => (
             <label
               key={idx}
               className="flex items-center space-x-2 text-base font-medium"
             >
               <input
                 type="checkbox"
-                name={item.name}
-                onChange={item.onChange}
+                name={name}
+                onChange={onChange}
                 className="accent-[#B5838D]"
               />
-              <span>{item.label}</span>
+              <span>{label}</span>
             </label>
           ))}
         </div>
@@ -197,6 +203,7 @@ function AdminAddProduct() {
               name="packageName"
               placeholder="Enter Package Name"
               className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
+              required
             />
           </div>
         )}
