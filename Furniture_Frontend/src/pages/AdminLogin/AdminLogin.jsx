@@ -2,68 +2,74 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAdmin } from "../../../features/adminSlice";
-import viewIcon from "../../../public/view.webp"; // move to assets folder
-import hideIcon from "../../../public/hide.webp"; // move to assets folder
+
+// Move image assets to src/assets/
+import viewIcon from "../../../assets/view.webp";
+import hideIcon from "../../../assets/hide.webp";
 
 /**
  * AdminLogin Component
- * Handles admin authentication and redirects to dashboard on success.
+ * Handles secure admin login, dispatches user session to Redux,
+ * and navigates to admin dashboard upon successful login.
  */
 function AdminLogin() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const URL = import.meta.env.VITE_BACK_END_API;
 
-  // Return early if the API URL is not defined
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Show error if URL is not set
   if (!URL) {
-    console.error(
-      "VITE_BACK_END_API is not defined in the environment variables."
-    );
-    return null;
+    console.error("❌ VITE_BACK_END_API is not defined.");
+    return <p className="text-red-600 text-center">API not configured.</p>;
   }
 
-  // Handles admin login logic
+  /**
+   * Handle form submission and login logic
+   */
   const handleAdminLogin = async () => {
-    if (!email || !password) {
-      alert("Please fill in all fields");
+    if (!email.trim() || !password.trim()) {
+      alert("Please fill in all fields.");
       return;
     }
 
     try {
-      const response = await fetch(`${URL}/api/auth/admin/login`, {
+      const res = await fetch(`${URL}/api/auth/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      const result = await response.json();
-      console.log("Admin login response:", result);
+      const data = await res.json();
+      console.log("✅ Login response:", data);
 
-      if (response.ok) {
-        const adminID = result._id;
-        localStorage.setItem(
-          "admin",
-          JSON.stringify({ adminID, isAuthenticated: true })
-        );
-        dispatch(setAdmin({ adminID, isAuthenticated: true }));
-        navigate("/admin/home");
-      } else {
-        alert(result.message || "Admin login failed.");
+      if (!res.ok) {
+        alert(data.message || "Invalid credentials.");
+        return;
       }
-    } catch (error) {
-      console.error("Admin login error:", error);
+
+      // Save to localStorage and Redux
+      const adminID = data._id;
+      const adminData = { adminID, isAuthenticated: true };
+      localStorage.setItem("admin", JSON.stringify(adminData));
+      dispatch(setAdmin(adminData));
+
+      // Redirect to dashboard
+      navigate("/admin/home");
+    } catch (err) {
+      console.error("Login error:", err);
       alert("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-xl p-8 border border-[#C9B8A3]">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
+      <div className="w-full max-w-md bg-[#DDBEA9] p-8 rounded-2xl shadow-xl border border-[#C9B8A3]">
         {/* Title */}
-        <h1 className="text-3xl font-extrabold text-[#3F4238] text-center mb-6">
+        <h1 className="text-3xl font-extrabold text-center text-[#3F4238] mb-6">
           Admin Login
         </h1>
 
@@ -84,17 +90,17 @@ function AdminLogin() {
               Email
             </label>
             <input
-              type="email"
               id="email"
+              type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full border border-[#A5A58D] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73] transition"
+              className="w-full border border-[#A5A58D] py-2 px-3 rounded-lg shadow-sm focus:ring-2 focus:ring-[#B98B73] focus:outline-none transition"
             />
           </div>
 
-          {/* Password Field with Show/Hide Toggle */}
+          {/* Password Field with Toggle */}
           <div>
             <label
               htmlFor="password"
@@ -104,27 +110,27 @@ function AdminLogin() {
             </label>
             <div className="flex items-center gap-2">
               <input
-                type={showPassword ? "text" : "password"}
                 id="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full border border-[#A5A58D] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73] transition"
+                className="w-full border border-[#A5A58D] py-2 px-3 rounded-lg shadow-sm focus:ring-2 focus:ring-[#B98B73] focus:outline-none transition"
               />
               <img
                 src={showPassword ? hideIcon : viewIcon}
                 alt={showPassword ? "Hide password" : "Show password"}
-                className="w-6 h-6 cursor-pointer select-none"
+                className="w-6 h-6 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               />
             </div>
           </div>
 
-          {/* Login Button */}
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-[#CB997E] text-white font-bold py-2 rounded-lg hover:bg-[#B98B73] transition duration-300"
+            className="w-full py-2 font-bold text-white rounded-lg bg-[#CB997E] hover:bg-[#B98B73] transition duration-300"
           >
             Login
           </button>
