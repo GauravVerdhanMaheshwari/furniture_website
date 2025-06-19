@@ -1,16 +1,28 @@
 import React from "react";
-// Optional: Uncomment if you want to add icons for better visuals
+// Optional: Uncomment for better UX with icons
 // import { FaCheck, FaTimes, FaTruck, FaBan } from "react-icons/fa";
 
+/**
+ * Order Component
+ * @param {Object} props
+ * @param {Object} props.order - Order details
+ * @param {Function} props.handleOrderAction - Function to update order status
+ */
 export default function Order({ order, handleOrderAction }) {
-  // Confirm & trigger an order status update
+  /**
+   * Handle admin action confirmation and update
+   * @param {string} action - Action type (accept/reject/deliver/cancel)
+   * @param {string} statusLabel - New status label
+   */
   const handleClick = (action, statusLabel) => {
-    if (confirm(`${statusLabel} order ${order._id}?`)) {
+    if (
+      confirm(`Are you sure you want to mark this order as "${statusLabel}"?`)
+    ) {
       handleOrderAction(order._id, action, { status: statusLabel });
     }
   };
 
-  // Color mapping for different order statuses
+  // Color mappings for different statuses
   const statusColors = {
     Pending: "text-yellow-600",
     Accepted: "text-blue-600",
@@ -21,7 +33,7 @@ export default function Order({ order, handleOrderAction }) {
 
   return (
     <div className="bg-[#FDFCFB] border border-[#E3D5CA] p-6 rounded-xl shadow-lg transition hover:shadow-xl">
-      {/* Order Header */}
+      {/* Header: Customer name and order time */}
       <div className="flex justify-between items-center border-b pb-2 mb-4">
         <h2 className="text-2xl font-bold text-[#3F4238] truncate">
           {order.userId?.name || "Unknown Customer"}
@@ -31,7 +43,7 @@ export default function Order({ order, handleOrderAction }) {
         </span>
       </div>
 
-      {/* Ordered Items Preview */}
+      {/* Product items preview carousel */}
       <div>
         <h3 className="font-semibold text-[#3F4238] mb-2">Ordered Items:</h3>
         <div className="flex overflow-x-auto gap-4 py-2 scrollbar-thin scrollbar-thumb-[#DDBEA9]">
@@ -57,7 +69,7 @@ export default function Order({ order, handleOrderAction }) {
         </div>
       </div>
 
-      {/* Order Info */}
+      {/* Summary and status information */}
       <div className="mt-4 text-[#3F4238] space-y-1">
         <p>
           <span className="font-semibold">Total:</span> ₹{order.totalPrice}
@@ -74,7 +86,7 @@ export default function Order({ order, handleOrderAction }) {
         </p>
       </div>
 
-      {/* Admin Action Buttons */}
+      {/* Admin control buttons for order actions */}
       <div className="mt-5 flex flex-wrap gap-3">
         {order.status === "Pending" && (
           <>
