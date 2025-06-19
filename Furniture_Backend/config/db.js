@@ -1,15 +1,25 @@
+// config/db.js
+
 const mongoose = require("mongoose");
 
+/**
+ * @desc Establishes a connection to MongoDB using Mongoose
+ * @returns {Promise<void>}
+ */
 const connectDB = async () => {
   try {
-    console.log("⏳ Connecting to MongoDB...");
+    console.log("⏳ Attempting to connect to MongoDB...");
+
     await mongoose.connect(process.env.DATABASE_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useNewUrlParser: true, // Uses the new URL string parser
+      useUnifiedTopology: true, // Uses the new Server Discovery and Monitoring engine
     });
-    console.log("✅ MongoDB connected successfully");
+
+    console.log("✅ Successfully connected to MongoDB");
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error.message);
+    console.error("❌ Failed to connect to MongoDB:", error.message);
+
+    // Exit process with failure to avoid app running without DB
     process.exit(1);
   }
 };
