@@ -21,7 +21,7 @@ import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
  * @param {Function} importFunc - The dynamic import of the component
  * @param {number} delay - Optional delay in milliseconds (default: 8500ms)
  */
-const lazyWithDelay = (importFunc, delay = 8500) =>
+const lazyWithDelay = (importFunc, delay = 3000) =>
   lazy(() =>
     Promise.all([
       importFunc(),
