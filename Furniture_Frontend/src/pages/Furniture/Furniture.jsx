@@ -2,18 +2,50 @@ import React, { useEffect, useState } from "react";
 import { FurnitureCard } from "../../components/indexComponents.js";
 import { useSelector } from "react-redux";
 
+/**
+ * Furniture Component
+ * Displays a list of filtered furniture products and handles cart interaction.
+ *
+ * Props:
+ * - company: string (optional) → filters by company
+ * - furnitureProduct: string (optional) → search term for product name
+ * - priceValue: number (optional) → max price filter
+ * - searchTerm: string (optional) → global search filter
+ */
 function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [quantities, setQuantities] = useState({});
-  const [error, setError] = useState(null);
-  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+  const [products, setProducts] = useState([]); // All products fetched from the backend
+  const [filteredProducts, setFilteredProducts] = useState([]); // Filtered result
+  const [loading, setLoading] = useState(true); // Tracks loading state
+  const [quantities, setQuantities] = useState({}); // Stores quantity for each product
+  const [error, setError] = useState(null); // Error state
 
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
-  // 🛒 Add product to cart handler
+  /**
+   * ➕ Increments the quantity of a specific product
+   */
+  const handleIncrement = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) + 1,
+    }));
+  };
+
+  /**
+   * ➖ Decrements the quantity of a specific product (min 1)
+   */
+  const handleDecrement = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max((prev[id] || 1) - 1, 1),
+    }));
+  };
+
+  /**
+   * 🛒 Adds a selected product and quantity to the user's cart
+   */
   const handleAddToCart = async (userId, productId, quantity) => {
     if (!isLoggedIn || !userId) {
       alert("You must be logged in to add items to the cart.");
@@ -28,7 +60,7 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: userId,
+          userId,
           items: [{ productId, quantity }],
         }),
       });
@@ -44,23 +76,9 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     }
   };
 
-  // ➕ Quantity increment
-  const handleIncrement = (id) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 1) + 1,
-    }));
-  };
-
-  // ➖ Quantity decrement
-  const handleDecrement = (id) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max((prev[id] || 1) - 1, 1),
-    }));
-  };
-
-  // 🔄 Fetch product data on initial render
+  /**
+   * 🔄 Fetch product list from backend on component mount
+   */
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -78,7 +96,9 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     fetchProducts();
   }, []);
 
-  // 🔍 Apply filters whenever products or filter values change
+  /**
+   * 🔍 Filters product list based on passed props
+   */
   useEffect(() => {
     const filtered = products.filter((product) => {
       const matchesCompany = !company || product.company === company;
@@ -96,6 +116,9 @@ function Furniture({ company, furnitureProduct, priceValue, searchTerm }) {
     setFilteredProducts(filtered);
   }, [products, company, furnitureProduct, priceValue, searchTerm]);
 
+  /**
+   * 🖼️ Renders UI
+   */
   return (
     <div className="flex flex-wrap justify-center pt-4 px-2 md:px-6 pb-10 bg-[#FFE8D6] min-h-[85vh] text-[#3F4238]">
       {loading ? (
