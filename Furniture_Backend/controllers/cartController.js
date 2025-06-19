@@ -1,6 +1,13 @@
+// controllers/cartController.js
+
 const Cart = require("../Models/cart");
 
-// Get cart for user
+// ----------------------------- CART CONTROLLER -----------------------------
+
+/**
+ * @desc    Get cart for a specific user
+ * @route   GET /api/cart/:userId
+ */
 exports.getCartForUser = async (req, res) => {
   const { userId } = req.params;
 
@@ -8,7 +15,7 @@ exports.getCartForUser = async (req, res) => {
     const cart = await Cart.findOne({ userId }).populate("items.productId");
 
     if (!cart) {
-      return res.status(200).json({ userId, items: [] }); // Returning empty cart if not found
+      return res.status(200).json({ userId, items: [] }); // Return empty cart if not found
     }
 
     res.status(200).json(cart);
@@ -19,7 +26,10 @@ exports.getCartForUser = async (req, res) => {
   }
 };
 
-// Add item to cart
+/**
+ * @desc    Add items to a user's cart
+ * @route   POST /api/cart/add
+ */
 exports.addToCart = async (req, res) => {
   const { userId, items } = req.body;
 
@@ -33,6 +43,7 @@ exports.addToCart = async (req, res) => {
       cart = new Cart({ userId, items: [] });
     }
 
+    // Merge incoming items into existing cart
     for (const item of items) {
       if (!item.productId || item.quantity <= 0) continue;
 
@@ -48,10 +59,7 @@ exports.addToCart = async (req, res) => {
       if (existingItem) {
         existingItem.quantity += item.quantity;
       } else {
-        cart.items.push({
-          productId: incomingId,
-          quantity: item.quantity,
-        });
+        cart.items.push({ productId: incomingId, quantity: item.quantity });
       }
     }
 
@@ -59,16 +67,19 @@ exports.addToCart = async (req, res) => {
     res.status(200).json(cart);
   } catch (error) {
     console.error("Error adding to cart:", error);
-    res.status(500).json({
-      message: "Error adding item to cart",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({ message: "Error adding item to cart", error: error.message });
   }
 };
 
-// Update cart for user
+/**
+ * @desc    Update entire cart by cart ID
+ * @route   PUT /api/cart/update
+ */
 exports.updateCartForUser = async (req, res) => {
   const { cartId, items } = req.body;
+
   try {
     const cart = await Cart.findById(cartId);
 
@@ -76,33 +87,33 @@ exports.updateCartForUser = async (req, res) => {
       return res.status(404).json({ message: "Cart not found" });
     }
 
-    // Clear existing items and add new ones
+    // Replace existing items with new list
     cart.items = [];
     for (const item of items) {
       if (!item.productId || item.quantity <= 0) continue;
 
       const incomingId =
         typeof item.productId === "object"
-          ? item.productId.ObjectId || item.productId.toString()
+          ? item.productId._id || item.productId.toString()
           : item.productId.toString();
 
-      cart.items.push({
-        productId: incomingId,
-        quantity: item.quantity,
-      });
+      cart.items.push({ productId: incomingId, quantity: item.quantity });
     }
 
     await cart.save();
     res.status(200).json(cart);
   } catch (error) {
-    console.error("BACK END Error updating cart:", error);
+    console.error("Error updating cart:", error);
     res
       .status(500)
       .json({ message: "Error updating cart", error: error.message });
   }
 };
 
-// Remove item from cart
+/**
+ * @desc    Remove a single item from a user's cart
+ * @route   DELETE /api/cart/remove
+ */
 exports.removeItemFromCart = async (req, res) => {
   const { userId, productId } = req.body;
 
@@ -127,7 +138,10 @@ exports.removeItemFromCart = async (req, res) => {
   }
 };
 
-// Clear entire cart
+/**
+ * @desc    Clear all items in a user's cart
+ * @route   DELETE /api/cart/clear
+ */
 exports.clearCartForUser = async (req, res) => {
   const { userId } = req.body;
 
