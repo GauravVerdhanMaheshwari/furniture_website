@@ -1,54 +1,59 @@
 const mongoose = require("mongoose");
-const user = require("../Models/user");
+const User = require("../Models/user");
 
-const URL = process.env.URL || "http://localhost:5000";
+const BASE_URL = process.env.URL || "http://localhost:5000";
 
-// Get all users
+// GET /api/users - Fetch all users
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const users = await user.find();
-    console.log("Fetched users:", users);
-    res.json(users);
+    const users = await User.find();
+    res.status(200).json(users);
   } catch (error) {
     next(error);
   }
 };
 
-// Get the current user by email
+// POST /api/users/find - Get user by name, email, and password (Not recommended for auth in production)
 exports.getUserByEmail = async (req, res, next) => {
   try {
-    const userData = await user.findOne({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    });
-    if (!userData) {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const user = await User.findOne({ name, email, password });
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(userData);
+
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
 };
 
-// Get a user by ID
+// GET /api/users/:id - Fetch a user by ID
 exports.getUserById = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
 
   try {
-    const userData = await user.findById(req.params.id);
-    if (!userData) {
+    const user = await User.findById(id);
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(userData);
+
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
 };
 
-// Add a new user
+// POST /api/users - Add a new user
 exports.addUser = async (req, res, next) => {
   try {
     const { name, email, password, address, phone } = req.body;
@@ -57,20 +62,25 @@ exports.addUser = async (req, res, next) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const existingUser = await user.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res
+        .status(409)
+        .json({ message: "User with this email already exists" });
     }
 
-    const newUser = new user(req.body);
+    const newUser = new User({ name, email, password, address, phone });
     await newUser.save();
-    res.status(201).json({ message: "User added successfully" });
+
+    res
+      .status(201)
+      .json({ message: "User created successfully", user: newUser });
   } catch (error) {
     next(error);
   }
 };
 
-// Login a user
+// POST /api/users/login - User login
 exports.loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -81,25 +91,27 @@ exports.loginUser = async (req, res, next) => {
         .json({ message: "Email and password are required" });
     }
 
-    const userData = await user.findOne({ email });
-    if (!userData || userData.password !== password) {
+    const user = await User.findOne({ email });
+    if (!user || user.password !== password) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    res.json({ message: "Login successful", user: userData });
+    res.status(200).json({ message: "Login successful", user });
   } catch (error) {
     next(error);
   }
 };
 
-// Update a user
+// PUT /api/users/:id - Update a user
 exports.updateUser = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
 
   try {
-    const updatedUser = await user.findByIdAndUpdate(req.params.id, req.body, {
+    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -108,41 +120,43 @@ exports.updateUser = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ message: "User updated successfully", data: updatedUser });
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
     next(error);
   }
 };
 
-// Delete a user
+// DELETE /api/users/:id - Delete a user and related data
 exports.deleteUser = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
 
   try {
-    const deletedUser = await user.findByIdAndDelete(req.params.id);
+    const deletedUser = await User.findByIdAndDelete(id);
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Cascade delete cart
-    fetch(`${URL}/api/cart/delete/${req.params.id}`, {
+    // Cascade delete - cart
+    fetch(`${BASE_URL}/api/cart/delete/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => console.error("Error deleting cart:", error));
+      headers: { "Content-Type": "application/json" },
+    }).catch((err) => console.error("Error deleting cart:", err));
 
-    // Cascade delete orders
-    fetch(`${URL}/api/orders/delete/${req.params.id}`, {
+    // Cascade delete - orders
+    fetch(`${BASE_URL}/api/orders/delete/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => console.error("Error deleting orders:", error));
+      headers: { "Content-Type": "application/json" },
+    }).catch((err) => console.error("Error deleting orders:", err));
 
-    res.json({ message: "User deleted successfully" });
+    res
+      .status(200)
+      .json({ message: "User and related data deleted successfully" });
   } catch (error) {
     next(error);
   }
