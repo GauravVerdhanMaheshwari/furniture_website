@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 
+/**
+ * Displays user's purchase history with product previews and status actions.
+ * @param {Object[]} userPurchases - List of user's past purchases
+ * @param {Object[]} PurchaseProductDetail - Complete product info to map by productId
+ */
 function Purchase({ userPurchases, PurchaseProductDetail }) {
-  // Cancels a purchase (or confirms delivery)
+  /**
+   * Handles cancel or confirm receipt of a purchase
+   * @param {string} purchaseId
+   */
   const handleCancelPurchase = async (purchaseId) => {
     try {
-      const response = await fetch(
+      const res = await fetch(
         `https://furniture-website-backend-yubt.onrender.com/api/purchases/${purchaseId}`,
         { method: "DELETE" }
       );
-      if (!response.ok) throw new Error("Cancel failed");
+      if (!res.ok) throw new Error("Cancel request failed");
+
       alert("Purchase status updated.");
       window.location.reload();
     } catch (err) {
@@ -17,19 +26,18 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
     }
   };
 
-  // Slider component for cycling product images
+  /**
+   * Mini image slider for product previews
+   */
   const Slider = ({ images }) => {
     const [current, setCurrent] = useState(0);
     const length = images?.length || 0;
 
-    const nextSlide = () => setCurrent((prev) => (prev + 1) % length);
-    const prevSlide = () => setCurrent((prev) => (prev - 1 + length) % length);
-
-    if (!images || images.length === 0) {
+    if (!images || length === 0) {
       return (
         <img
           src="https://picsum.photos/200/300"
-          alt="default"
+          alt="No Preview"
           className="w-32 h-32 object-cover mb-2 rounded shadow-sm"
         />
       );
@@ -39,20 +47,20 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
       <div className="relative w-32 h-32 mb-2">
         <img
           src={images[current]}
-          alt={`Slide ${current}`}
+          alt={`Slide ${current + 1}`}
           className="w-full h-full object-cover rounded shadow-md"
         />
         {length > 1 && (
           <>
             <button
+              onClick={() => setCurrent((prev) => (prev - 1 + length) % length)}
               className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-30 text-white px-2 rounded-l hover:bg-opacity-50"
-              onClick={prevSlide}
             >
               ‹
             </button>
             <button
+              onClick={() => setCurrent((prev) => (prev + 1) % length)}
               className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black bg-opacity-30 text-white px-2 rounded-r hover:bg-opacity-50"
-              onClick={nextSlide}
             >
               ›
             </button>
@@ -62,7 +70,7 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
     );
   };
 
-  // Empty state message
+  // Display message if no purchases exist
   if (!userPurchases || userPurchases.length === 0) {
     return (
       <p className="text-[#B98B73] mt-6 text-xl font-semibold">
@@ -77,18 +85,17 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
         Purchase History
       </h2>
 
-      {/* Loop through each purchase */}
       {userPurchases.map((purchase) => (
         <div
           key={purchase._id}
           className="bg-[#FFE8D6] border border-[#D4C7B0] rounded-lg p-5 shadow-lg mb-6"
         >
-          {/* Basic Purchase Info */}
+          {/* Header Info */}
           <p className="text-[#6B705C] mb-1">
             <strong className="text-[#3F4238]">Order ID:</strong> {purchase._id}
           </p>
 
-          {/* Products inside the purchase */}
+          {/* Products in purchase */}
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-3">
             {purchase.items.map((item, index) => {
               const product = PurchaseProductDetail.find(
@@ -112,7 +119,7 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
             })}
           </div>
 
-          {/* Status & Metadata */}
+          {/* Meta and Action Section */}
           <div className="mt-4 space-y-1 text-[#6B705C]">
             <p>
               <strong className="text-[#3F4238]">Status:</strong>{" "}
@@ -128,7 +135,7 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
             </p>
           </div>
 
-          {/* Action Button: Cancel or Confirm Delivery */}
+          {/* Action Buttons */}
           {(purchase.status === "Pending" ||
             purchase.status === "Accepted") && (
             <button
