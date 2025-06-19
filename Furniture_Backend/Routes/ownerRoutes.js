@@ -4,6 +4,7 @@ const ownerController = require("../controllers/ownerController");
 
 // Product Management
 router.get("/products", ownerController.getAllProducts);
+router.post("/product/add", ownerController.addProduct);
 router.get("/products/new", ownerController.getNewProducts);
 router.get("/products/hot", ownerController.getHotProducts);
 router.get("/products/package", ownerController.getPackageProducts);
