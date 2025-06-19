@@ -2,17 +2,23 @@ import React, { useEffect, useState } from "react";
 import { FurnitureCard } from "../indexComponents.js";
 import { useSelector } from "react-redux";
 
+/**
+ * Suggestions component fetches and displays furniture products dynamically.
+ *
+ * @param {string} title - Section heading.
+ * @param {string} api - API endpoint to fetch suggested products.
+ */
 function Suggestions({ title, api }) {
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
-  // Add product to user's cart
+  // Adds a product to the user's cart
   const handleAddToCart = async (id, quantities) => {
     if (!isLoggedIn || !userId) {
       alert("Please log in to add items to the cart.");
@@ -24,24 +30,22 @@ function Suggestions({ title, api }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: userId,
+          userId,
           items: [{ productId: id, quantity: quantities[id] || 1 }],
         }),
       });
 
       const result = await response.json();
-      if (!response.ok) {
-        alert("Failed to add item to cart: " + result.message);
-        throw new Error(result.message || "Failed to add item to cart");
-      }
+      if (!response.ok) throw new Error(result.message || "Add to cart failed");
 
       alert("Item added to cart successfully!");
-    } catch (error) {
-      alert("Error sending cart data to server: " + error.message);
+    } catch (err) {
+      console.error("Cart error:", err);
+      alert("Error adding item to cart: " + err.message);
     }
   };
 
-  // Increase quantity handler
+  // Increments selected product's quantity
   const handleIncrement = (id, stock) => {
     if (stock > 0 && (quantities[id] || 1) >= stock) return;
     setQuantities((prev) => ({
@@ -50,7 +54,7 @@ function Suggestions({ title, api }) {
     }));
   };
 
-  // Decrease quantity handler
+  // Decrements selected product's quantity
   const handleDecrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
@@ -58,38 +62,33 @@ function Suggestions({ title, api }) {
     }));
   };
 
-  // Fetch product suggestions based on `api` prop
+  // Fetch product data on mount or api/title change
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch(api);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Status ${response.status}`);
 
         const data = await response.json();
-        const normalizedProducts = Array.isArray(data)
-          ? data
-          : data.products || [];
+        const productList = Array.isArray(data) ? data : data.products || [];
 
-        setProducts(normalizedProducts);
-
-        if (normalizedProducts.length === 0 && data.message) {
+        setProducts(productList);
+        if (productList.length === 0 && data.message) {
           setError(`No products found in "${title}" category`);
         }
       } catch (err) {
+        console.error("Fetch error:", err);
         setError("Failed to load products.");
-        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [title, api]);
+  }, [api, title]);
 
-  // Show loading message
+  // Show loading state
   if (loading) {
     return (
       <div className="text-center p-6 bg-[#FFE8D6] text-[#3F4238]">
@@ -98,7 +97,7 @@ function Suggestions({ title, api }) {
     );
   }
 
-  // Handle fetch error
+  // Handle API error
   if (error) {
     return (
       <div className="text-center p-6 bg-[#FFE8D6] text-[#6B705C]">
@@ -122,36 +121,25 @@ function Suggestions({ title, api }) {
             No Products Found
           </p>
         ) : (
-          products.map(
-            ({
-              _id,
-              name,
-              company,
-              price,
-              description,
-              images,
-              inStock,
-              stock,
-            }) => (
-              <FurnitureCard
-                key={_id}
-                id={_id}
-                userId={userId}
-                name={name}
-                company={company}
-                price={price}
-                description={description}
-                inStock={inStock}
-                stock={stock}
-                imageURL={images?.[0]}
-                images={images || []}
-                quantities={quantities}
-                handleAddToCart={handleAddToCart}
-                handleIncrement={handleIncrement}
-                handleDecrement={handleDecrement}
-              />
-            )
-          )
+          products.map((product) => (
+            <FurnitureCard
+              key={product._id}
+              id={product._id}
+              userId={userId}
+              name={product.name}
+              company={product.company}
+              price={product.price}
+              description={product.description}
+              inStock={product.inStock}
+              stock={product.stock}
+              imageURL={product.images?.[0]}
+              images={product.images || []}
+              quantities={quantities}
+              handleAddToCart={handleAddToCart}
+              handleIncrement={handleIncrement}
+              handleDecrement={handleDecrement}
+            />
+          ))
         )}
       </div>
     </section>
