@@ -1,5 +1,13 @@
 import React from "react";
 
+/**
+ * SearchFilter component handles both search input and filter panel toggle.
+ *
+ * @param {string} searchTerm - Current search text.
+ * @param {Function} setSearchTerm - Updates the search text.
+ * @param {boolean} showFilter - Flag for showing the filter panel.
+ * @param {Function} setShowFilter - Toggles the filter panel visibility.
+ */
 function SearchFilter({
   searchTerm,
   setSearchTerm,
@@ -8,9 +16,9 @@ function SearchFilter({
 }) {
   return (
     <div className="flex flex-col sm:flex-row items-center w-full gap-3 px-2 mb-4">
-      {/* Search Input with Icon */}
+      {/* Search Field with Icon */}
       <div className="relative w-full sm:w-auto flex items-center">
-        {/* Clickable search icon */}
+        {/* Search Icon (click to focus input) */}
         <img
           src="/search.webp"
           alt="Search icon"
@@ -18,15 +26,16 @@ function SearchFilter({
           onClick={() => document.getElementById("search")?.focus()}
         />
 
-        {/* Text input field */}
+        {/* Search Input Field */}
         <input
           type="text"
           id="search"
           value={searchTerm}
           placeholder="Search for furniture..."
           onChange={(e) => setSearchTerm(e.target.value)}
-          onFocus={() => setShowFilter(false)} // Hide filter panel when typing
+          onFocus={() => setShowFilter(false)} // Hide filters when typing
           className="pl-10 py-2 px-3 ml-1 sm:ml-2 w-full sm:w-[220px] text-[#3F4238] bg-white border-2 border-[#DDBEA9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#CB997E] placeholder-[#A5A58D] transition"
+          aria-label="Search input"
         />
       </div>
 
