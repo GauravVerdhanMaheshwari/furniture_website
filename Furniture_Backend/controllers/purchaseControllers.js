@@ -1,59 +1,75 @@
 const mongoose = require("mongoose");
-const purchase = require("../Models/purchase");
+const Purchase = require("../Models/purchase");
 const HistoryBought = require("../Models/history");
 
-// Get all purchases
+// GET /api/purchases - Get all purchases
 exports.getAllPurchases = async (req, res, next) => {
   try {
-    const purchases = await purchase.find();
-    res.json(purchases);
+    const purchases = await Purchase.find();
+    res.status(200).json(purchases);
   } catch (error) {
     next(error);
   }
 };
 
-// Get purchases by user ID
+// GET /api/purchases/:id - Get purchases by user ID
 exports.getPurchaseById = async (req, res, next) => {
   const { id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
 
   try {
-    const purchaseData = await purchase.find({ userId: id }).populate("userId");
+    const purchases = await Purchase.find({ userId: id }).populate("userId");
 
-    if (!purchaseData || purchaseData.length === 0) {
-      return res.status(404).json({ message: "Purchase not found" });
+    if (!purchases.length) {
+      return res
+        .status(404)
+        .json({ message: "No purchases found for this user" });
     }
 
-    res.json(purchaseData);
+    res.status(200).json(purchases);
   } catch (error) {
     next(error);
   }
 };
 
-// Add a new purchase
+// POST /api/purchases - Add a new purchase
 exports.addPurchase = async (req, res, next) => {
   try {
-    const newPurchase = new purchase(req.body);
+    const { userId, items, date, totalAmount } = req.body;
+
+    if (!userId || !items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: "Invalid purchase data" });
+    }
+
+    const newPurchase = new Purchase({ userId, items, date, totalAmount });
     await newPurchase.save();
-    res.status(201).json({ message: "Purchase added successfully" });
+
+    res
+      .status(201)
+      .json({
+        message: "Purchase created successfully",
+        purchase: newPurchase,
+      });
   } catch (error) {
     next(error);
   }
 };
 
-// Delete purchase and log to history
+// DELETE /api/purchases/:id - Delete a purchase and archive to history
 exports.deletePurchase = async (req, res, next) => {
   const { id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid purchase ID format" });
   }
 
   try {
-    const deletedPurchase = await purchase
-      .findByIdAndDelete(id)
-      .populate("items.productId");
+    const deletedPurchase = await Purchase.findByIdAndDelete(id).populate(
+      "items.productId"
+    );
 
     if (!deletedPurchase) {
       return res.status(404).json({ message: "Purchase not found" });
@@ -68,11 +84,11 @@ exports.deletePurchase = async (req, res, next) => {
 
     await HistoryBought.insertMany(historyEntries);
 
-    res.json({
-      message: "Purchase deleted and moved to history successfully",
+    res.status(200).json({
+      message: "Purchase deleted and logged to history successfully",
     });
   } catch (error) {
-    console.error("Error in deletePurchase:", error);
+    console.error("Error deleting purchase:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
