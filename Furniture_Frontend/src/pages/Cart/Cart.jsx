@@ -2,18 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { CartComponent } from "../../components/indexComponents.js";
 
+/**
+ * Cart Component
+ * Displays and manages a user's cart, including quantity updates,
+ * saving, removing items, and checkout functionality.
+ */
 function Cart() {
-  const [cart, setCart] = useState(null); // Stores the cart data
-  const [error, setError] = useState(null); // Stores error messages if any
-  const [loading, setLoading] = useState(true); // Tracks loading state
-  const [change, setChange] = useState(false); // Tracks if any cart changes occurred
+  const [cart, setCart] = useState(null); // Stores fetched cart data
+  const [error, setError] = useState(null); // Tracks any error messages
+  const [loading, setLoading] = useState(true); // Shows loader until data is fetched
+  const [change, setChange] = useState(false); // Tracks unsaved changes in cart
 
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
+  // Redux state
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
 
-  // Fetch cart on mount if user is logged in
+  /**
+   * Effect: Redirect unauthenticated users or fetch cart
+   */
   useEffect(() => {
     if (!isLoggedIn || !userId) {
       window.location.href = "/login";
@@ -22,7 +30,9 @@ function Cart() {
     }
   }, [isLoggedIn, userId]);
 
-  // Fetch the user's cart
+  /**
+   * Fetch user's cart from server and adjust items if quantity exceeds stock
+   */
   const fetchCart = async () => {
     try {
       const res = await fetch(`${URL}/api/cart/${userId}`);
@@ -41,41 +51,48 @@ function Cart() {
 
       if (adjusted) {
         setChange(true);
-        alert("Some items exceeded available stock and were adjusted.");
+        alert("Some item quantities were adjusted to available stock.");
       }
 
       setCart({ ...data, items: updatedItems });
     } catch (err) {
-      setError(err.message);
       console.error("Error fetching cart:", err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Update item quantity locally
+  /**
+   * Update quantity for an item in local state
+   */
   const updateItemQuantity = (productId, delta) => {
-    setCart((prevCart) => {
-      const updatedItems = prevCart.items.map((item) => {
+    setCart((prev) => {
+      const updatedItems = prev.items.map((item) => {
         if (item.productId._id === productId) {
           let newQty = item.quantity + delta;
+
           if (newQty < 1) {
             alert("Minimum quantity is 1");
             newQty = 1;
           } else if (newQty > item.productId.stock) {
-            alert("Quantity exceeds available stock");
+            alert("Quantity exceeds stock");
             newQty = item.productId.stock;
           }
+
           return { ...item, quantity: newQty };
         }
         return item;
       });
-      return { ...prevCart, items: updatedItems };
+
+      return { ...prev, items: updatedItems };
     });
     setChange(true);
   };
 
-  // Save cart changes to backend
+  /**
+   * Persist updated cart to backend
+   */
   const handleSaveChanges = async () => {
     try {
       const res = await fetch(`${URL}/api/cart/update`, {
@@ -101,7 +118,9 @@ function Cart() {
     }
   };
 
-  // Remove an item from the cart
+  /**
+   * Remove an item from the cart
+   */
   const handleRemoveItem = async (productId) => {
     try {
       const res = await fetch(`${URL}/api/cart/remove`, {
@@ -121,7 +140,9 @@ function Cart() {
     }
   };
 
-  // Clear the entire cart
+  /**
+   * Clear all items from the cart
+   */
   const handleClearCart = async () => {
     if (!window.confirm("Are you sure you want to clear your cart?")) return;
 
@@ -142,7 +163,7 @@ function Cart() {
     }
   };
 
-  // If user is not logged in
+  // 🧾 Fallback for unauthenticated users
   if (!isLoggedIn) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#FFE8D6]">
@@ -153,7 +174,7 @@ function Cart() {
     );
   }
 
-  // Show loading state
+  // ⏳ Show loading state
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#FFE8D6]">
@@ -162,6 +183,7 @@ function Cart() {
     );
   }
 
+  // ✅ Render Cart UI
   return (
     <div className="pt-20 flex flex-col items-center min-h-screen bg-[#FFE8D6] px-4 text-[#3F4238]">
       <h1 className="text-4xl font-bold mb-6 text-[#6B705C]">🛒 Your Cart</h1>
@@ -177,7 +199,7 @@ function Cart() {
           </p>
         ) : (
           <>
-            {/* List of cart items */}
+            {/* 🧾 Cart Items */}
             <ul className="divide-y divide-[#B7B7A4]">
               {cart.items.map((item) => (
                 <CartComponent
@@ -189,7 +211,7 @@ function Cart() {
               ))}
             </ul>
 
-            {/* Cart controls */}
+            {/* ⚙️ Cart Controls */}
             <div className="flex flex-col items-center mt-8 gap-4">
               <p className="text-2xl font-semibold text-[#3F4238]">
                 Total: ₹
@@ -199,15 +221,17 @@ function Cart() {
                 )}
               </p>
 
+              {/* Save Changes */}
               {change && (
                 <button
-                  className="px-5 py-2 bg-[#6B705C] text-white rounded-lg hover:bg-[#3F4238] transition"
                   onClick={handleSaveChanges}
+                  className="px-5 py-2 bg-[#6B705C] text-white rounded-lg hover:bg-[#3F4238] transition"
                 >
                   💾 Save Changes
                 </button>
               )}
 
+              {/* Proceed to Checkout */}
               <button
                 disabled={change}
                 onClick={() => {
@@ -226,9 +250,10 @@ function Cart() {
                 ✅ Proceed to Checkout
               </button>
 
+              {/* Clear Cart */}
               <button
-                className="px-5 py-2 bg-[#B98B73] text-white rounded-lg hover:bg-[#3F4238] transition"
                 onClick={handleClearCart}
+                className="px-5 py-2 bg-[#B98B73] text-white rounded-lg hover:bg-[#3F4238] transition"
               >
                 🗑️ Clear Cart
               </button>
