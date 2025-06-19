@@ -1,31 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
+/**
+ * CheckoutPage Component
+ * Manages cart review, payment method selection, and order placement.
+ */
 const CheckoutPage = () => {
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [thankYou, setThankYou] = useState(false);
-  const [cart, setCart] = useState(null);
-  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
+  const [paymentMethod, setPaymentMethod] = useState(""); // Selected payment method
+  const [totalPrice, setTotalPrice] = useState(0); // Calculated total price
+  const [loading, setLoading] = useState(true); // Tracks loading state
+  const [thankYou, setThankYou] = useState(false); // Shows thank you message
+  const [cart, setCart] = useState(null); // Stores user cart
 
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const userId = useSelector((state) => state.user.userID);
 
-  // Clear cart from backend after successful order
-  const clearCartForUser = async (userId) => {
-    try {
-      const res = await fetch(`${URL}/api/cart/clear`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-      if (!res.ok) throw new Error("Failed to clear cart");
-    } catch (error) {
-      console.error("Error clearing cart:", error);
-    }
-  };
-
-  // Fetch user's cart data on component mount
+  /**
+   * Fetch cart data on mount
+   */
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -39,37 +31,64 @@ const CheckoutPage = () => {
         setLoading(false);
       }
     };
-    fetchCart();
+
+    if (userId) fetchCart();
   }, [userId]);
 
-  // Calculate total price when cart updates
+  /**
+   * Calculate total price when cart updates
+   */
   useEffect(() => {
     if (!cart?.items) return;
+
     const total = cart.items.reduce(
       (acc, item) => acc + item.productId.price * item.quantity,
       0
     );
+
     setTotalPrice(total);
   }, [cart]);
 
-  // Redirect to profile after "Thank You" message
+  /**
+   * After successful order, redirect to profile page
+   */
   useEffect(() => {
     if (thankYou) {
       const timer = setTimeout(() => {
         window.location.href = "/profile";
       }, 1200);
+
       return () => clearTimeout(timer);
     }
   }, [thankYou]);
 
-  // Handle order confirmation
+  /**
+   * Clears the cart on the backend after successful order
+   */
+  const clearCartForUser = async () => {
+    try {
+      const res = await fetch(`${URL}/api/cart/clear`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!res.ok) throw new Error("Failed to clear cart");
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+    }
+  };
+
+  /**
+   * Handles order confirmation
+   */
   const handleConfirmOrder = async () => {
     if (!paymentMethod) return alert("Please select a payment method.");
     if (!cart?.items?.length) return alert("Your cart is empty.");
 
     setLoading(true);
 
-    const purchaseData = {
+    const orderPayload = {
       userId,
       items: cart.items.map((item) => ({
         productId: item.productId._id,
@@ -83,15 +102,13 @@ const CheckoutPage = () => {
       const res = await fetch(`${URL}/api/purchases`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(purchaseData),
+        body: JSON.stringify(orderPayload),
       });
 
-      if (res.ok) {
-        setThankYou(true);
-        await clearCartForUser(userId);
-      } else {
-        alert("Failed to place the order.");
-      }
+      if (!res.ok) throw new Error("Order placement failed");
+
+      await clearCartForUser();
+      setThankYou(true);
     } catch (error) {
       console.error("Error placing order:", error);
       alert("Something went wrong while placing the order.");
@@ -100,7 +117,7 @@ const CheckoutPage = () => {
     }
   };
 
-  // Show thank-you message after successful checkout
+  // ✅ Thank You Screen
   if (thankYou) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
@@ -114,7 +131,7 @@ const CheckoutPage = () => {
     );
   }
 
-  // If cart is empty
+  // 🛒 Empty Cart Fallback
   if (!loading && cart?.items?.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
@@ -130,6 +147,7 @@ const CheckoutPage = () => {
     );
   }
 
+  // 🧾 Checkout Form UI
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-[#D4C7B0]">
@@ -137,7 +155,7 @@ const CheckoutPage = () => {
           🧾 Checkout
         </h2>
 
-        {/* Payment Method Selection */}
+        {/* 🔐 Payment Method Selection */}
         <div className="mb-6">
           <p className="font-semibold mb-3 text-[#3F4238]">
             Select Payment Method:
@@ -164,7 +182,7 @@ const CheckoutPage = () => {
           </div>
         </div>
 
-        {/* Price Display */}
+        {/* 💰 Total Price Display */}
         <div className="mb-6">
           <p className="font-semibold text-[#3F4238]">Total Price:</p>
           <p className="text-2xl font-bold text-[#6B705C]">
@@ -172,7 +190,7 @@ const CheckoutPage = () => {
           </p>
         </div>
 
-        {/* Confirm Order Button */}
+        {/* ✅ Confirm Order */}
         <button
           onClick={handleConfirmOrder}
           disabled={loading || !cart}
