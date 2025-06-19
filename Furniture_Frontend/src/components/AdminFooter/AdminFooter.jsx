@@ -1,8 +1,18 @@
+// components/AdminFooter.jsx
+
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+/**
+ * AdminFooter Component
+ * @desc Displays the footer section of the admin panel with navigation links
+ */
 function AdminFooter() {
-  // Function to apply active/inactive styles to NavLink
+  /**
+   * @desc Returns the appropriate class name based on whether a NavLink is active
+   * @param {object} param0 - Destructured object from NavLink to check active state
+   * @returns {string} CSS class names for NavLink
+   */
   const linkCss = ({ isActive }) =>
     isActive
       ? "text-[#CB997E] font-semibold mx-3 md:mx-4 transition-colors duration-200"
