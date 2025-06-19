@@ -1,28 +1,35 @@
 import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+
 import {
-  Route,
   createBrowserRouter,
   createRoutesFromElements,
+  Route,
   RouterProvider,
 } from "react-router-dom";
-import App from "./App.jsx";
+
 import { Provider } from "react-redux";
 import { store } from "../app/store.js";
+
+import App from "./App.jsx";
 import Loading from "./components/Loading/Loading.jsx";
 import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
 
-// Delay wrapper for lazy loading
+/**
+ * 💤 Lazy loader with optional artificial delay (for UX or spinner testing)
+ * @param {Function} importFunc - The dynamic import of the component
+ * @param {number} delay - Optional delay in milliseconds (default: 8500ms)
+ */
 const lazyWithDelay = (importFunc, delay = 8500) =>
   lazy(() =>
     Promise.all([
       importFunc(),
       new Promise((resolve) => setTimeout(resolve, delay)),
-    ]).then(([moduleExports]) => moduleExports)
+    ]).then(([module]) => module)
   );
 
-// Lazy-loaded pages with delay
+// 🧩 Client pages (lazy-loaded for performance)
 const Home = lazyWithDelay(() => import("./pages/Home/Home.jsx"));
 const Products = lazyWithDelay(() => import("./pages/Products/Products.jsx"));
 const AboutUs = lazyWithDelay(() => import("./pages/AboutUs/AboutUs.jsx"));
@@ -33,6 +40,7 @@ const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
 const Login = lazyWithDelay(() => import("./pages/Login/Login.jsx"));
 const Register = lazyWithDelay(() => import("./pages/Register/Register.jsx"));
 
+// 🔐 Admin pages (isolated by path prefix)
 const AdminLogin = lazyWithDelay(() =>
   import("./pages/AdminLogin/AdminLogin.jsx")
 );
@@ -54,11 +62,17 @@ const AdminAddProduct = lazyWithDelay(() =>
 const AdminEditProduct = lazyWithDelay(() =>
   import("./pages/AdminEditProduct/AdminEditProduct.jsx")
 );
+
+// ❌ 404 fallback page
 const Page404 = lazyWithDelay(() => import("./pages/404/Page404.jsx"));
 
+/**
+ * 🧭 React Router setup using route definitions and nested <Route> structure
+ */
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+      {/* Client-side routes */}
       <Route
         index
         element={
@@ -131,6 +145,8 @@ const router = createBrowserRouter(
           </Suspense>
         }
       />
+
+      {/* Admin routes */}
       <Route
         path="admin"
         element={
@@ -195,6 +211,8 @@ const router = createBrowserRouter(
           </Suspense>
         }
       />
+
+      {/* Fallback route (404) */}
       <Route
         path="*"
         element={
@@ -207,6 +225,9 @@ const router = createBrowserRouter(
   )
 );
 
+/**
+ * 🚀 React app entry point: mount root component with Redux & Router
+ */
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
