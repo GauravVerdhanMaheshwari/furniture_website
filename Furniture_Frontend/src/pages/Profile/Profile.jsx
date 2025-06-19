@@ -6,26 +6,34 @@ import {
   Purchase,
 } from "../../components/indexComponents.js";
 
+/**
+ * Profile Page
+ * Displays user's information, purchase history, and activity logs.
+ * Allows profile updates and account deletion.
+ */
 function Profile() {
-  // Redux state selectors
+  // 🔗 Redux State
   const userID = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
-  // Redirect if not authenticated
+  // 🔒 Redirect unauthenticated users
   if (!isLoggedIn || !userID) {
     window.location.href = "/login";
   }
 
-  // Local state
+  // 📦 Local State
   const [userData, setUserData] = useState(null);
   const [userHistory, setUserHistory] = useState([]);
   const [purchaseData, setPurchaseData] = useState([]);
   const [detailedPurchaseProducts, setDetailedPurchaseProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [changed, setChanged] = useState(false);
+  const [changed, setChanged] = useState(false); // Tracks form changes
 
-  // Fetch profile-related data
+  /**
+   * Fetch user profile data, browsing history, and purchases.
+   * Also fetches detailed product data for each purchased item.
+   */
   useEffect(() => {
     if (!userID) return;
 
@@ -33,13 +41,14 @@ function Profile() {
       setLoading(true);
 
       try {
-        // Fetch user, history, and purchase data in parallel
+        // Parallel data fetching
         const [userRes, historyRes, purchaseRes] = await Promise.all([
           fetch(`${URL}/api/users/${userID}`),
           fetch(`${URL}/api/history/user/${userID}`),
           fetch(`${URL}/api/purchases/${userID}`),
         ]);
 
+        // Parse responses
         const user = await userRes.json();
         const history = await historyRes.json();
         const purchases = await purchaseRes.json();
@@ -47,11 +56,12 @@ function Profile() {
           ? purchases
           : [purchases];
 
+        // Store data in state
         setUserData(user);
         setUserHistory(Array.isArray(history) ? history : []);
         setPurchaseData(purchaseArray);
 
-        // Fetch detailed product info for each item in each purchase
+        // Fetch detailed product data for each purchased item
         const details = [];
         for (const purchase of purchaseArray) {
           for (const item of purchase.items) {
@@ -80,7 +90,9 @@ function Profile() {
     fetchData();
   }, [userID]);
 
-  // Handle profile update
+  /**
+   * Updates user profile data
+   */
   const handleSaveChanges = async () => {
     if (!userData || Object.values(userData).includes("")) {
       return alert("All fields must be filled out.");
@@ -105,7 +117,9 @@ function Profile() {
     }
   };
 
-  // Handle account deletion
+  /**
+   * Deletes the user account
+   */
   const handleDeleteUser = async () => {
     if (!window.confirm("Are you sure you want to delete your account?"))
       return;
@@ -124,7 +138,7 @@ function Profile() {
     }
   };
 
-  // Safety fallback (edge case)
+  // 🔐 Fallback UI if unauthorized (double check)
   if (!isLoggedIn || !userID) {
     return (
       <div className="bg-[#FFE8D6] min-h-screen flex items-center justify-center p-4">
@@ -135,6 +149,7 @@ function Profile() {
     );
   }
 
+  // ✅ Profile Page Rendering
   return (
     <div className="min-h-screen px-4 py-10 bg-[#FFE8D6] text-[#3F4238]">
       <div className="max-w-4xl mx-auto">
@@ -143,12 +158,12 @@ function Profile() {
           Your Profile
         </h1>
 
-        {/* Loading Spinner or Profile Content */}
+        {/* Conditional rendering: Spinner or Profile Content */}
         {loading ? (
           <p className="text-[#3F4238] text-lg text-center">Loading...</p>
         ) : userData && userData._id ? (
           <>
-            {/* Editable user form */}
+            {/* 📝 Editable Form */}
             <div className="mb-10">
               <UserForm
                 userData={userData}
@@ -160,7 +175,7 @@ function Profile() {
               />
             </div>
 
-            {/* Purchase section */}
+            {/* 📦 Purchase Records */}
             <div className="mb-10">
               <Purchase
                 userPurchases={purchaseData}
@@ -168,7 +183,7 @@ function Profile() {
               />
             </div>
 
-            {/* History section */}
+            {/* 📜 Browsing History */}
             <div className="mb-10">
               <HistoryBuys userID={userID} userHistory={userHistory} />
             </div>
