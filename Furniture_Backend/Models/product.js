@@ -1,42 +1,107 @@
 const mongoose = require("mongoose");
 
+/**
+ * 🔢 Validator to restrict image uploads to a maximum of 4.
+ * @param {Array} val - Array of image URLs.
+ * @returns {boolean} - True if image count is ≤ 4.
+ */
 function arrayLimit(val) {
   return val.length <= 4;
 }
 
+/**
+ * 🛋️ Product Schema
+ * Describes the structure of a product document in the database.
+ */
 const productSchema = new mongoose.Schema(
   {
+    // 📛 Product Name
     name: {
       type: String,
-      required: true,
+      required: [true, "Product name is required"],
       trim: true,
       minlength: 1,
       maxlength: 100,
     },
+
+    // 📝 Product Description
     description: {
       type: String,
-      required: true,
+      required: [true, "Product description is required"],
       trim: true,
       minlength: 1,
       maxlength: 500,
     },
-    price: { type: Number, required: true, min: 0 },
+
+    // 💵 Product Price
+    price: {
+      type: Number,
+      required: [true, "Price is required"],
+      min: [0, "Price cannot be negative"],
+    },
+
+    // 🖼️ Product Images (up to 4)
     images: {
       type: [String],
-      required: true,
+      required: [true, "At least one image is required"],
       validate: [arrayLimit, "You can upload up to 4 images."],
     },
-    stock: { type: Number, required: true, min: 0 },
-    inStock: { type: Boolean, default: true },
-    New: { type: Boolean, default: false },
-    Hot: { type: Boolean, default: false },
-    Package: { type: Boolean, default: false },
-    PackageName: { type: String, trim: true },
-    company: { type: String, required: true, trim: true },
-    AddedDate: { type: Date, default: Date.now },
+
+    // 📦 Stock Count
+    stock: {
+      type: Number,
+      required: [true, "Stock is required"],
+      min: [0, "Stock cannot be negative"],
+    },
+
+    // 🟢 Stock Availability Flag
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
+
+    // 🆕 Markers (for promotional tagging or filtering)
+    New: {
+      type: Boolean,
+      default: false,
+    },
+    Hot: {
+      type: Boolean,
+      default: false,
+    },
+    Package: {
+      type: Boolean,
+      default: false,
+    },
+
+    // 📦 Name of Package (if applicable)
+    PackageName: {
+      type: String,
+      trim: true,
+    },
+
+    // 🏢 Brand or Manufacturer Name
+    company: {
+      type: String,
+      required: [true, "Company is required"],
+      trim: true,
+    },
+
+    // 📅 Date Added to Catalog
+    AddedDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true, // Automatically adds createdAt and updatedAt
+  }
 );
 
+/**
+ * 🧾 Product Model
+ * Allows interaction with the 'products' collection in MongoDB.
+ */
 const Product = mongoose.model("Product", productSchema);
+
 module.exports = Product;
