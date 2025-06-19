@@ -1,17 +1,23 @@
 const mongoose = require("mongoose");
 const Product = require("../Models/product");
 
-// Fetch all products
+/**
+ * @desc    Fetch all products
+ * @route   GET /api/products
+ */
 exports.getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     next(error);
   }
 };
 
-// New products
+/**
+ * @desc    Fetch latest added products (New)
+ * @route   GET /api/products/new
+ */
 exports.getNewProducts = async (req, res, next) => {
   try {
     const newProducts = await Product.find({ New: true })
@@ -21,16 +27,19 @@ exports.getNewProducts = async (req, res, next) => {
     if (newProducts.length === 0) {
       return res
         .status(200)
-        .json({ message: "No products found", products: [] });
+        .json({ message: "No new products found", products: [] });
     }
 
-    res.json(newProducts);
+    res.status(200).json(newProducts);
   } catch (error) {
     next(error);
   }
 };
 
-// Hot products
+/**
+ * @desc    Fetch hot-selling products
+ * @route   GET /api/products/hot
+ */
 exports.getHotProducts = async (req, res, next) => {
   try {
     const hotProducts = await Product.find({ Hot: true })
@@ -40,16 +49,19 @@ exports.getHotProducts = async (req, res, next) => {
     if (hotProducts.length === 0) {
       return res
         .status(200)
-        .json({ message: "No products found", products: [] });
+        .json({ message: "No hot products found", products: [] });
     }
 
-    res.json(hotProducts);
+    res.status(200).json(hotProducts);
   } catch (error) {
     next(error);
   }
 };
 
-// Package products
+/**
+ * @desc    Fetch products that are part of a package deal
+ * @route   GET /api/products/package
+ */
 exports.getPackageProducts = async (req, res, next) => {
   try {
     const packageProducts = await Product.find({ Package: true })
@@ -59,68 +71,91 @@ exports.getPackageProducts = async (req, res, next) => {
     if (packageProducts.length === 0) {
       return res
         .status(200)
-        .json({ message: "No products found", products: [] });
+        .json({ message: "No package products found", products: [] });
     }
 
-    res.json(packageProducts);
+    res.status(200).json(packageProducts);
   } catch (error) {
     next(error);
   }
 };
 
-// Get product by ID with validation
+/**
+ * @desc    Get a product by its ID
+ * @route   GET /api/products/:id
+ */
 exports.getProductById = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  // Validate ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
 
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(id);
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json(product);
+
+    res.status(200).json(product);
   } catch (error) {
     next(error);
   }
 };
 
-// Update a product with ID validation
+/**
+ * @desc    Update a product by its ID
+ * @route   PUT /api/products/:id
+ */
 exports.updateProduct = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  // Validate ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
 
   try {
-    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure updates follow schema
     });
 
-    if (!updated) {
+    if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json({ message: "Product updated successfully", data: updated });
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-// Delete a product with ID validation
+/**
+ * @desc    Delete a product by its ID
+ * @route   DELETE /api/products/:id
+ */
 exports.deleteProduct = async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  // Validate ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
 
   try {
-    const deleted = await Product.findByIdAndDelete(req.params.id);
+    const deletedProduct = await Product.findByIdAndDelete(id);
 
-    if (!deleted) {
+    if (!deletedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json({ message: "Product deleted successfully" });
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     next(error);
   }
