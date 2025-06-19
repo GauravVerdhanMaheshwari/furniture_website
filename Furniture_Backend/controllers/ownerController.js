@@ -1,14 +1,18 @@
+// controllers/adminController.js
+
 const mongoose = require("mongoose");
 const Product = require("../Models/product");
 const Purchase = require("../Models/purchase");
 const HistoryBought = require("../Models/history");
 const Admin = require("../Models/admin");
 
+// ----------------------------- PRODUCT MANAGEMENT -----------------------------
+
 // Fetch all products
 exports.getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     next(error);
   }
@@ -21,9 +25,11 @@ exports.addProduct = async (req, res, next) => {
   const company = req.body.company || "Made in Factory";
   const AddedDate = new Date().toISOString();
   const PackageName = Package ? req.body.PackageName : "";
+
   if (!name || !description || !price || !stock) {
     return res.status(400).json({ message: "All fields are required" });
   }
+
   try {
     const newProduct = new Product({
       name,
@@ -39,6 +45,7 @@ exports.addProduct = async (req, res, next) => {
       AddedDate,
       PackageName,
     });
+
     await newProduct.save();
     res
       .status(201)
@@ -51,19 +58,13 @@ exports.addProduct = async (req, res, next) => {
   }
 };
 
+// Fetch categorized products
 exports.getNewProducts = async (req, res, next) => {
   try {
     const newProducts = await Product.find({ New: true })
       .sort({ AddedDate: -1 })
       .limit(3);
-
-    if (newProducts.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "No products found", products: [] });
-    }
-
-    res.json(newProducts);
+    res.status(200).json(newProducts);
   } catch (error) {
     next(error);
   }
@@ -74,14 +75,7 @@ exports.getHotProducts = async (req, res, next) => {
     const hotProducts = await Product.find({ Hot: true })
       .sort({ AddedDate: -1 })
       .limit(3);
-
-    if (hotProducts.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "No products found", products: [] });
-    }
-
-    res.json(hotProducts);
+    res.status(200).json(hotProducts);
   } catch (error) {
     next(error);
   }
@@ -92,45 +86,24 @@ exports.getPackageProducts = async (req, res, next) => {
     const packageProducts = await Product.find({ Package: true })
       .sort({ AddedDate: -1 })
       .limit(3);
-
-    if (packageProducts.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "No products found", products: [] });
-    }
-
-    res.json(packageProducts);
+    res.status(200).json(packageProducts);
   } catch (error) {
     next(error);
   }
 };
 
-// Get product by ID
+// Get single product by ID
 exports.getProductById = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
+
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json(product);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Fetch all purchases
-exports.getAllPurchases = async (req, res, next) => {
-  try {
-    const purchases = await Purchase.find().populate("userId", "name email");
-    if (purchases.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "No purchases found", purchases: [] });
-    }
-    res.json(purchases);
+    res.status(200).json(product);
   } catch (error) {
     next(error);
   }
@@ -141,6 +114,7 @@ exports.updateProduct = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
+
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -148,7 +122,7 @@ exports.updateProduct = async (req, res, next) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json({ message: "Product updated successfully", product });
+    res.status(200).json({ message: "Product updated successfully", product });
   } catch (error) {
     next(error);
   }
@@ -159,22 +133,24 @@ exports.deleteProduct = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
+
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json({ message: "Product deleted successfully" });
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     next(error);
   }
 };
 
-// Reject a product
+// Reject product by setting a flag
 exports.rejectProduct = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid product ID format" });
   }
+
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -182,17 +158,30 @@ exports.rejectProduct = async (req, res, next) => {
     }
     product.rejected = true;
     await product.save();
-    res.json({ message: "Product rejected successfully", product });
+    res.status(200).json({ message: "Product rejected successfully", product });
   } catch (error) {
     next(error);
   }
 };
 
-// Accept a purchase
+// ----------------------------- PURCHASE MANAGEMENT -----------------------------
+
+// Fetch all purchases
+exports.getAllPurchases = async (req, res, next) => {
+  try {
+    const purchases = await Purchase.find().populate("userId", "name email");
+    res.status(200).json(purchases);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Accept purchase
 exports.acceptPurchase = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid purchase ID format" });
   }
+
   try {
     const purchase = await Purchase.findById(req.params.id);
     if (!purchase) {
@@ -200,44 +189,44 @@ exports.acceptPurchase = async (req, res, next) => {
     }
     purchase.status = "Accepted";
     await purchase.save();
-    res.json({ message: "Purchase accepted successfully" });
+    res.status(200).json({ message: "Purchase accepted successfully" });
   } catch (error) {
     next(error);
   }
 };
 
-// Reject a purchase
+// Reject purchase if pending
 exports.rejectPurchase = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid purchase ID format" });
   }
+
   try {
     const purchase = await Purchase.findById(req.params.id);
     if (!purchase) {
       return res.status(404).json({ message: "Purchase not found" });
     }
     if (purchase.status !== "Pending") {
-      return res.status(400).json({
-        message: `Cannot reject an order with status: ${purchase.status}`,
-      });
+      return res
+        .status(400)
+        .json({ message: `Cannot reject a ${purchase.status} order` });
     }
     purchase.status = "Rejected";
     await purchase.save();
-    res.json({
-      message: "Purchase rejected successfully",
-      purchaseId: purchase._id,
-      status: purchase.status,
-    });
+    res
+      .status(200)
+      .json({ message: "Purchase rejected successfully", purchase });
   } catch (error) {
     next(error);
   }
 };
 
-// Deliver a purchase
+// Deliver purchase and update product stock
 exports.deliverPurchase = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid purchase ID format" });
   }
+
   try {
     const purchase = await Purchase.findById(req.params.id);
     if (!purchase) {
@@ -250,33 +239,31 @@ exports.deliverPurchase = async (req, res, next) => {
         product.stock = Math.max(product.stock - item.quantity, 0);
         await product.save();
 
-        const historyEntry = new HistoryBought({
+        const history = new HistoryBought({
           userID: purchase.userId,
           productID: item.productId,
           quantity: item.quantity,
           totalPrice: item.quantity * product.price,
         });
-
-        await historyEntry.save();
+        await history.save();
       }
     }
 
     purchase.status = "Delivered";
     await purchase.save();
 
-    res.json({
-      message: "Purchase delivered, stock updated, and history logged.",
-    });
+    res.status(200).json({ message: "Purchase delivered and logged" });
   } catch (error) {
     next(error);
   }
 };
 
-// Cancel a purchase
+// Cancel purchase
 exports.cancelPurchase = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid purchase ID format" });
   }
+
   try {
     const purchase = await Purchase.findById(req.params.id);
     if (!purchase) {
@@ -284,12 +271,15 @@ exports.cancelPurchase = async (req, res, next) => {
     }
     purchase.status = "Cancelled";
     await purchase.save();
-    res.json({ message: "Purchase cancelled successfully" });
+    res.status(200).json({ message: "Purchase cancelled successfully" });
   } catch (error) {
     next(error);
   }
 };
 
+// ----------------------------- ADMIN MANAGEMENT -----------------------------
+
+// Admin login
 exports.loginOwner = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -298,23 +288,16 @@ exports.loginOwner = async (req, res, next) => {
   }
 
   try {
-    // Assuming you have an Owner model for owner authentication
     const owner = await Admin.findOne({ email, password });
-    const ownerCheck = await Admin.find();
-    console.log("Owner login attempt:", { email, password });
-    console.log("Owner data:", ownerCheck);
+    if (!owner) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-    // if (!owner) {
-    //   return res.status(401).json({ message: "Invalid credentials" });
-    // }
-
-    res.json({
+    res.status(200).json({
       message: "Admin logged in successfully",
-      owner: ownerCheck,
+      owner,
       isAuthenticated: true,
     });
-    // Here you can generate a token or session for the admin
-    // res.json({ message: "Admin logged in successfully", adminId: owner._id });
   } catch (error) {
     next(error);
   }
@@ -339,7 +322,7 @@ exports.updateOwnerProfile = async (req, res, next) => {
       return res.status(404).json({ message: "Owner not found" });
     }
 
-    res.json({ message: "Owner profile updated successfully", owner });
+    res.status(200).json({ message: "Owner profile updated", owner });
   } catch (error) {
     next(error);
   }
@@ -348,11 +331,11 @@ exports.updateOwnerProfile = async (req, res, next) => {
 // Get owner profile
 exports.getOwnerProfile = async (req, res, next) => {
   try {
-    const owner = await Admin.find();
-    if (!owner || owner.length === 0) {
+    const owners = await Admin.find();
+    if (!owners.length) {
       return res.status(404).json({ message: "Owner not found" });
     }
-    res.json(owner);
+    res.status(200).json(owners);
   } catch (error) {
     next(error);
   }
