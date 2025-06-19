@@ -1,5 +1,15 @@
 import React from "react";
 
+/**
+ * UserForm Component - Handles user profile updates and deletion.
+ *
+ * @param {object} userData - Current user data.
+ * @param {function} setUserData - Setter for user data state.
+ * @param {function} setChanged - Setter to track form changes.
+ * @param {function} handleSaveChanges - Save handler.
+ * @param {function} handleDeleteUser - Delete handler.
+ * @param {boolean} changed - Flag indicating unsaved changes.
+ */
 function UserForm({
   userData,
   setUserData,
@@ -8,136 +18,123 @@ function UserForm({
   handleDeleteUser,
   changed = false,
 }) {
-  // Reusable input base classes
-  const inputBaseClasses =
+  const inputBase =
     "mb-4 p-2 rounded bg-[#DDBEA9] border border-[#D4C7B0] text-[#3F4238] placeholder-[#A5A58D] focus:outline-none focus:ring-2 focus:ring-[#CB997E]";
 
-  // If no user data available
   if (!userData) {
     return (
-      <div className="flex flex-col bg-[#FFE8D6] border border-[#D4C7B0] p-6 rounded-md text-xl font-semibold text-[#6B705C]">
-        <p className="text-[#B98B73]">⚠️ User data not available.</p>
+      <div className="bg-[#FFE8D6] border border-[#D4C7B0] p-6 rounded-md text-center text-[#B98B73] font-semibold text-xl">
+        ⚠️ User data not available.
       </div>
     );
   }
 
+  // Central change handler
+  const handleChange = (field, value) => {
+    setChanged(true);
+    setUserData((prev) => ({ ...prev, [field]: value }));
+  };
+
   return (
-    <div className="flex flex-col bg-[#FFE8D6] border border-[#D4C7B0] p-6 rounded-md shadow-md text-xl font-semibold text-[#6B705C] w-full max-w-xl mx-auto">
-      {/* Name Input */}
-      <label htmlFor="name" className="mb-1">
-        Name:
-      </label>
+    <div className="bg-[#FFE8D6] border border-[#D4C7B0] p-6 rounded-md shadow-md text-[#6B705C] font-semibold w-full max-w-xl mx-auto">
+      {/* Name */}
+      <label htmlFor="name">Name:</label>
       <input
-        type="text"
         id="name"
+        type="text"
         value={userData.name}
-        onChange={(e) => {
-          setChanged(true);
-          setUserData((prev) => ({ ...prev, name: e.target.value }));
-        }}
         placeholder="Enter your name"
-        className={inputBaseClasses}
-        maxLength={50}
+        className={inputBase}
         minLength={8}
+        maxLength={50}
+        required
+        onChange={(e) => handleChange("name", e.target.value)}
         onBlur={(e) => {
-          const len = e.target.value.length;
+          const len = e.target.value.trim().length;
           if (len < 8 || len > 50) {
-            alert("Name must be between 8 and 50 characters long.");
-            setUserData((prev) => ({ ...prev, name: "" }));
+            alert("Name must be between 8 and 50 characters.");
+            handleChange("name", "");
           }
         }}
-        required
       />
 
-      {/* Email Input */}
-      <label htmlFor="email" className="mb-1">
-        Email:
-      </label>
+      {/* Email */}
+      <label htmlFor="email">Email:</label>
       <input
-        type="email"
         id="email"
+        type="email"
         value={userData.email}
-        onChange={(e) => {
-          setChanged(true);
-          setUserData((prev) => ({ ...prev, email: e.target.value }));
-        }}
         placeholder="Enter your email"
-        className={inputBaseClasses}
-        pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+        className={inputBase}
+        required
+        onChange={(e) => handleChange("email", e.target.value)}
         onBlur={(e) => {
           const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailPattern.test(e.target.value)) {
             alert("Please enter a valid email address.");
-            setUserData((prev) => ({ ...prev, email: "" }));
+            handleChange("email", "");
           }
         }}
-        required
       />
 
-      {/* Address Input */}
-      <label htmlFor="address" className="mb-1">
-        Address:
-      </label>
+      {/* Address */}
+      <label htmlFor="address">Address:</label>
       <input
-        type="text"
         id="address"
+        type="text"
         value={userData.address}
-        onChange={(e) => {
-          setChanged(true);
-          setUserData((prev) => ({ ...prev, address: e.target.value }));
-        }}
         placeholder="Enter your address"
-        className={inputBaseClasses}
+        className={inputBase}
         required
+        onChange={(e) => handleChange("address", e.target.value)}
       />
 
-      {/* Phone Input */}
-      <label htmlFor="phone" className="mb-1">
-        Phone:
-      </label>
+      {/* Phone */}
+      <label htmlFor="phone">Phone:</label>
       <input
-        type="tel"
         id="phone"
+        type="tel"
         value={userData.phone}
-        onChange={(e) => {
-          setChanged(true);
-          setUserData((prev) => ({ ...prev, phone: e.target.value }));
-        }}
         placeholder="Enter your phone number"
-        className={inputBaseClasses}
-        minLength={10}
-        maxLength={10}
+        className={inputBase}
         pattern="\d{10}"
+        maxLength={10}
+        required
+        onChange={(e) => handleChange("phone", e.target.value)}
         onBlur={(e) => {
           if (e.target.value.length !== 10) {
-            alert("Phone number must be 10 digits long.");
-            setUserData((prev) => ({ ...prev, phone: "" }));
+            alert("Phone number must be exactly 10 digits.");
+            handleChange("phone", "");
           }
         }}
-        required
       />
 
       {/* Action Buttons */}
-      <div className="flex flex-col mt-6">
+      <div className="mt-6">
         {changed && (
-          <p className="text-[#6B705C] mb-3">
-            ✅ You have unsaved changes. Don’t forget to save.
-          </p>
+          <p className="mb-3 text-[#6B705C]">✅ Unsaved changes detected.</p>
         )}
+
         <div className="flex flex-wrap gap-3">
-          {/* Save Changes */}
           {changed && (
             <button
-              className="bg-[#CB997E] hover:bg-[#B98B73] text-white px-4 py-2 rounded transition"
               onClick={handleSaveChanges}
+              className="bg-[#CB997E] hover:bg-[#B98B73] text-white px-4 py-2 rounded transition"
             >
               Save Changes
             </button>
           )}
-          {/* Delete Account */}
           <button
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Are you sure you want to delete your account? This action is irreversible."
+                )
+              ) {
+                handleDeleteUser();
+              }
+            }}
             className="bg-[#3F4238] hover:bg-[#6B705C] text-white px-4 py-2 rounded transition"
-            onClick={handleDeleteUser}
           >
             Delete Account
           </button>
