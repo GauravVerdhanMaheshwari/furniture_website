@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 function Register() {
+  // 📦 Local form state
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [password, setPassword] = React.useState("");
@@ -11,19 +12,33 @@ function Register() {
   const [address, setAddress] = React.useState("");
   const [phone, setPhone] = React.useState("");
 
+  // 🌐 API endpoint
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
-  // Handle user registration
+  /**
+   * 📝 Handles user registration form submission
+   */
   const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      return alert("Passwords do not match.");
-    } else if (password.length < 8 || password.length > 20) {
-      return alert("Password must be between 8 and 20 characters long.");
-    } else if (!username || !email || !password || !confirmPassword) {
+    // 🔒 Validation
+    if (!username || !email || !password || !confirmPassword) {
       return alert("Please fill in all required fields.");
     }
 
-    const userData = { name: username, email, password, address, phone };
+    if (password !== confirmPassword) {
+      return alert("Passwords do not match.");
+    }
+
+    if (password.length < 8 || password.length > 20) {
+      return alert("Password must be between 8 and 20 characters.");
+    }
+
+    const userData = {
+      name: username,
+      email,
+      password,
+      address,
+      phone,
+    };
 
     try {
       const response = await fetch(`${URL}/api/users`, {
@@ -33,7 +48,7 @@ function Register() {
       });
 
       if (response.ok) {
-        // Clear form and redirect on success
+        // ✅ Success: clear form and redirect
         setUsername("");
         setEmail("");
         setPassword("");
@@ -60,11 +75,12 @@ function Register() {
         }}
         className="bg-[#DDBEA9] w-full max-w-lg px-10 py-12 rounded-2xl shadow-2xl space-y-5"
       >
+        {/* 🧾 Form Header */}
         <h2 className="text-3xl font-bold text-center text-[#3F4238] mb-6">
           Create an Account
         </h2>
 
-        {/* Username Field */}
+        {/* 👤 Username Field */}
         <div>
           <label htmlFor="username" className="block text-[#3F4238] mb-1">
             Username
@@ -80,7 +96,7 @@ function Register() {
           />
         </div>
 
-        {/* Email Field */}
+        {/* 📧 Email Field */}
         <div>
           <label htmlFor="email" className="block text-[#3F4238] mb-1">
             Email
@@ -96,7 +112,7 @@ function Register() {
           />
         </div>
 
-        {/* Password Field */}
+        {/* 🔑 Password Field */}
         <div>
           <label htmlFor="password" className="block text-[#3F4238] mb-1">
             Password
@@ -115,14 +131,14 @@ function Register() {
             />
             <img
               src={showPassword ? "/hide.webp" : "/view.webp"}
-              alt={showPassword ? "Hide" : "View"}
+              alt={showPassword ? "Hide password" : "View password"}
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
             />
           </div>
         </div>
 
-        {/* Confirm Password Field */}
+        {/* 🔁 Confirm Password Field */}
         <div>
           <label
             htmlFor="confirm-password"
@@ -144,14 +160,14 @@ function Register() {
             />
             <img
               src={showConfirmPassword ? "/hide.webp" : "/view.webp"}
-              alt={showConfirmPassword ? "Hide" : "View"}
+              alt={showConfirmPassword ? "Hide password" : "View password"}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
             />
           </div>
         </div>
 
-        {/* Address Field */}
+        {/* 🏠 Address Field (Optional) */}
         <div>
           <label htmlFor="address" className="block text-[#3F4238] mb-1">
             Address (optional)
@@ -166,7 +182,7 @@ function Register() {
           />
         </div>
 
-        {/* Phone Field */}
+        {/* 📞 Phone Field (Optional) */}
         <div>
           <label htmlFor="phone" className="block text-[#3F4238] mb-1">
             Phone (10 digits)
@@ -183,7 +199,7 @@ function Register() {
           />
         </div>
 
-        {/* Submit Button */}
+        {/* 🚀 Submit Button */}
         <button
           type="submit"
           className="w-full bg-[#CB997E] text-white font-semibold py-2 rounded-md hover:bg-[#B98B73] transition-all"
@@ -191,7 +207,7 @@ function Register() {
           Register
         </button>
 
-        {/* Login Redirect */}
+        {/* 🔁 Redirect to Login */}
         <div className="text-center mt-4 text-sm text-[#6B705C]">
           Already have an account?{" "}
           <NavLink
