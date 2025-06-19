@@ -3,16 +3,27 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../features/userSlice";
 
+/**
+ * Login Component
+ * Handles user authentication via username, email, and password.
+ */
 function Login() {
+  // 🔐 Input States
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
-  // Handles login logic and validation
+  /**
+   * Handles login logic:
+   * - Validates input
+   * - Sends POST request to backend
+   * - Stores user in Redux and localStorage
+   */
   const handleLogin = async () => {
     if (!username || !email || !password) {
       alert("Please fill in all fields.");
@@ -27,17 +38,12 @@ function Login() {
       });
 
       const result = await response.json();
-      console.log("Server response:", result);
-
       if (!response.ok) throw new Error(result.message || "Login failed");
 
-      // Save user to local storage and Redux
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ userID: result.user._id, isAuthenticated: true })
-      );
-
-      dispatch(setUser({ userID: result.user._id, isAuthenticated: true }));
+      // ✅ Save user info
+      const userPayload = { userID: result.user._id, isAuthenticated: true };
+      localStorage.setItem("user", JSON.stringify(userPayload));
+      dispatch(setUser(userPayload));
       navigate("/");
     } catch (error) {
       console.error("Login error:", error);
@@ -47,14 +53,15 @@ function Login() {
 
   return (
     <div className="mt-20 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center">
-      {/* Login Form Container */}
+      {/* 🧾 Login Form */}
       <form
-        className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-2xl px-8 py-10 space-y-6"
         onSubmit={(e) => {
           e.preventDefault();
           handleLogin();
         }}
+        className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-2xl px-8 py-10 space-y-6"
       >
+        {/* 🔓 Header */}
         <h2 className="text-3xl font-bold text-center text-[#3F4238] mb-2">
           Welcome Back 👋
         </h2>
@@ -62,7 +69,7 @@ function Login() {
           Please login to continue
         </p>
 
-        {/* Username Field */}
+        {/* 👤 Username Field */}
         <div>
           <label
             htmlFor="username"
@@ -81,7 +88,7 @@ function Login() {
           />
         </div>
 
-        {/* Email Field */}
+        {/* 📧 Email Field */}
         <div>
           <label
             htmlFor="email"
@@ -100,7 +107,7 @@ function Login() {
           />
         </div>
 
-        {/* Password Field */}
+        {/* 🔑 Password Field */}
         <div>
           <label
             htmlFor="password"
@@ -120,16 +127,17 @@ function Login() {
               maxLength={20}
               required
             />
+            {/* 👁️ Toggle Password Visibility */}
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
-              alt="toggle password visibility"
+              alt="Toggle password visibility"
               className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
               onClick={() => setShowPassword((prev) => !prev)}
             />
           </div>
         </div>
 
-        {/* Submit Button */}
+        {/* 🔘 Submit Button */}
         <button
           type="submit"
           className="w-full bg-[#6B705C] hover:bg-[#3F4238] text-white font-semibold py-2 rounded-md transition duration-300"
@@ -137,7 +145,7 @@ function Login() {
           Login
         </button>
 
-        {/* Register Link */}
+        {/* 🧭 Navigation to Register */}
         <p className="text-center text-sm mt-4">
           Don’t have an account?{" "}
           <NavLink
