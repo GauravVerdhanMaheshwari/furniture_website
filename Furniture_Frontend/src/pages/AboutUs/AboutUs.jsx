@@ -1,9 +1,19 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 function AboutUs() {
   return (
     <div className="bg-cream py-10 px-4 sm:px-8 md:px-16 max-w-7xl mx-auto mt-20">
-      {/* Header Section */}
+      {/* SEO and Meta Info */}
+      <Helmet>
+        <title>About Us | Geetanjali Furniture</title>
+        <meta
+          name="description"
+          content="Learn about Geetanjali Furniture, a trusted name in stylish and affordable furniture for over 15 years in Vastral. Discover our mission, values, and why customers love us."
+        />
+      </Helmet>
+
+      {/* Header */}
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-tan-dark">
           About Us
@@ -14,94 +24,96 @@ function AboutUs() {
       </div>
 
       <div className="space-y-10">
-        {/* Introduction Block */}
+        {/* Company Intro */}
         <section className="bg-white rounded-2xl shadow-md p-6 sm:p-10 hover:shadow-lg transition duration-300">
           <p className="text-base sm:text-lg text-charcoal text-justify leading-relaxed">
-            Located at Shop No. 1 & 2, Shree Manav Siva Vikas Mandal, Near
-            I.T.I., New RTO Road, Vastral - 382418, Geetanjali Furniture has
-            proudly served the community for over 15 years with unwavering
-            dedication to quality, affordability, and customer satisfaction.
+            Located at Shop No. 1 & 2, Shree Manav Siva Vikas Mandal, near
+            I.T.I., New RTO Road, Vastral – 382418, Geetanjali Furniture has
+            proudly served the community for over 15 years. We are known for
+            quality craftsmanship, affordability, and unwavering customer
+            satisfaction.
           </p>
         </section>
 
-        {/* Legacy Section */}
+        {/* Legacy */}
         <section className="bg-white rounded-2xl shadow-md p-6 sm:p-10 hover:shadow-lg transition duration-300">
           <h2 className="text-xl sm:text-2xl font-semibold text-peach-tan text-center mb-4">
             A Legacy of Trust and Quality
           </h2>
           <p className="text-base sm:text-lg text-charcoal text-justify leading-relaxed">
-            At Geetanjali Furniture, we believe your home is a reflection of
-            your personality — and we help you express it through stylish,
-            durable, and comfortable furniture. Since our humble beginnings,
-            we’ve become a trusted name in the local market, delivering elegance
-            and excellence to every household.
+            At Geetanjali Furniture, we believe your home should reflect your
+            personality. That’s why we offer furniture that’s not only stylish
+            and durable, but also comfortable and affordable. From modest
+            beginnings, we've earned the community’s trust through consistent
+            quality and service.
           </p>
         </section>
 
-        {/* Why Choose Us Section */}
+        {/* Why Choose Us */}
         <section className="bg-white rounded-2xl shadow-md p-6 sm:p-10 hover:shadow-lg transition duration-300">
           <h2 className="text-xl sm:text-2xl font-semibold text-peach-tan text-center mb-6">
             Why Choose Us?
           </h2>
           <ul className="text-charcoal text-base sm:text-lg space-y-4 list-disc pl-5 leading-relaxed">
             <li>
-              <strong>Extensive Collection:</strong> From contemporary to
-              classic furniture solutions.
+              <strong>Extensive Collection:</strong> From modern minimalism to
+              timeless classics.
             </li>
             <li>
-              <strong>Customization Options:</strong> Tailored to your taste,
-              size, and space.
+              <strong>Customization:</strong> Tailored sizes, finishes, and
+              styles to fit your needs.
             </li>
             <li>
-              <strong>One-Stop Destination:</strong> Everything from décor to
-              kitchens under one roof.
+              <strong>All-in-One Store:</strong> Furniture, décor, and kitchen
+              solutions.
             </li>
             <li>
-              <strong>Budget-Friendly Pricing:</strong> Great value with
-              seasonal discounts.
+              <strong>Affordable Pricing:</strong> Honest value with seasonal
+              offers.
             </li>
             <li>
-              <strong>Fast & Reliable Delivery:</strong> On-time and careful
-              handling every time.
+              <strong>Timely Delivery:</strong> Reliable, careful shipping every
+              time.
             </li>
             <li>
-              <strong>After-Sales Support:</strong> Hassle-free, expert guidance
-              post-purchase.
+              <strong>After-Sales Support:</strong> We're here for you, even
+              after your purchase.
             </li>
             <li>
-              <strong>Eco-Friendly Craftsmanship:</strong> Sustainable,
-              planet-conscious design.
+              <strong>Sustainable Craftsmanship:</strong> Built with
+              eco-friendly materials and processes.
             </li>
           </ul>
         </section>
 
-        {/* Mission Statement */}
+        {/* Mission */}
         <section className="bg-white rounded-2xl shadow-md p-6 sm:p-10 hover:shadow-lg transition duration-300">
           <h2 className="text-xl sm:text-2xl font-semibold text-peach-tan text-center mb-4">
             Our Mission
           </h2>
           <p className="text-base sm:text-lg text-charcoal text-justify leading-relaxed">
-            To provide high-quality, stylish, and affordable furniture that
-            enhances your home. We strive for innovation, craftsmanship, and
-            sustainability in every piece we offer.
+            To deliver high-quality, stylish, and affordable furniture that
+            elevates your living experience. We aim to blend innovation with
+            traditional craftsmanship — with a deep focus on sustainability.
           </p>
         </section>
 
-        {/* Vision Statement */}
+        {/* Vision */}
         <section className="bg-white rounded-2xl shadow-md p-6 sm:p-10 hover:shadow-lg transition duration-300">
           <h2 className="text-xl sm:text-2xl font-semibold text-peach-tan text-center mb-4">
             Our Vision
           </h2>
           <p className="text-base sm:text-lg text-charcoal text-justify leading-relaxed">
-            Whether it's your first home or a fresh update, we help bring your
-            vision to life. Explore comfort. Explore style. Explore Geetanjali.
+            Whether furnishing your first home or updating your space, our goal
+            is to make your journey comfortable and stylish. Explore comfort.
+            Explore style. Explore Geetanjali.
           </p>
         </section>
 
-        {/* Contact Information */}
+        {/* Contact Info */}
         <section className="bg-white rounded-2xl shadow-md p-6 sm:p-10 text-center hover:shadow-lg transition duration-300">
           <h2 className="text-xl sm:text-2xl font-semibold text-peach-tan mb-2">
-            📍 Geetanjali Furniture
+            📍 Visit Us
           </h2>
           <p className="text-base sm:text-lg text-charcoal leading-relaxed">
             Shop No. 1 & 2, Shree Manav Siva Vikas Mandal, Near I.T.I., New RTO
@@ -109,7 +121,7 @@ function AboutUs() {
           </p>
 
           <h3 className="text-lg sm:text-xl font-medium text-tan-dark mt-4">
-            📞 Call us today for inquiries and offers!
+            📞 Contact Us
           </h3>
           <p>
             <a
