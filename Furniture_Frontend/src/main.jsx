@@ -34,7 +34,6 @@ const Home = lazyWithDelay(() => import("./pages/Home/Home.jsx"));
 const Products = lazyWithDelay(() => import("./pages/Products/Products.jsx"));
 const AboutUs = lazyWithDelay(() => import("./pages/AboutUs/AboutUs.jsx"));
 const Contacts = lazyWithDelay(() => import("./pages/Contacts/Contacts.jsx"));
-const Cart = lazyWithDelay(() => import("./pages/Cart/Cart.jsx"));
 const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
 const Login = lazyWithDelay(() => import("./pages/Login/Login.jsx"));
 const Register = lazyWithDelay(() => import("./pages/Register/Register.jsx"));

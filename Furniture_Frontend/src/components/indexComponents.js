@@ -1,6 +1,5 @@
 import AdminFooter from "./AdminFooter/AdminFooter";
 import AdminHeader from "./AdminHeader/AdminHeader";
-import CartComponent from "./CartComponent/CartComponent";
 import Footer from "./Footer/Footer";
 import FurnitureCard from "./FurnitureCard/FurnitureCard";
 import Header from "./Header/Header";
@@ -17,7 +16,6 @@ import FilterPanel from "./FilterPanel/FilterPanel";
 export {
   AdminFooter,
   AdminHeader,
-  CartComponent,
   Footer,
   FurnitureCard,
   Header,

@@ -33,7 +33,6 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" })); // Parse URL-enc
 // -------------------------------
 app.use("/api/products", require("./Routes/productRoutes"));
 app.use("/api/auth", require("./Routes/authRoutes"));
-app.use("/api/cart", require("./Routes/cartRoutes"));
 app.use("/api/users", require("./Routes/userRoutes"));
 app.use("/api/history", require("./Routes/historyRoutes"));
 app.use("/api/owner", require("./Routes/ownerRoutes"));
