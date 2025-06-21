@@ -33,6 +33,41 @@ const productSchema = new mongoose.Schema(
       maxlength: 500,
     },
 
+    // 🏷️ Product Type (e.g., Sofa, Chair, Table)
+    type: {
+      type: String,
+      required: [true, "Product type is required"],
+      enum: [
+        "Sofa",
+        "Chair",
+        "Table",
+        "Bed",
+        "wardrobe",
+        "Shoes Rack",
+        "Others",
+      ],
+      trim: true,
+    },
+
+    // Product Size (dimensions in inches)
+    size: {
+      height: {
+        type: Number,
+        required: [true, "Height is required"],
+        min: [0, "Height cannot be negative"],
+      },
+      width: {
+        type: Number,
+        required: [true, "Width is required"],
+        min: [0, "Width cannot be negative"],
+      },
+      depth: {
+        type: Number,
+        required: [true, "Depth is required"],
+        min: [0, "Depth cannot be negative"],
+      },
+    },
+
     // 💵 Product Price
     price: {
       type: Number,

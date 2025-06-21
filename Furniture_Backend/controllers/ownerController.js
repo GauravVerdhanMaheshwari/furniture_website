@@ -20,7 +20,18 @@ exports.getAllProducts = async (req, res, next) => {
 
 // Add a new product
 exports.addProduct = async (req, res, next) => {
-  const { name, description, price, stock, New, Hot, Package } = req.body;
+  const {
+    name,
+    description,
+    price,
+    stock,
+    New,
+    Hot,
+    Package,
+    Length,
+    Height,
+    Depth,
+  } = req.body;
   const images = req.body.images || [];
   const company = req.body.company || "Made in Factory";
   const AddedDate = new Date().toISOString();
@@ -35,6 +46,11 @@ exports.addProduct = async (req, res, next) => {
       name,
       description,
       price,
+      size: {
+        Length: Length || 0,
+        Height: Height || 0,
+        Depth: Depth || 0,
+      },
       stock,
       images,
       company,

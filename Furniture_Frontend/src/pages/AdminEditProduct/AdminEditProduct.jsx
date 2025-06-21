@@ -123,6 +123,54 @@ function AdminEditProduct() {
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
           required
         />
+        {/* Size */}
+        <label className="block text-[#3F4238] font-medium mb-1">
+          Size (H x W x D in inches)
+        </label>
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <input
+            type="number"
+            min={0}
+            value={product.size?.height || ""}
+            onChange={(e) =>
+              setProduct((p) => ({
+                ...p,
+                size: { ...p.size, height: Number(e.target.value) },
+              }))
+            }
+            placeholder="Height"
+            className="border border-[#B7B7A4] rounded-lg px-3 py-2"
+            required
+          />
+          <input
+            type="number"
+            min={0}
+            value={product.size?.width || ""}
+            onChange={(e) =>
+              setProduct((p) => ({
+                ...p,
+                size: { ...p.size, width: Number(e.target.value) },
+              }))
+            }
+            placeholder="Width"
+            className="border border-[#B7B7A4] rounded-lg px-3 py-2"
+            required
+          />
+          <input
+            type="number"
+            min={0}
+            value={product.size?.depth || ""}
+            onChange={(e) =>
+              setProduct((p) => ({
+                ...p,
+                size: { ...p.size, depth: Number(e.target.value) },
+              }))
+            }
+            placeholder="Depth"
+            className="border border-[#B7B7A4] rounded-lg px-3 py-2"
+            required
+          />
+        </div>
 
         {/* Price */}
         <label className="block text-[#3F4238] font-medium mb-1">Price</label>
