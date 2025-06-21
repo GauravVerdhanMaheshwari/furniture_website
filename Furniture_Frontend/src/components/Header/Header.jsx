@@ -97,15 +97,6 @@ export default function Header() {
 
       {/* === User Section === */}
       <div className="flex items-center gap-3 ml-2">
-        {/* Cart Icon */}
-        <NavLink
-          to="/cart"
-          className="w-8 h-8 hover:scale-105 transition"
-          aria-label="Cart"
-        >
-          <img src="shopping-cart.webp" alt="Cart" className="w-full h-full" />
-        </NavLink>
-
         {/* Profile Icon */}
         <NavLink
           to="/profile"
