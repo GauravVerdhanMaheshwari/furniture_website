@@ -21,7 +21,7 @@ import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
  * @param {Function} importFunc - The dynamic import of the component
  * @param {number} delay - Optional delay in milliseconds (default: 8500ms)
  */
-const lazyWithDelay = (importFunc, delay = 3000) =>
+const lazyWithDelay = (importFunc, delay = 0) =>
   lazy(() =>
     Promise.all([
       importFunc(),
@@ -97,22 +97,6 @@ const router = createBrowserRouter(
         element={
           <Suspense fallback={<Loading />}>
             <Contacts />
-          </Suspense>
-        }
-      />
-      <Route
-        path="cart"
-        element={
-          <Suspense fallback={<Loading />}>
-            <Cart />
-          </Suspense>
-        }
-      />
-      <Route
-        path="checkout"
-        element={
-          <Suspense fallback={<Loading />}>
-            <CheckOut />
           </Suspense>
         }
       />
