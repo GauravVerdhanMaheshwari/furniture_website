@@ -50,9 +50,6 @@ const AdminHome = lazyWithDelay(() =>
 const AdminProducts = lazyWithDelay(() =>
   import("./pages/AdminProducts/AdminProducts.jsx")
 );
-const AdminOrder = lazyWithDelay(() =>
-  import("./pages/AdminOrder/AdminOrder.jsx")
-);
 const AdminProfile = lazyWithDelay(() =>
   import("./pages/AdminProfile/AdminProfile.jsx")
 );
@@ -176,14 +173,6 @@ const router = createBrowserRouter(
         element={
           <Suspense fallback={<Loading />}>
             <AdminProducts />
-          </Suspense>
-        }
-      />
-      <Route
-        path="admin/orders"
-        element={
-          <Suspense fallback={<Loading />}>
-            <AdminOrder />
           </Suspense>
         }
       />

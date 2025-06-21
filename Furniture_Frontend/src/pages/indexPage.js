@@ -4,7 +4,6 @@ import AdminAddProduct from "./AdminAddProduct/AdminAddProduct";
 import AdminEditProduct from "./AdminEditProduct/AdminEditProduct";
 import AdminHome from "./AdminHome/AdminHome";
 import AdminLogin from "./AdminLogin/AdminLogin";
-import AdminOrder from "./AdminOrder/AdminOrder";
 import AdminProducts from "./AdminProducts/AdminProducts";
 import AdminProfile from "./AdminProfile/AdminProfile";
 import Cart from "./Cart/Cart";
@@ -24,7 +23,6 @@ export {
   AdminEditProduct,
   AdminHome,
   AdminLogin,
-  AdminOrder,
   AdminProducts,
   AdminProfile,
   Cart,

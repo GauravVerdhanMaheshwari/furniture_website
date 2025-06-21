@@ -6,7 +6,6 @@ import FurnitureCard from "./FurnitureCard/FurnitureCard";
 import Header from "./Header/Header";
 import Hero from "./Hero/Hero";
 import HistoryBuys from "./HistoryBuys/HistoryBuys";
-import Order from "./Order/Order";
 import Product from "./Product/Product";
 import Purchase from "./Purchase/Purchase";
 import Search from "./Search/Search";
@@ -24,7 +23,6 @@ export {
   Header,
   Hero,
   HistoryBuys,
-  Order,
   Product,
   Purchase,
   Search,
