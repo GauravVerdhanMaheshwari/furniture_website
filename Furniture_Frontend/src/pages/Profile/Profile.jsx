@@ -24,7 +24,6 @@ function Profile() {
 
   // 📦 Local State
   const [userData, setUserData] = useState(null);
-  const [userHistory, setUserHistory] = useState([]);
   const [purchaseData, setPurchaseData] = useState([]);
   const [detailedPurchaseProducts, setDetailedPurchaseProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,15 +41,13 @@ function Profile() {
 
       try {
         // Parallel data fetching
-        const [userRes, historyRes, purchaseRes] = await Promise.all([
+        const [userRes, purchaseRes] = await Promise.all([
           fetch(`${URL}/api/users/${userID}`),
-          fetch(`${URL}/api/history/user/${userID}`),
           fetch(`${URL}/api/purchases/${userID}`),
         ]);
 
         // Parse responses
         const user = await userRes.json();
-        const history = await historyRes.json();
         const purchases = await purchaseRes.json();
         const purchaseArray = Array.isArray(purchases)
           ? purchases
@@ -58,7 +55,6 @@ function Profile() {
 
         // Store data in state
         setUserData(user);
-        setUserHistory(Array.isArray(history) ? history : []);
         setPurchaseData(purchaseArray);
 
         // Fetch detailed product data for each purchased item
@@ -88,7 +84,7 @@ function Profile() {
     };
 
     fetchData();
-  }, [userID]);
+  }, [userID, URL]);
 
   /**
    * Updates user profile data
@@ -181,11 +177,6 @@ function Profile() {
                 userPurchases={purchaseData}
                 PurchaseProductDetail={detailedPurchaseProducts}
               />
-            </div>
-
-            {/* 📜 Browsing History */}
-            <div className="mb-10">
-              <HistoryBuys userID={userID} userHistory={userHistory} />
             </div>
           </>
         ) : (
