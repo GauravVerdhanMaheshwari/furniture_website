@@ -1,3 +1,5 @@
+// components/Product.jsx
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -11,10 +13,7 @@ function Product({ product, deleteProduct }) {
   const { _id, name, price, images = [] } = product;
 
   return (
-    <div
-      key={_id}
-      className="bg-[#DDBEA9] rounded-xl shadow-md w-full sm:w-64 p-4 hover:shadow-xl transition-shadow duration-300"
-    >
+    <div className="bg-[#DDBEA9] rounded-xl shadow-md w-full sm:w-64 p-4 hover:shadow-xl transition-shadow duration-300">
       {/* Product Image Gallery */}
       <div className="flex gap-2 overflow-x-auto rounded-md scrollbar-thin scrollbar-thumb-[#B7B7A4] mb-3">
         {images.length > 0 ? (
@@ -35,7 +34,6 @@ function Product({ product, deleteProduct }) {
         )}
       </div>
 
-      {/* Divider */}
       <hr className="my-2 border-[#B7B7A4]" />
 
       {/* Product Details */}
@@ -44,7 +42,6 @@ function Product({ product, deleteProduct }) {
 
       {/* Admin Action Buttons */}
       <div className="mt-4 space-y-2">
-        {/* Edit Button */}
         <Link
           to={`/admin/edit-product/${_id}`}
           className="block bg-[#6B705C] text-white text-center py-2 rounded-md hover:bg-[#3F4238] transition"
@@ -52,7 +49,6 @@ function Product({ product, deleteProduct }) {
           Edit Product
         </Link>
 
-        {/* Delete Button */}
         <button
           onClick={() => deleteProduct(_id)}
           className="block bg-red-500 text-white text-center py-2 rounded-md hover:bg-red-600 transition w-full"
