@@ -13,13 +13,6 @@ router.put("/product/:id", ownerController.updateProduct);
 router.delete("/product/:id", ownerController.deleteProduct);
 router.patch("/product/reject/:id", ownerController.rejectProduct);
 
-// Purchase Management
-router.get("/purchases", ownerController.getAllPurchases);
-router.patch("/purchase/accept/:id", ownerController.acceptPurchase);
-router.patch("/purchase/reject/:id", ownerController.rejectPurchase);
-router.patch("/purchase/deliver/:id", ownerController.deliverPurchase);
-router.patch("/purchase/cancel/:id", ownerController.cancelPurchase);
-
 // Owner Management
 router.get("/profile", ownerController.getOwnerProfile);
 router.put("/profile", ownerController.updateOwnerProfile);
