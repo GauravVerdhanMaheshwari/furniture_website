@@ -1,6 +1,11 @@
 // components/FilterPanel.jsx
+
 import React from "react";
 
+/**
+ * FilterPanel Component
+ * @description A reusable component for filtering products by type and price.
+ */
 function FilterPanel({
   minPrice,
   maxPrice,
@@ -29,7 +34,7 @@ function FilterPanel({
   return (
     <div className="w-full border border-[#D4C7B0] rounded-xl p-5 bg-[#FFF9F3] mb-6 shadow-sm transition-all duration-300 animate-fade-in">
       <div className="flex flex-col gap-5">
-        {/* Type Filter */}
+        {/* === Type Filter Dropdown === */}
         <div className="flex flex-col sm:flex-row justify-between items-center px-2">
           <label
             htmlFor="typeFilter"
@@ -52,7 +57,7 @@ function FilterPanel({
           </select>
         </div>
 
-        {/* Price Filter */}
+        {/* === Price Filter === */}
         <div className="flex flex-col sm:flex-row justify-between items-center px-2">
           <h2 className="text-lg font-semibold text-[#3F4238] mb-2 sm:mb-0">
             Sort by Price
@@ -82,7 +87,7 @@ function FilterPanel({
 
         <hr className="border-[#D4C7B0]" />
 
-        {/* Clear Filters */}
+        {/* === Clear Filter Button === */}
         <div className="flex justify-end px-2">
           <button
             onClick={handleClearFilter}
