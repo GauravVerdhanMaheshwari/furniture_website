@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Product, CATEGORY_ENUM } = require("../Models/product");
-const mongoose = require("mongoose");
 
 exports.getProductCategories = async (req, res) => {
   res.status(200).json(CATEGORY_ENUM);
