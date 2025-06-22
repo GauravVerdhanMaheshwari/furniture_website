@@ -2,7 +2,6 @@
 
 const mongoose = require("mongoose");
 const Product = require("../Models/product");
-const HistoryBought = require("../Models/history");
 const Admin = require("../Models/admin");
 
 // ----------------------------- PRODUCT MANAGEMENT -----------------------------
