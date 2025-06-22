@@ -140,9 +140,6 @@ function Products() {
               height={item.size.height}
               width={item.size.width}
               depth={item.size.depth}
-              stock={item.stock}
-              inStock={item.stock > 0}
-              quantities={quantities}
               images={item.images}
               handleAddToCart={() =>
                 handleAddToCart(item._id, quantities[item._id] || 1)

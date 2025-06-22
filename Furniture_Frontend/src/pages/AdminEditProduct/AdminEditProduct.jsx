@@ -185,34 +185,6 @@ function AdminEditProduct() {
           required
         />
 
-        {/* In Stock */}
-        <label className="block text-[#3F4238] font-medium mb-1">Stock</label>
-        <input
-          type="number"
-          min={0}
-          value={product.stock}
-          onChange={(e) =>
-            setProduct((p) => ({ ...p, stock: Number(e.target.value) }))
-          }
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-          required
-        />
-
-        {/* Status Dropdown */}
-        <label className="block text-[#3F4238] font-medium mb-1">
-          Availability
-        </label>
-        <select
-          value={product.inStock ? "Yes" : "No"}
-          onChange={(e) =>
-            setProduct((p) => ({ ...p, inStock: e.target.value === "Yes" }))
-          }
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-        >
-          <option value="Yes">In Stock</option>
-          <option value="No">Out of Stock</option>
-        </select>
-
         {/* Upload New Image */}
         <label className="block text-[#3F4238] font-medium mb-1">
           Upload New Image

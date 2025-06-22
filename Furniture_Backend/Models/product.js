@@ -82,19 +82,6 @@ const productSchema = new mongoose.Schema(
       validate: [arrayLimit, "You can upload up to 4 images."],
     },
 
-    // 📦 Stock Count
-    stock: {
-      type: Number,
-      required: [true, "Stock is required"],
-      min: [0, "Stock cannot be negative"],
-    },
-
-    // 🟢 Stock Availability Flag
-    inStock: {
-      type: Boolean,
-      default: true,
-    },
-
     // 🆕 Markers (for promotional tagging or filtering)
     New: {
       type: Boolean,

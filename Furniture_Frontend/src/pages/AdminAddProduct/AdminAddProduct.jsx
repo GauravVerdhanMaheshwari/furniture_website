@@ -123,12 +123,6 @@ function AdminAddProduct() {
             required: true,
           },
           {
-            label: "Stock Quantity",
-            name: "stock",
-            type: "number",
-            required: true,
-          },
-          {
             label: "Product Dimensions Length(inch)",
             name: "Length",
             type: "number",
