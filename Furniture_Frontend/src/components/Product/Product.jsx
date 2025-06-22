@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
  * @param {Function} props.deleteProduct - Function to handle product deletion
  */
 function Product({ product, deleteProduct }) {
-  const { _id, name, price, stock, inStock, images = [] } = product;
+  const { _id, name, price, images = [] } = product;
 
   return (
     <div
@@ -41,14 +41,6 @@ function Product({ product, deleteProduct }) {
       {/* Product Details */}
       <h2 className="text-lg font-bold text-[#3F4238] truncate">{name}</h2>
       <p className="text-[#6B705C] font-medium">₹{price}</p>
-      <p
-        className={`font-semibold ${
-          inStock ? "text-green-600" : "text-red-600"
-        }`}
-      >
-        {inStock ? "In Stock" : "Out of Stock"}
-      </p>
-      <p className="text-sm text-[#A5A58D]">Available: {stock}</p>
 
       {/* Admin Action Buttons */}
       <div className="mt-4 space-y-2">

@@ -10,57 +10,12 @@ import { useSelector } from "react-redux";
  */
 function Suggestions({ title, api }) {
   const [products, setProducts] = useState([]);
-  const [quantities, setQuantities] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const userId = useSelector((state) => state.user.userID);
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
-
-  // Adds a product to the user's cart
-  const handleAddToCart = async (id, quantities) => {
-    if (!isLoggedIn || !userId) {
-      alert("Please log in to add items to the cart.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${URL}/api/cart/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          items: [{ productId: id, quantity: quantities[id] || 1 }],
-        }),
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "Add to cart failed");
-
-      alert("Item added to cart successfully!");
-    } catch (err) {
-      console.error("Cart error:", err);
-      alert("Error adding item to cart: " + err.message);
-    }
-  };
-
-  // Increments selected product's quantity
-  const handleIncrement = (id, stock) => {
-    if (stock > 0 && (quantities[id] || 1) >= stock) return;
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 1) + 1,
-    }));
-  };
-
-  // Decrements selected product's quantity
-  const handleDecrement = (id) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max((prev[id] || 1) - 1, 1),
-    }));
-  };
 
   // Fetch product data on mount or api/title change
   useEffect(() => {
@@ -130,14 +85,8 @@ function Suggestions({ title, api }) {
               company={product.company}
               price={product.price}
               description={product.description}
-              inStock={product.inStock}
-              stock={product.stock}
               imageURL={product.images?.[0]}
               images={product.images || []}
-              quantities={quantities}
-              handleAddToCart={handleAddToCart}
-              handleIncrement={handleIncrement}
-              handleDecrement={handleDecrement}
             />
           ))
         )}

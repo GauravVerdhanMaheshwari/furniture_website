@@ -25,7 +25,7 @@ exports.addProduct = async (req, res, next) => {
   const AddedDate = new Date().toISOString();
   const PackageName = Package ? req.body.PackageName : "";
 
-  if (!name || !description || !price || !stock) {
+  if (!name || !description || !price) {
     return res.status(400).json({ message: "All fields are required" });
   }
 

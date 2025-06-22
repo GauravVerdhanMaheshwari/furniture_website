@@ -15,10 +15,6 @@ function FurnitureCard({
   height,
   width,
   depth,
-  quantities,
-  handleAddToCart,
-  handleIncrement,
-  handleDecrement,
   images = [],
 }) {
   return (
@@ -73,37 +69,6 @@ function FurnitureCard({
       </p>
 
       <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price}</p>
-
-      {/* === Quantity Controls === */}
-      <div className="flex items-center justify-between my-3">
-        <button
-          onClick={() => handleDecrement(id)}
-          className="w-1/5 py-1 border border-[#A5A58D] rounded hover:bg-[#FFE8D6] disabled:opacity-50"
-          aria-label="Decrease quantity"
-        >
-          −
-        </button>
-
-        <p className="w-1/5 text-center border border-[#A5A58D] py-1 rounded bg-white">
-          {quantities[id] || 1}
-        </p>
-
-        <button
-          onClick={() => handleIncrement(id)}
-          className="w-1/5 py-1 border border-[#A5A58D] rounded hover:bg-[#FFE8D6] disabled:opacity-50"
-          aria-label="Increase quantity"
-        >
-          +
-        </button>
-      </div>
-
-      {/* === Add to Cart Button === */}
-      <button
-        onClick={() => handleAddToCart(id, quantities[id] || 1)}
-        className={`w-full py-2 rounded font-medium transition-all bg-[#CB997E] hover:bg-[#B98B73] text-white active:scale-95`}
-      >
-        Add to Cart
-      </button>
     </div>
   );
 }

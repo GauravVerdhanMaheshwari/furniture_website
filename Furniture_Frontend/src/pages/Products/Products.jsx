@@ -65,24 +65,6 @@ function Products() {
     setShowFilter(false);
   };
 
-  const handleIncrement = (id, maxStock) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.min((prev[id] || 1) + 1, maxStock),
-    }));
-  };
-
-  const handleDecrement = (id) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max((prev[id] || 1) - 1, 1),
-    }));
-  };
-
-  const handleAddToCart = (id, quantity) => {
-    console.log(`Added ${quantity} of product ${id} to cart.`);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F8F1EB]">
@@ -141,11 +123,6 @@ function Products() {
               width={item.size.width}
               depth={item.size.depth}
               images={item.images}
-              handleAddToCart={() =>
-                handleAddToCart(item._id, quantities[item._id] || 1)
-              }
-              handleIncrement={() => handleIncrement(item._id, item.stock)}
-              handleDecrement={() => handleDecrement(item._id)}
             />
           ))}
         </div>
