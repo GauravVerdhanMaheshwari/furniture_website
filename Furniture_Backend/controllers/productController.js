@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
-const Product = require("../Models/product");
+const { Product, CATEGORY_ENUM } = require("../Models/product");
+const mongoose = require("mongoose");
+
+exports.getProductCategories = async (req, res) => {
+  res.status(200).json(CATEGORY_ENUM);
+};
+
+// other existing handlers remain the same...
 
 /**
  * @desc    Fetch all products

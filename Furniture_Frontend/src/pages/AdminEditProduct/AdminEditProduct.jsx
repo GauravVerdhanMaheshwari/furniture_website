@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+/**
+ * AdminEditProduct - Edit product details
+ */
 function AdminEditProduct() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Convert single file to base64
   const convertToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -18,14 +21,25 @@ function AdminEditProduct() {
       reader.onerror = reject;
     });
 
-  // Redirect if not admin
+  // 🔐 Auth redirect
   useEffect(() => {
     if (!localStorage.getItem("admin")) {
       navigate("/admin/login");
     }
   }, [navigate]);
 
-  // Fetch existing product details
+  // 🧠 Fetch categories
+  useEffect(() => {
+    fetch(`${URL}/api/products/categories`)
+      .then((res) => res.json())
+      .then(setCategories)
+      .catch((err) => {
+        console.error("Category fetch failed", err);
+        setCategories([]);
+      });
+  }, []);
+
+  // 📦 Fetch product
   useEffect(() => {
     fetch(`${URL}/api/owner/product/${id}`)
       .then((res) => {
@@ -35,8 +49,11 @@ function AdminEditProduct() {
       .then((data) => {
         setProduct({
           ...data,
-          isNew: data.isNew || data.new || false,
-          image: data.image || "", // fallback
+          New: data.New || false,
+          Hot: data.Hot || false,
+          Package: data.Package || false,
+          PackageName: data.PackageName || "",
+          image: "", // placeholder
         });
         setLoading(false);
       })
@@ -44,14 +61,12 @@ function AdminEditProduct() {
         console.error("Fetch error:", err);
         setLoading(false);
       });
-  }, [id, URL]);
+  }, [id]);
 
-  // Submit form
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     const updated = { ...product };
 
-    // Convert file to base64 if needed
     if (product.image instanceof File) {
       updated.image = await convertToBase64(product.image);
     }
@@ -75,18 +90,12 @@ function AdminEditProduct() {
       });
   };
 
-  if (loading) {
+  if (loading || !product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6]">
-        <p className="text-xl text-[#6B705C]">Loading...</p>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6]">
-        <p className="text-xl text-[#6B705C]">Product not found.</p>
+        <p className="text-xl text-[#6B705C]">
+          {loading ? "Loading..." : "Product not found"}
+        </p>
       </div>
     );
   }
@@ -106,7 +115,7 @@ function AdminEditProduct() {
         <input
           type="text"
           value={product.name}
-          onChange={(e) => setProduct((p) => ({ ...p, name: e.target.value }))}
+          onChange={(e) => setProduct({ ...product, name: e.target.value })}
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
           required
         />
@@ -118,25 +127,21 @@ function AdminEditProduct() {
         <textarea
           value={product.description}
           onChange={(e) =>
-            setProduct((p) => ({ ...p, description: e.target.value }))
+            setProduct({ ...product, description: e.target.value })
           }
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
           required
         />
 
-        {/* Category */}
-        <label className="block text-[#3F4238] font-medium mb-1">
-          Category
-        </label>
+        {/* Type */}
+        <label className="block text-[#3F4238] font-medium mb-1">Type</label>
         <select
-          value={product.category}
-          onChange={(e) =>
-            setProduct((p) => ({ ...p, category: e.target.value }))
-          }
+          value={product.type}
+          onChange={(e) => setProduct({ ...product, type: e.target.value })}
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
           required
         >
-          {["Chair", "Table", "Sofa", "Bed", "Cabinet"].map((cat) => (
+          {categories.map((cat) => (
             <option key={cat} value={cat}>
               {cat}
             </option>
@@ -145,51 +150,26 @@ function AdminEditProduct() {
 
         {/* Size */}
         <label className="block text-[#3F4238] font-medium mb-1">
-          Size (H x W x D in inches)
+          Size (H x W x D)
         </label>
         <div className="grid grid-cols-3 gap-4 mb-4">
-          <input
-            type="number"
-            min={0}
-            value={product.size?.height || ""}
-            onChange={(e) =>
-              setProduct((p) => ({
-                ...p,
-                size: { ...p.size, height: Number(e.target.value) },
-              }))
-            }
-            placeholder="Height"
-            className="border border-[#B7B7A4] rounded-lg px-3 py-2"
-            required
-          />
-          <input
-            type="number"
-            min={0}
-            value={product.size?.width || ""}
-            onChange={(e) =>
-              setProduct((p) => ({
-                ...p,
-                size: { ...p.size, width: Number(e.target.value) },
-              }))
-            }
-            placeholder="Width"
-            className="border border-[#B7B7A4] rounded-lg px-3 py-2"
-            required
-          />
-          <input
-            type="number"
-            min={0}
-            value={product.size?.depth || ""}
-            onChange={(e) =>
-              setProduct((p) => ({
-                ...p,
-                size: { ...p.size, depth: Number(e.target.value) },
-              }))
-            }
-            placeholder="Depth"
-            className="border border-[#B7B7A4] rounded-lg px-3 py-2"
-            required
-          />
+          {["height", "width", "depth"].map((dim) => (
+            <input
+              key={dim}
+              type="number"
+              min={0}
+              value={product.size?.[dim] || ""}
+              onChange={(e) =>
+                setProduct({
+                  ...product,
+                  size: { ...product.size, [dim]: Number(e.target.value) },
+                })
+              }
+              placeholder={dim}
+              className="border border-[#B7B7A4] rounded-lg px-3 py-2"
+              required
+            />
+          ))}
         </div>
 
         {/* Price */}
@@ -199,60 +179,56 @@ function AdminEditProduct() {
           min={0}
           value={product.price}
           onChange={(e) =>
-            setProduct((p) => ({ ...p, price: Number(e.target.value) }))
+            setProduct({ ...product, price: Number(e.target.value) })
           }
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
           required
         />
 
-        {/* Upload New Image */}
+        {/* Image Upload */}
         <label className="block text-[#3F4238] font-medium mb-1">
           Upload New Image
         </label>
         <input
           type="file"
           accept="image/*"
-          onChange={(e) =>
-            setProduct((p) => ({ ...p, image: e.target.files[0] }))
-          }
+          onChange={(e) => setProduct({ ...product, image: e.target.files[0] })}
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
         />
 
-        {/* Checkboxes */}
+        {/* Tags */}
         <div className="grid grid-cols-2 gap-4 mb-4 text-[#3F4238]">
-          {["hot", "isNew", "package"].map((field) => (
-            <label key={field} className="flex gap-2 items-center">
+          {["Hot", "New", "Package"].map((key) => (
+            <label key={key} className="flex gap-2 items-center">
               <input
                 type="checkbox"
-                checked={product[field] || false}
+                checked={product[key] || false}
                 onChange={(e) =>
-                  setProduct((p) => ({ ...p, [field]: e.target.checked }))
+                  setProduct({ ...product, [key]: e.target.checked })
                 }
               />
-              {field.charAt(0).toUpperCase() + field.slice(1)}
+              {key}
             </label>
           ))}
         </div>
 
         {/* Package Name */}
-        {product.package && (
+        {product.Package && (
           <>
             <label className="block text-[#3F4238] font-medium mb-1">
               Package Name
             </label>
             <input
               type="text"
-              value={product.packageName || ""}
+              value={product.PackageName || ""}
               onChange={(e) =>
-                setProduct((p) => ({ ...p, packageName: e.target.value }))
+                setProduct({ ...product, PackageName: e.target.value })
               }
               className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-              required
             />
           </>
         )}
 
-        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-[#6B705C] text-white py-2 px-4 rounded hover:bg-[#3F4238] transition"
