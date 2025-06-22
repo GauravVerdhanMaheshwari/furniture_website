@@ -9,8 +9,12 @@ function FurnitureCard({
   imageURL,
   name,
   description,
+  type,
   company,
   price,
+  height,
+  width,
+  depth,
   quantities,
   inStock,
   stock,
@@ -25,6 +29,10 @@ function FurnitureCard({
     : "bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 opacity-60 cursor-not-allowed";
 
   const stockTextColor = inStock ? "text-green-700" : "text-red-600";
+
+  const heightImg = "../../../public/height.webp";
+  const widthImg = "../../../public/width.webp";
+  const depthImg = "../../../public/depth.webp";
 
   return (
     <div className={baseCardStyle}>
@@ -52,6 +60,20 @@ function FurnitureCard({
 
       {/* Truncated description to maintain card height */}
       <p className="text-sm text-[#6B705C] line-clamp-2 my-1">{description}</p>
+
+      <p className="text-sm text-[#6B705C]">
+        Type: <span className="font-medium">{type}</span>
+      </p>
+
+      {/* === Dimensions === */}
+      <div>
+        <img src={heightImg} />
+        <p className="text-sm text-[#6B705C]">{height} inch</p>
+        <img src={widthImg} />
+        <p className="text-sm text-[#6B705C]">{width} inch</p>
+        <img src={depthImg} />
+        <p className="text-sm text-[#6B705C]">{depth} inch</p>
+      </div>
 
       <p className="text-sm text-[#A5A58D] mt-1">
         {company ? `Company: ${company}` : "Made in factory"}

@@ -1,3 +1,4 @@
+// pages/Products.jsx
 import { useState, useEffect } from "react";
 import {
   FurnitureCard,
@@ -5,16 +6,9 @@ import {
   SearchFilter,
 } from "../../components/indexComponents.js";
 
-/**
- * Products Page Component
- * Displays a list of furniture products with search and filter functionality.
- */
 function Products() {
-  // 📦 State for product data and filtered results
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-
-  // 🎛️ UI/Filter State
   const [quantities, setQuantities] = useState({});
   const [showFilter, setShowFilter] = useState(false);
   const [priceValue, setPriceValue] = useState(10000);
@@ -22,16 +16,10 @@ function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // 🔗 Backend API URL
   const URL = import.meta.env.VITE_BACK_END_API;
-
   const minPrice = 100;
   const maxPrice = 10000;
 
-  /**
-   * Fetches product data from the backend on mount
-   * Initializes quantity state and sets available types
-   */
   useEffect(() => {
     fetch(`${URL}/api/products/`)
       .then((res) => res.json())
@@ -39,14 +27,12 @@ function Products() {
         const items = data || [];
         setProducts(items);
 
-        // Set default quantity = 1 for each item
         const defaultQuantities = {};
         items.forEach((item) => {
           defaultQuantities[item._id] = 1;
         });
         setQuantities(defaultQuantities);
 
-        // Ensure selected type is valid
         const types = [...new Set(items.map((item) => item.type))];
         if (!types.includes(selectedType)) setSelectedType("");
 
@@ -59,9 +45,6 @@ function Products() {
       });
   }, [selectedType, URL]);
 
-  /**
-   * Filters product list on search/type/price change
-   */
   useEffect(() => {
     const filtered = products.filter((item) => {
       const matchesSearch = item.name
@@ -75,9 +58,6 @@ function Products() {
     setFilteredProducts(filtered);
   }, [products, searchTerm, selectedType, priceValue]);
 
-  /**
-   * Resets all filters and hides the filter panel
-   */
   const handleClearFilter = () => {
     setPriceValue(maxPrice);
     setSelectedType("");
@@ -85,7 +65,6 @@ function Products() {
     setShowFilter(false);
   };
 
-  // ➕ Increase quantity with stock limit
   const handleIncrement = (id, maxStock) => {
     setQuantities((prev) => ({
       ...prev,
@@ -93,7 +72,6 @@ function Products() {
     }));
   };
 
-  // ➖ Decrease quantity (minimum 1)
   const handleDecrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
@@ -101,13 +79,10 @@ function Products() {
     }));
   };
 
-  // 🛒 Stub: Add item to cart (to be implemented)
   const handleAddToCart = (id, quantity) => {
     console.log(`Added ${quantity} of product ${id} to cart.`);
-    // Add actual logic to connect with backend or Redux
   };
 
-  // ⏳ Loading Spinner
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F8F1EB]">
@@ -124,14 +99,11 @@ function Products() {
     );
   }
 
-  // 🧾 Products Page
   return (
     <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
-        {/* 🔤 Page Title */}
         <h1 className="text-4xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
 
-        {/* 🔍 Search & Filter */}
         <SearchFilter
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -139,7 +111,6 @@ function Products() {
           setShowFilter={setShowFilter}
         />
 
-        {/* 🧰 Filter Panel (visible if toggled) */}
         {showFilter && (
           <FilterPanel
             minPrice={minPrice}
@@ -153,19 +124,22 @@ function Products() {
           />
         )}
 
-        {/* 🔻 Divider */}
         <hr className="w-full border-[#D4C7B0] my-6" />
 
-        {/* 🛍️ Product Grid */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredProducts.map((item) => (
             <FurnitureCard
               key={item._id}
               id={item._id}
               name={item.name}
+              description={item.description}
+              type={item.type}
               imageURL={item.imageURL}
               company={item.company}
               price={item.price}
+              height={item.size.height}
+              width={item.size.width}
+              depth={item.size.depth}
               stock={item.stock}
               inStock={item.stock > 0}
               quantities={quantities}
@@ -179,7 +153,6 @@ function Products() {
           ))}
         </div>
 
-        {/* ⚠️ Empty State */}
         {filteredProducts.length === 0 && (
           <p className="mt-8 text-lg text-[#6B705C] font-medium">
             No products match your search.
