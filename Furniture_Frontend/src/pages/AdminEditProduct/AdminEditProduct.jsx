@@ -123,6 +123,26 @@ function AdminEditProduct() {
           className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
           required
         />
+
+        {/* Category */}
+        <label className="block text-[#3F4238] font-medium mb-1">
+          Category
+        </label>
+        <select
+          value={product.category}
+          onChange={(e) =>
+            setProduct((p) => ({ ...p, category: e.target.value }))
+          }
+          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
+          required
+        >
+          {["Chair", "Table", "Sofa", "Bed", "Cabinet"].map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+
         {/* Size */}
         <label className="block text-[#3F4238] font-medium mb-1">
           Size (H x W x D in inches)
