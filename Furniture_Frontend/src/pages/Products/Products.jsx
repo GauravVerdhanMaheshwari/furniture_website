@@ -9,7 +9,6 @@ import {
 function Products() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [quantities, setQuantities] = useState({});
   const [showFilter, setShowFilter] = useState(false);
   const [priceValue, setPriceValue] = useState(10000);
   const [selectedType, setSelectedType] = useState("");
@@ -31,7 +30,6 @@ function Products() {
         items.forEach((item) => {
           defaultQuantities[item._id] = 1;
         });
-        setQuantities(defaultQuantities);
 
         const types = [...new Set(items.map((item) => item.type))];
         if (!types.includes(selectedType)) setSelectedType("");
