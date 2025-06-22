@@ -37,7 +37,7 @@ function AdminEditProduct() {
         console.error("Category fetch failed", err);
         setCategories([]);
       });
-  }, []);
+  }, [URL]);
 
   // 📦 Fetch product
   useEffect(() => {
@@ -61,7 +61,7 @@ function AdminEditProduct() {
         console.error("Fetch error:", err);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, URL]);
 
   const handleSaveChanges = async (e) => {
     e.preventDefault();
