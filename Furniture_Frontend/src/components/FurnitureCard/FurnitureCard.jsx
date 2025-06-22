@@ -21,10 +21,6 @@ function FurnitureCard({
   handleDecrement,
   images = [],
 }) {
-  const heightImg = "../../../public/height.webp";
-  const widthImg = "../../../public/width.webp";
-  const depthImg = "../../../public/depth.webp";
-
   return (
     <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 transform transition-transform hover:scale-105">
       {/* === Image Carousel (or fallback) === */}
@@ -59,15 +55,15 @@ function FurnitureCard({
       {/* === Dimensions === */}
       <div className="flex items-center justify-between mt-2">
         <div className="flex-1 text-center">
-          <img src={heightImg} className="w-[100%]" />
+          <img src="height.webp" className="w-[100%]" />
           <p className="text-sm text-[#6B705C]">Height: {height} inch</p>
         </div>
         <div className="flex-1 text-center">
-          <img src={widthImg} className="w-[100%]" />
+          <img src="width.webp" className="w-[100%]" />
           <p className="text-sm text-[#6B705C]">Width: {width} inch</p>
         </div>
         <div className="flex-1 text-center">
-          <img src={depthImg} className="w-[100%]" />
+          <img src="depth.webp" className="w-[100%]" />
           <p className="text-sm text-[#6B705C]">Depth: {depth} inch</p>
         </div>
       </div>
