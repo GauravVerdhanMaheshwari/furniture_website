@@ -68,16 +68,16 @@ function FurnitureCard({
       {/* === Dimensions === */}
       <div className="flex items-center justify-between mt-2">
         <div className="flex-1 text-center">
-          <img src={heightImg} className="w-2 h-2" />
-          <p className="text-sm text-[#6B705C]">{height} inch</p>
+          <img src={heightImg} className="w-[100%]" />
+          <p className="text-sm text-[#6B705C]">Height: {height} inch</p>
         </div>
         <div className="flex-1 text-center">
-          <img src={widthImg} className="w-2 h-2" />
-          <p className="text-sm text-[#6B705C]">{width} inch</p>
+          <img src={widthImg} className="w-[100%]" />
+          <p className="text-sm text-[#6B705C]">Width: {width} inch</p>
         </div>
         <div className="flex-1 text-center">
-          <img src={depthImg} className="w-2 h-2" />
-          <p className="text-sm text-[#6B705C]">{depth} inch</p>
+          <img src={depthImg} className="w-[100%]" />
+          <p className="text-sm text-[#6B705C]">Depth: {depth} inch</p>
         </div>
       </div>
 
