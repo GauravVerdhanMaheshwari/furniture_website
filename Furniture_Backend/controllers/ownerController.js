@@ -1,7 +1,7 @@
 // controllers/adminController.js
 
 const mongoose = require("mongoose");
-const Product = require("../Models/product");
+const { Product } = require("../Models/product");
 const Admin = require("../Models/admin");
 
 // ----------------------------- PRODUCT MANAGEMENT -----------------------------
@@ -12,7 +12,8 @@ exports.getAllProducts = async (req, res, next) => {
     const products = await Product.find();
     res.status(200).json(products);
   } catch (error) {
-    next(error);
+    console.error("❌ Failed to fetch products:", error.message); // Log error
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
