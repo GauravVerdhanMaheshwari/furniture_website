@@ -8,3 +8,5 @@ router.get("/:id", packageController.getPackageById); // Get package by ID
 router.post("/", packageController.createPackage); // Create a new package
 router.put("/:id", packageController.updatePackage); // Update a package by ID
 router.delete("/:id", packageController.deletePackage); // Delete a package by ID
+
+module.exports = router;
