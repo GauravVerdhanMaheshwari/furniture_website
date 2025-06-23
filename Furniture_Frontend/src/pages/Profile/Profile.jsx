@@ -41,6 +41,14 @@ function Profile() {
 
     if (!window.confirm("Are you sure you want to save changes?")) return;
 
+    // Validate address length
+    if (userData.address.length < 10 || userData.address.length > 100)
+      return alert("Address must be between 10 and 100 characters.");
+
+    userData.name = userData.name.trim();
+    userData.address = userData.address.trim();
+    userData.email = userData.email.toLowerCase().trim();
+
     try {
       const response = await fetch(`${URL}/api/users/${userID}`, {
         method: "PUT",
