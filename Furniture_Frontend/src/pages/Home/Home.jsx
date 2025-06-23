@@ -42,7 +42,7 @@ function Home() {
         </section>
 
         {/* 📦 Package Deals Section */}
-        <section className="mt-12">
+        {/* <section className="mt-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#6B705C] mb-4">
             📦 Package Deals
           </h2>
@@ -53,7 +53,7 @@ function Home() {
               api="https://furniture-website-backend-yubt.onrender.com/api/products/package"
             />
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );
