@@ -5,7 +5,6 @@ import FurnitureCard from "./FurnitureCard/FurnitureCard";
 import Header from "./Header/Header";
 import Hero from "./Hero/Hero";
 import Product from "./Product/Product";
-import Purchase from "./Purchase/Purchase";
 import Search from "./Search/Search";
 import SearchFilter from "./SearchFilter/SearchFilter";
 import Suggestions from "./Suggestions/Suggestions";
@@ -20,7 +19,6 @@ export {
   Header,
   Hero,
   Product,
-  Purchase,
   Search,
   SearchFilter,
   Suggestions,

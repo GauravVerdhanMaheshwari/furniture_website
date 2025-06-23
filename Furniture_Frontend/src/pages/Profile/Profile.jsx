@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-  UserForm,
-  Purchase,
-} from "../../components/indexComponents.js";
+import { UserForm, Purchase } from "../../components/indexComponents.js";
 
 /**
  * Profile Page
@@ -23,8 +20,6 @@ function Profile() {
 
   // 📦 Local State
   const [userData, setUserData] = useState(null);
-  const [purchaseData, setPurchaseData] = useState([]);
-  const [detailedPurchaseProducts, setDetailedPurchaseProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false); // Tracks form changes
 
@@ -40,41 +35,15 @@ function Profile() {
 
       try {
         // Parallel data fetching
-        const [userRes, purchaseRes] = await Promise.all([
+        const userRes = await Promise.all([
           fetch(`${URL}/api/users/${userID}`),
-          fetch(`${URL}/api/purchases/${userID}`),
         ]);
 
         // Parse responses
         const user = await userRes.json();
-        const purchases = await purchaseRes.json();
-        const purchaseArray = Array.isArray(purchases)
-          ? purchases
-          : [purchases];
 
         // Store data in state
         setUserData(user);
-        setPurchaseData(purchaseArray);
-
-        // Fetch detailed product data for each purchased item
-        const details = [];
-        for (const purchase of purchaseArray) {
-          for (const item of purchase.items) {
-            try {
-              const res = await fetch(`${URL}/api/products/${item.productId}`);
-              const product = await res.json();
-              details.push({
-                ...product,
-                quantity: item.quantity,
-                purchaseDate: item.purchaseDate,
-              });
-            } catch (err) {
-              console.error("Error fetching product detail:", err);
-            }
-          }
-        }
-
-        setDetailedPurchaseProducts(details);
       } catch (err) {
         console.error("Error fetching profile data:", err);
       } finally {
@@ -167,14 +136,6 @@ function Profile() {
                 handleDeleteUser={handleDeleteUser}
                 changed={changed}
                 setChanged={setChanged}
-              />
-            </div>
-
-            {/* 📦 Purchase Records */}
-            <div className="mb-10">
-              <Purchase
-                userPurchases={purchaseData}
-                PurchaseProductDetail={detailedPurchaseProducts}
               />
             </div>
           </>
