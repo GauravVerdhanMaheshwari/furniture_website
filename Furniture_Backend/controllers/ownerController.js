@@ -2,6 +2,7 @@
 
 const mongoose = require("mongoose");
 const { Product } = require("../Models/product");
+const Package = require("../Models/package");
 const Admin = require("../Models/admin");
 
 // ----------------------------- PRODUCT MANAGEMENT -----------------------------
@@ -44,9 +45,7 @@ exports.addProduct = async (req, res, next) => {
       company,
       New: New || false,
       Hot: Hot || false,
-      Package: Package || false,
       AddedDate,
-      PackageName,
     });
 
     await newProduct.save();
@@ -79,17 +78,6 @@ exports.getHotProducts = async (req, res, next) => {
       .sort({ AddedDate: -1 })
       .limit(3);
     res.status(200).json(hotProducts);
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.getPackageProducts = async (req, res, next) => {
-  try {
-    const packageProducts = await Product.find({ Package: true })
-      .sort({ AddedDate: -1 })
-      .limit(3);
-    res.status(200).json(packageProducts);
   } catch (error) {
     next(error);
   }
@@ -228,5 +216,106 @@ exports.getOwnerProfile = async (req, res, next) => {
     res.status(200).json(owners);
   } catch (error) {
     next(error);
+  }
+};
+
+exports.getAllPackages = async (req, res, next) => {
+  try {
+    const packages = await Package.find();
+    res.status(200).json(packages);
+  } catch (error) {
+    console.error("❌ Failed to fetch packages:", error.message); // Log error
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+};
+
+// Get package by ID
+exports.getPackageById = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid package ID format" });
+  }
+
+  try {
+    const package = await Package.findById(req.params.id);
+    if (!package) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+    res.status(200).json(package);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Create a new package
+exports.addPackages = async (req, res, next) => {
+  const { packageName, items, price } = req.body;
+
+  if (!packageName || !items || !price) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const newPackage = new Package({
+      packageName,
+      items,
+      price,
+    });
+
+    await newPackage.save();
+    res
+      .status(201)
+      .json({ message: "Package created successfully", newPackage });
+  } catch (error) {
+    console.error("❌ Failed to create package:", error.message); // Log error
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+};
+
+// Update a package by ID
+exports.updatePackage = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid package ID format" });
+  }
+
+  const { packageName, items, price } = req.body;
+
+  if (!packageName || !items || !price) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const updatedPackage = await Package.findByIdAndUpdate(
+      req.params.id,
+      { packageName, items, price },
+      { new: true }
+    );
+
+    if (!updatedPackage) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Package updated successfully", updatedPackage });
+  } catch (error) {
+    console.error("❌ Failed to update package:", error.message); // Log error
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+};
+// Delete a package by ID
+exports.deletePackage = async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid package ID format" });
+  }
+
+  try {
+    const deletedPackage = await Package.findByIdAndDelete(req.params.id);
+    if (!deletedPackage) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+    res.status(200).json({ message: "Package deleted successfully" });
+  } catch (error) {
+    console.error("❌ Failed to delete package:", error.message); // Log error
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
