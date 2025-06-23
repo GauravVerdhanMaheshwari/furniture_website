@@ -83,7 +83,7 @@ export default function Header() {
             isMenuOpen ? "block" : "hidden md:flex"
           }`}
         >
-          {["home", "products"].map((item) => (
+          {["home", "products", "packages"].map((item) => (
             <li key={item}>
               <NavLink
                 to={`/admin/${item}`}
