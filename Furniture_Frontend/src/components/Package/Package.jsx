@@ -12,7 +12,7 @@ function Packages({ packages, onDelete }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <div className="relative bg-[#DDBEA9] rounded-xl shadow-md w-full sm:w-64 p-4 hover:shadow-xl transition-shadow duration-300">
+    <div className="mt-18 relative bg-[#DDBEA9] rounded-xl shadow-md w-full sm:w-64 p-4 hover:shadow-xl transition-shadow duration-300">
       {/* Package Info */}
       <div className="flex flex-col gap-1 mb-3">
         <h2 className="text-lg font-bold text-[#3F4238] truncate">
