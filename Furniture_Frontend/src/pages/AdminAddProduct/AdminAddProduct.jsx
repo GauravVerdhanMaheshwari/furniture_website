@@ -5,7 +5,6 @@ function AdminAddProduct() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const navigate = useNavigate();
 
-  const [showPackageName, setShowPackageName] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   /**
@@ -61,11 +60,6 @@ function AdminAddProduct() {
         Depth: Number(formData.get("Depth")) || 0,
         Hot: formData.get("hot") === "on",
         New: formData.get("newProduct") === "on",
-        Package: formData.get("packageProduct") === "on",
-        PackageName:
-          formData.get("packageProduct") === "on"
-            ? formData.get("packageName")
-            : "",
         AddedDate: new Date().toISOString(),
       };
 
@@ -83,7 +77,6 @@ function AdminAddProduct() {
 
       alert("✅ Product added successfully!");
       form.reset();
-      setShowPackageName(false);
 
       setTimeout(() => navigate("/admin/products"), 800);
     } catch (err) {
@@ -186,11 +179,6 @@ function AdminAddProduct() {
           {[
             { name: "hot", label: "🔥 Mark as Hot" },
             { name: "newProduct", label: "🆕 Mark as New" },
-            {
-              name: "packageProduct",
-              label: "📦 Is a Package?",
-              onChange: (e) => setShowPackageName(e.target.checked),
-            },
           ].map(({ name, label, onChange }, idx) => (
             <label
               key={idx}
@@ -206,20 +194,6 @@ function AdminAddProduct() {
             </label>
           ))}
         </div>
-
-        {/* Conditional Field: Package Name */}
-        {showPackageName && (
-          <div>
-            <label className="block font-medium mb-1">Package Name</label>
-            <input
-              type="text"
-              name="packageName"
-              placeholder="Enter Package Name"
-              className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
-              required
-            />
-          </div>
-        )}
 
         {/* Submit Button */}
         <button
