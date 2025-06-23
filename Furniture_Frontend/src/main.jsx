@@ -48,6 +48,9 @@ const AdminHome = lazyWithDelay(() =>
 const AdminProducts = lazyWithDelay(() =>
   import("./pages/AdminProducts/AdminProducts.jsx")
 );
+const AdminPackages = lazyWithDelay(() =>
+  import("./pages/AdminPackages/AdminPackages.jsx")
+);
 const AdminProfile = lazyWithDelay(() =>
   import("./pages/AdminProfile/AdminProfile.jsx")
 );
@@ -56,6 +59,12 @@ const AdminAddProduct = lazyWithDelay(() =>
 );
 const AdminEditProduct = lazyWithDelay(() =>
   import("./pages/AdminEditProduct/AdminEditProduct.jsx")
+);
+const AdminPackagesAdd = lazyWithDelay(() =>
+  import("./pages/AdminPackagesAdd/AdminPackagesAdd.jsx")
+);
+const AdminPackagesEdit = lazyWithDelay(() =>
+  import("./pages/AdminPackagesEdit/AdminPackagesEdit.jsx")
 );
 
 // ❌ 404 fallback page
@@ -167,6 +176,14 @@ const router = createBrowserRouter(
         }
       />
       <Route
+        path="admin/packages"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminPackages />
+          </Suspense>
+        }
+      />
+      <Route
         path="admin/add-product"
         element={
           <Suspense fallback={<Loading />}>
@@ -182,7 +199,22 @@ const router = createBrowserRouter(
           </Suspense>
         }
       />
-
+      <Route
+        path="admin/add-package"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminPackagesAdd />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin/edit-package/:id"
+        element={
+          <Suspense fallback={<Loading />}>
+            <AdminPackagesEdit />
+          </Suspense>
+        }
+      />
       {/* Fallback route (404) */}
       <Route
         path="*"
