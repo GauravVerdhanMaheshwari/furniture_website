@@ -17,4 +17,11 @@ router.patch("/product/reject/:id", ownerController.rejectProduct);
 router.get("/profile", ownerController.getOwnerProfile);
 router.put("/profile", ownerController.updateOwnerProfile);
 
+// Package Management
+router.get("/packages", ownerController.getAllPackages);
+router.post("/package/add", ownerController.addPackages);
+router.get("/package/:id", ownerController.getPackageById);
+router.put("/package/edit/:id", ownerController.updatePackage);
+router.delete("/package/:id", ownerController.deletePackage);
+
 module.exports = router;
