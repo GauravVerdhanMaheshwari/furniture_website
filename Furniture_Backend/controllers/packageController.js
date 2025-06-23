@@ -2,15 +2,17 @@ const mongoose = require("mongoose");
 const Package = require("../Models/package");
 
 // Get all packages
+// controllers/packageController.js or similar
+
 exports.getAllPackages = async (req, res) => {
   try {
-    const packages = await Package.find();
+    const packages = await Package.find().populate("items.productId", "name");
     res.status(200).json(packages);
-  } catch (error) {
-    console.error("Error fetching packages:", error);
+  } catch (err) {
     res.status(500).json({ message: "Failed to fetch packages" });
   }
 };
+
 // Get package by ID
 exports.getPackageById = async (req, res) => {
   const { id } = req.params;

@@ -219,13 +219,12 @@ exports.getOwnerProfile = async (req, res, next) => {
   }
 };
 
-exports.getAllPackages = async (req, res, next) => {
+exports.getAllPackages = async (req, res) => {
   try {
-    const packages = await Package.find();
+    const packages = await Package.find().populate("items.productId", "name");
     res.status(200).json(packages);
-  } catch (error) {
-    console.error("❌ Failed to fetch packages:", error.message); // Log error
-    res.status(500).json({ message: "Server error: " + error.message });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch packages" });
   }
 };
 
