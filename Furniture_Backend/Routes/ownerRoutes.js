@@ -21,6 +21,6 @@ router.get("/packages", ownerController.getAllPackages);
 router.post("/package/add", ownerController.addPackages);
 router.get("/package/:id", ownerController.getPackageById);
 router.put("/package/edit/:id", ownerController.updatePackage);
-router.delete("/package/:id", ownerController.deletePackage);
+router.delete("/package/delete/:id", ownerController.deletePackage);
 
 module.exports = router;

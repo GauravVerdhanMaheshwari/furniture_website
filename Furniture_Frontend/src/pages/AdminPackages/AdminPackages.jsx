@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "../../components/indexComponents";
+import { Search, Package } from "../../components/indexComponents";
 
 function AdminPackages() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
@@ -32,6 +32,24 @@ function AdminPackages() {
     fetchPackages();
   }, [URL, navigate]);
 
+  const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this package?")) return;
+    try {
+      const res = await fetch(`${URL}/api/owner/package/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message);
+
+      alert("Package deleted successfully!");
+      setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
+    } catch (err) {
+      console.error("❌ Delete error:", err);
+      alert("Failed to delete package.");
+    }
+  };
+
   const filteredPackages = packages.filter((pkg) =>
     pkg?.packageName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -50,27 +68,7 @@ function AdminPackages() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredPackages.map((pkg) => (
-            <div
-              key={pkg._id}
-              className="bg-white rounded-lg shadow-md p-4 border border-[#E3D5CA]"
-            >
-              <h2 className="text-xl font-semibold">{pkg.packageName}</h2>
-              <p className="mt-1 text-sm text-gray-600">
-                Total Price: ₹{pkg.price}
-              </p>
-
-              <div className="mt-2">
-                <p className="font-medium mb-1">Products:</p>
-                <ul className="list-disc list-inside text-sm space-y-1">
-                  {pkg.items.map((item, index) => (
-                    <li key={index}>
-                      {item.productId?.name || "Unknown Product"} ×{" "}
-                      {item.quantity}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <Packages packages={pkg} onDelete={handleDelete} />
           ))}
         </div>
       )}
