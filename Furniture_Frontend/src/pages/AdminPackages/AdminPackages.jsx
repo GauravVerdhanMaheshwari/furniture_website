@@ -99,7 +99,7 @@ function AdminPackage() {
           ) : (
             packages
               .filter((packages) =>
-                packages.name.toLowerCase().includes(searchTerm.toLowerCase())
+                packages.name.includes(searchTerm.toLowerCase())
               )
               .map((packages) => (
                 <Package
