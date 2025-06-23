@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   UserForm,
-  HistoryBuys,
   Purchase,
 } from "../../components/indexComponents.js";
 
 /**
  * Profile Page
- * Displays user's information, purchase history, and activity logs.
+ * Displays user's information, and activity logs.
  * Allows profile updates and account deletion.
  */
 function Profile() {
@@ -30,7 +29,7 @@ function Profile() {
   const [changed, setChanged] = useState(false); // Tracks form changes
 
   /**
-   * Fetch user profile data, browsing history, and purchases.
+   * Fetch user profile data, and purchases.
    * Also fetches detailed product data for each purchased item.
    */
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 /**
- * Displays user's purchase history with product previews and status actions.
+ * Displays user's with product previews and status actions.
  * @param {Object[]} userPurchases - List of user's past purchases
  * @param {Object[]} PurchaseProductDetail - Complete product info to map by productId
  */
@@ -81,10 +81,6 @@ function Purchase({ userPurchases, PurchaseProductDetail }) {
 
   return (
     <div className="mt-6">
-      <h2 className="text-2xl font-bold mb-4 text-[#3F4238]">
-        Purchase History
-      </h2>
-
       {userPurchases.map((purchase) => (
         <div
           key={purchase._id}
