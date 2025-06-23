@@ -35,7 +35,7 @@ function Profile() {
   }, [userID, URL]);
 
   const handleSaveChanges = async () => {
-    if (!userData || Object.values(userData).includes("")) {
+    if (!userData.name || !userData.email || !userData.phone) {
       return alert("All fields must be filled out.");
     }
 
