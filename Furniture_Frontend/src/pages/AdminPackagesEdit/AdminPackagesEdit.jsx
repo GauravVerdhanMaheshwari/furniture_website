@@ -65,7 +65,7 @@ function AdminEditPackage() {
     }
 
     try {
-      const res = await fetch(`${URL}/api/owner/package/${id}`, {
+      const res = await fetch(`${URL}/api/owner/package/edit/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,7 +88,7 @@ function AdminEditPackage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6]">
+      <div className="mt-18 min-h-screen flex items-center justify-center bg-[#FFE8D6]">
         <p className="text-lg text-[#6B705C]">Loading package data...</p>
       </div>
     );
