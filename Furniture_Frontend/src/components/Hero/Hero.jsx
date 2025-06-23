@@ -27,7 +27,7 @@ function Hero() {
           onClick={() => navigate("/products")}
           className="mt-2 px-6 py-3 rounded-xl bg-[#CB997E] text-[#3F4238] font-semibold text-lg md:text-xl hover:bg-[#B98B73] hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm"
         >
-          Shop Now
+          View Shop
         </button>
       </div>
 
