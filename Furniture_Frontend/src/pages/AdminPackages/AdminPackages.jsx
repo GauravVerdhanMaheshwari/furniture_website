@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Search from "../../components/indexComponents"; // adjust path as needed
+import { Search } from "../../components/indexComponents"; // adjust path as needed
 
 function AdminPackages() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
