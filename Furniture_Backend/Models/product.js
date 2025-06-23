@@ -68,8 +68,6 @@ const productSchema = new mongoose.Schema(
     },
     New: { type: Boolean, default: false },
     Hot: { type: Boolean, default: false },
-    Package: { type: Boolean, default: false },
-    PackageName: { type: String, trim: true },
     company: {
       type: String,
       required: [true, "Company is required"],
