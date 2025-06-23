@@ -35,6 +35,7 @@ app.use("/api/products", require("./Routes/productRoutes"));
 app.use("/api/auth", require("./Routes/authRoutes"));
 app.use("/api/users", require("./Routes/userRoutes"));
 app.use("/api/owner", require("./Routes/ownerRoutes"));
+app.use("/api/packages", require("./Routes/packageRoutes"));
 
 // -------------------------------
 // 404 - Not Found Handler
