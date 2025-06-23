@@ -52,6 +52,7 @@ function Profile() {
       setUserData(updatedUser);
       setChanged(false);
       alert("Profile updated successfully.");
+      window.location.reload();
     } catch (err) {
       console.error("Update failed:", err);
       alert("Failed to update profile.");
