@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { UserForm, Purchase } from "../../components/indexComponents.js";
+import { UserForm } from "../../components/indexComponents.js";
 
 /**
  * Profile Page
@@ -35,7 +35,7 @@ function Profile() {
 
       try {
         // Parallel data fetching
-        const userRes = await Promise.all([
+        const [userRes] = await Promise.all([
           fetch(`${URL}/api/users/${userID}`),
         ]);
 
@@ -115,7 +115,7 @@ function Profile() {
 
   // ✅ Profile Page Rendering
   return (
-    <div className="min-h-screen px-4 py-10 bg-[#FFE8D6] text-[#3F4238]">
+    <div className="mt-25 min-h-screen px-4 py-10 bg-[#FFE8D6] text-[#3F4238]">
       <div className="max-w-4xl mx-auto">
         {/* Page Header */}
         <h1 className="text-4xl font-bold mb-8 text-[#6B705C] text-center">
