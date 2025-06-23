@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Packages, Search } from "../../components/indexComponents.js";
+import { Package, Search } from "../../components/indexComponents.js";
 
 /**
  * AdminProducts Component
@@ -102,7 +102,7 @@ function AdminPackage() {
                 packages.name.toLowerCase().includes(searchTerm.toLowerCase())
               )
               .map((packages) => (
-                <Packages
+                <Package
                   key={packages._id}
                   packages={packages}
                   onDelete={() => deletePackage(packages._id)}
