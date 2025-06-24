@@ -30,6 +30,15 @@ function PackageCard({ data }) {
     fetchDetails();
   }, [URL, items]);
 
+  {
+    console.log(
+      "PackageCard : Data:",
+      data,
+      "PackageCard data",
+      productDetails
+    );
+  }
+
   return (
     <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 w-full sm:w-64 md:w-72 m-3 transform transition-transform hover:scale-105">
       <h2 className="text-lg md:text-xl font-semibold text-[#3F4238] mb-2 text-center">

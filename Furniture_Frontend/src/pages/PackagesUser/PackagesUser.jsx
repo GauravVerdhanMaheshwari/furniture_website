@@ -46,6 +46,10 @@ function PackageUser() {
     setShowFilter(false);
   };
 
+  {
+    console.log("PackagesUser : Filtered Packages:", filteredPackages);
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F8F1EB]">
