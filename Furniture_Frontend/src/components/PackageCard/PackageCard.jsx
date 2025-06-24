@@ -39,7 +39,7 @@ function PackageCard({ data }) {
           const pid = item.productId._id || item.productId;
           const prod = productDetails[pid] || item.productId;
           const name = prod?.name || "Loading...";
-          const img = prod?.images?.[0] || "/fallback-image.jpg";
+          const img = prod?.images?.[0];
           const pr = prod?.price || 0;
 
           return (
@@ -48,7 +48,6 @@ function PackageCard({ data }) {
                 src={img}
                 alt={name}
                 className="w-10 h-10 rounded object-cover border"
-                onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
               <div className="truncate">
                 <p className="text-sm font-medium truncate">{name}</p>
