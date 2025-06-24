@@ -22,6 +22,7 @@ function Packages({ packages, onDelete }) {
       <div className="flex flex-col gap-1 mb-3">
         <h2 className="text-lg font-bold text-[#3F4238] truncate">
           {packageName}
+          {console.log("Package", packages)}
         </h2>
         <p className="text-[#6B705C] font-medium">₹{price}</p>
         <p className="text-sm text-[#6B705C] italic">
