@@ -32,6 +32,9 @@ const lazyWithDelay = (importFunc, delay = 0) =>
 // 🧩 Client pages (lazy-loaded for performance)
 const Home = lazyWithDelay(() => import("./pages/Home/Home.jsx"));
 const Products = lazyWithDelay(() => import("./pages/Products/Products.jsx"));
+const PackagesUser = lazyWithDelay(() =>
+  import("./pages/PackagesUser/PackagesUser.jsx")
+);
 const AboutUs = lazyWithDelay(() => import("./pages/AboutUs/AboutUs.jsx"));
 const Contacts = lazyWithDelay(() => import("./pages/Contacts/Contacts.jsx"));
 const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
@@ -90,6 +93,14 @@ const router = createBrowserRouter(
         element={
           <Suspense fallback={<Loading />}>
             <Products />
+          </Suspense>
+        }
+      />
+      <Route
+        path="packages"
+        element={
+          <Suspense fallback={<Loading />}>
+            <PackagesUser />
           </Suspense>
         }
       />
