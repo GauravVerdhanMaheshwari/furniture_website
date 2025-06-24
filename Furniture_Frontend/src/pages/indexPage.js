@@ -14,6 +14,7 @@ import Furniture from "./Furniture/Furniture";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
 import Products from "./Products/Products";
+import PackagesUser from "./PackagesUser/PackagesUser";
 import Profile from "./Profile/Profile";
 import Register from "./Register/Register";
 
@@ -27,11 +28,14 @@ export {
   AdminProducts,
   AdminProfile,
   AdminPackages,
+  AdminPackagesAdd,
+  AdminPackagesEdit,
   Contacts,
   Furniture,
   Home,
   Login,
   Products,
+  PackagesUser,
   Profile,
   Register,
 };
