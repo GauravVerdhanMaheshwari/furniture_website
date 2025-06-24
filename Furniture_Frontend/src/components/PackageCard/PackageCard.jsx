@@ -1,89 +1,70 @@
 // components/PackageCard.jsx
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-/**
- * PackageCard Component
- * @description Displays a furniture package with its name, price, and detailed list of products with their image and quantity.
- */
 function PackageCard({ data }) {
-  const URL = import.meta.env.VITE_BACK_END_API;
-  const { packageName, price, items = [] } = data;
-  const [productDetails, setProductDetails] = useState([]);
+  const { _id, packageName, price, items = [] } = data;
+  const [productDetails, setProductDetails] = useState({});
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
+  // Fetch product details
   useEffect(() => {
-    const fetchDetails = async () => {
-      try {
-        const results = await Promise.all(
-          items.map((item) =>
-            fetch(`${URL}/api/product/${item.productId}`)
-              .then((res) => res.json())
-              .then((product) => ({
-                ...product,
-                quantity: item.quantity,
-                image: item.image,
-              }))
-              .catch(() => null)
+    items.forEach((item) => {
+      const pid = item.productId._id || item.productId;
+      if (!productDetails[pid]) {
+        fetch(`${URL}/api/owner/product/${pid}`)
+          .then((res) => res.json())
+          .then((product) =>
+            setProductDetails((prev) => ({ ...prev, [pid]: product }))
           )
-        );
-        setProductDetails(results.filter((p) => p !== null));
-      } catch (err) {
-        console.error("Failed to fetch product details for package:", err);
+          .catch(console.error);
       }
-    };
-
-    fetchDetails();
-  }, [URL, items]);
-
-  {
-    console.log(
-      "PackageCard : Data:",
-      data,
-      "PackageCard data",
-      productDetails
-    );
-  }
+    });
+  }, [items, URL, productDetails]);
 
   return (
-    <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 w-full sm:w-64 md:w-72 m-3 transform transition-transform hover:scale-105">
-      <h2 className="text-lg md:text-xl font-semibold text-[#3F4238] mb-2 text-center">
+    <div className="bg-[#DDBEA9] rounded-xl shadow-lg p-4 m-3 w-full sm:w-64 md:w-72 transition-transform hover:scale-105">
+      {/* === Package Header === */}
+      <h2 className="text-xl font-bold text-[#3F4238] truncate">
         {packageName}
       </h2>
-
-      <p className="text-md text-[#B98B73] font-bold mb-4 text-center">
-        ₹ {price}
+      <p className="text-[#6B705C] text-sm mb-2 italic">
+        {items.length} item{items.length !== 1 ? "s" : ""} included
       </p>
 
-      <div className="space-y-3">
-        {productDetails.map((product, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-sm p-2 flex items-center gap-2"
-          >
-            <img
-              src={
-                product.images?.[0] || product.imageURL || "/fallback-image.jpg"
-              }
-              alt={product.name}
-              className="h-16 w-16 object-cover rounded"
-              onError={(e) => {
-                e.target.src = "/fallback-image.jpg";
-              }}
-            />
+      <hr className="border-[#B7B7A4] my-2" />
 
-            <div className="flex-1">
-              <h3 className="font-medium text-[#3F4238] text-sm">
-                {product.name}
-              </h3>
-              <p className="text-xs text-[#6B705C]">Qty: {product.quantity}</p>
-              <p className="text-xs text-[#6B705C]">
-                Size: {product.size?.height}H x {product.size?.width}W x{" "}
-                {product.size?.depth}D
-              </p>
-              <p className="text-xs text-[#A5A58D]">₹ {product.price}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* === Items List === */}
+      <ul className="space-y-2 max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-[#B7B7A4] pr-1">
+        {items.map((item, index) => {
+          const pid = item.productId._id || item.productId;
+          const prod = productDetails[pid] || item.productId;
+          const name = prod?.name || "Loading...";
+          const img = prod?.images?.[0] || "/fallback-image.jpg";
+          const pr = prod?.price || 0;
+
+          return (
+            <li key={index} className="flex gap-2 items-center">
+              <img
+                src={img}
+                alt={name}
+                className="w-10 h-10 rounded object-cover border"
+                onError={(e) => (e.target.src = "/fallback-image.jpg")}
+              />
+              <div className="truncate">
+                <p className="text-sm font-medium truncate">{name}</p>
+                <p className="text-xs text-[#6B705C]">
+                  ₹{pr} × {item.quantity}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* === Total Price === */}
+      <p className="text-md text-[#B98B73] font-bold mt-4 text-center">
+        ₹ {price}
+      </p>
     </div>
   );
 }
