@@ -56,9 +56,15 @@ function AdminPackages() {
 
   return (
     <div className="mt-18 min-h-screen bg-[#FFE8D6] p-6 text-[#3F4238]">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h1 className="text-2xl font-bold mb-4 sm:mb-0">📦 All Packages</h1>
+      {/* 🔍 Header: Search bar + Add Product button */}
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-10 bg-white shadow-md rounded-xl p-6 gap-4">
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <Link
+          to="/admin/add-package"
+          className="bg-[#CB997E] hover:bg-[#B98B73] text-white px-5 py-2 rounded-md text-sm font-semibold shadow-sm transition-all"
+        >
+          + Add Package
+        </Link>
       </div>
 
       {loading ? (
