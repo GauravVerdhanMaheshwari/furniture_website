@@ -47,7 +47,7 @@ function PackageCard({ data }) {
               <img
                 src={img}
                 alt={name}
-                className="w-10 h-10 rounded object-cover border"
+                className="w-20 h-20 rounded object-cover border"
               />
               <div className="truncate">
                 <p className="text-sm font-medium truncate">{name}</p>
