@@ -68,7 +68,9 @@ function AdminPackages() {
       </div>
 
       {loading ? (
-        <p className="text-center text-lg">Loading packages...</p>
+        <p className="text-2xl text-[#6B705C] text-center animate-pulse">
+          Loading packages...
+        </p>
       ) : filteredPackages.length === 0 ? (
         <p className="text-center text-lg">No packages found.</p>
       ) : (
