@@ -20,17 +20,30 @@ function AdminEditPackage() {
     const fetchData = async () => {
       try {
         const [productRes, packageRes] = await Promise.all([
-          fetch(`${URL}/api/products`),
+          fetch(`${URL}/api/owner/products`),
           fetch(`${URL}/api/owner/package/${id}`),
         ]);
 
         const productData = await productRes.json();
         const packageData = await packageRes.json();
 
+        // Map items with full product data
+        const enrichedItems = packageData.items.map((item) => {
+          const matchedProduct = productData.find(
+            (p) => p._id === item.productId
+          );
+          return {
+            ...item,
+            name: matchedProduct?.name || "Unknown",
+            price: matchedProduct?.price || 0,
+            image: matchedProduct?.images?.[0] || "/no-img.png",
+          };
+        });
+
         setProducts(productData);
         setPackageName(packageData.packageName);
         setPrice(packageData.price);
-        setSelectedItems(packageData.items);
+        setSelectedItems(enrichedItems);
       } catch (err) {
         console.error("❌ Fetch error:", err);
         alert("Failed to load package or products.");
@@ -58,6 +71,24 @@ function AdminEditPackage() {
     );
   };
 
+  const handleAddItem = (product) => {
+    const alreadyAdded = selectedItems.find(
+      (item) => item.productId === product._id
+    );
+    if (!alreadyAdded) {
+      setSelectedItems([
+        ...selectedItems,
+        {
+          productId: product._id,
+          quantity: 1,
+          name: product.name,
+          price: product.price,
+          image: product.images?.[0] || "/no-img.png",
+        },
+      ]);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!packageName || !price || selectedItems.length === 0) {
@@ -71,13 +102,16 @@ function AdminEditPackage() {
         body: JSON.stringify({
           packageName,
           price,
-          items: selectedItems,
+          items: selectedItems.map(({ productId, quantity }) => ({
+            productId,
+            quantity,
+          })),
         }),
       });
 
       const result = await res.json();
-
       if (!res.ok) throw new Error(result.message);
+
       alert("✅ Package updated successfully!");
       navigate("/admin/packages");
     } catch (err) {
@@ -94,11 +128,15 @@ function AdminEditPackage() {
     );
   }
 
+  const availableProducts = products.filter(
+    (p) => !selectedItems.some((item) => item.productId === p._id)
+  );
+
   return (
     <div className="mt-18 min-h-screen bg-[#FFE8D6] px-4 py-10">
       <form
         onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto bg-[#DDBEA9] rounded-xl shadow-xl p-6 space-y-6 text-[#3F4238]"
+        className="max-w-4xl mx-auto bg-[#DDBEA9] rounded-xl shadow-xl p-8 space-y-6 text-[#3F4238]"
       >
         <h1 className="text-3xl font-bold text-center text-[#B98B73]">
           Edit Package
@@ -130,41 +168,76 @@ function AdminEditPackage() {
         <div>
           <label className="block font-semibold mb-2">Selected Products:</label>
           <div className="space-y-3">
-            {selectedItems.map((item) => {
-              const product = products.find((p) => p._id === item.productId);
-              return (
-                <div
-                  key={item.productId}
-                  className="bg-white p-3 rounded shadow-sm flex justify-between items-center"
-                >
-                  <div>
-                    <p className="font-medium">{product?.name || "Product"}</p>
-                    <input
-                      type="number"
-                      min={1}
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(item.productId, e.target.value)
-                      }
-                      className="w-20 mt-1 border p-1 rounded"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveItem(item.productId)}
-                    className="text-red-500 hover:text-red-700 font-bold"
-                  >
-                    ✖
-                  </button>
+            {selectedItems.map((item) => (
+              <div
+                key={item.productId}
+                className="bg-white p-3 rounded shadow-sm flex items-center gap-3"
+              >
+                <img
+                  src={item.image || "/no-img.png"}
+                  alt={item.name}
+                  className="w-16 h-16 object-cover rounded"
+                />
+                <div className="flex-1">
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-600">
+                    ₹{item.price} × quantity
+                  </p>
+                  <input
+                    type="number"
+                    min={1}
+                    value={item.quantity}
+                    onChange={(e) =>
+                      handleQuantityChange(item.productId, e.target.value)
+                    }
+                    className="w-20 mt-1 border p-1 rounded"
+                  />
                 </div>
-              );
-            })}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveItem(item.productId)}
+                  className="text-red-600 hover:text-red-800 font-bold"
+                >
+                  ✖
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Available Products */}
+        <div>
+          <label className="block font-semibold mb-2">Add More Products:</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-80 overflow-y-auto">
+            {availableProducts.map((p) => (
+              <div
+                key={p._id}
+                className="border rounded p-3 bg-white flex items-center gap-3"
+              >
+                <img
+                  src={p.images?.[0] || "/no-img.png"}
+                  alt={p.name}
+                  className="w-16 h-16 object-cover rounded"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold">{p.name}</p>
+                  <p className="text-sm text-gray-600">₹{p.price}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleAddItem(p)}
+                  className="bg-[#6B705C] text-white px-3 py-1 rounded hover:bg-[#3F4238] transition"
+                >
+                  Add
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-full py-2 text-white font-semibold rounded bg-[#CB997E] hover:bg-[#6B705C] transition"
+          className="w-full py-3 text-white font-semibold rounded bg-[#CB997E] hover:bg-[#6B705C] transition"
         >
           Save Changes
         </button>
