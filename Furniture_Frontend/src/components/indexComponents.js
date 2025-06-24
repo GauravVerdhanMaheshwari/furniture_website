@@ -18,6 +18,7 @@ export {
   AdminHeader,
   Footer,
   FurnitureCard,
+  PackageCard,
   Header,
   Hero,
   Product,
