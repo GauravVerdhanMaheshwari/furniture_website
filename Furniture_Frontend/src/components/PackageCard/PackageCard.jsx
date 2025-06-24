@@ -17,7 +17,11 @@ function PackageCard({ data }) {
           items.map((item) =>
             fetch(`${URL}/api/product/${item.productId}`)
               .then((res) => res.json())
-              .then((product) => ({ ...product, quantity: item.quantity }))
+              .then((product) => ({
+                ...product,
+                quantity: item.quantity,
+                image: item.image,
+              }))
               .catch(() => null)
           )
         );
