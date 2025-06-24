@@ -79,6 +79,7 @@ export default function Header() {
           {[
             { to: "/", label: "Home" },
             { to: "/products", label: "Shop" },
+            { to: "/packages", label: "Packages" },
             { to: "/about", label: "About Us" },
             { to: "/contact", label: "Contact Us" },
           ].map(({ to, label }) => (
