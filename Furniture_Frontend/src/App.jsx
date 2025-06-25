@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
 import { setUser } from "../features/userSlice";
 import Loading from "./components/Loading/Loading.jsx";
 
@@ -32,34 +31,24 @@ function App() {
     setRehydrated(true);
   }, [dispatch]);
 
+  // 👇 Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   if (!rehydrated) {
     return <Loading />;
   }
 
-  const pageAnimation = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-    transition: { duration: 0.3 },
-  };
-
   return (
     <>
       {isAdminRoute ? <AdminHeader /> : <Header />}
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={location.pathname}
-          {...pageAnimation}
-          className="min-h-screen"
-        >
-          <React.Suspense fallback={<Loading />}>
-            <Outlet />
-          </React.Suspense>
-        </motion.div>
-      </AnimatePresence>
+      <React.Suspense fallback={<Loading />}>
+        <Outlet />
+      </React.Suspense>
 
       {isAdminRoute ? <AdminFooter /> : <Footer />}
     </>
