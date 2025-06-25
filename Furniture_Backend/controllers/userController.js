@@ -7,7 +7,16 @@ const sendVerificationEmail = require("../utils/sendVerificationEmail");
 
 const BASE_URL = process.env.URL || "http://localhost:5000";
 
-// GET /api/users - Fetch all users
+// Helper to hash password
+async function hashPassword(password) {
+  if (!password || password.length < 8 || password.length > 20) {
+    throw new Error("Password must be between 8 and 20 characters long");
+  }
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+}
+
+// GET /api/users
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
@@ -17,45 +26,38 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-// POST /api/users - Register a new user with hashed password and email verification
-exports.addUser = async (req, res, next) => {
+// POST /api/users
+exports.addUser = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
-    async function hashPassword(password) {
-      try {
-        if (!password || password.length < 8 || password.length > 20) {
-          throw new Error("Password must be between 8 and 20 characters long");
-        }
-        const salt = await bcrypt.genSalt(10);
-        return await bcrypt.hash(password, salt);
-      } catch (error) {
-        console.error("Error hashing password:", error);
-        throw new Error("Password hashing failed");
-      }
-    }
-    const hashedPassword = await hashPassword(password);
-    console.log("Registering user:", { name, email, hashedPassword, phone });
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = new User({ name, email, hashedPassword, phone });
-    await user.save();
+    const hashedPassword = await hashPassword(password);
 
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+    });
+
+    await user.save();
     await sendVerificationEmail(user);
 
     res
       .status(201)
-      .json({ msg: "Signup successful. Check your email to verify." });
+      .json({ message: "Signup successful. Check your email to verify." });
   } catch (err) {
     console.error("Signup failed:", err);
-    res.status(500).json({ msg: "Signup failed", error: err.message });
+    res.status(500).json({ message: "Signup failed", error: err.message });
   }
 };
 
-// GET /api/users/verify-email?token=abc123 - Verify email token
+// GET /api/users/verify-email
 exports.verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
@@ -85,7 +87,7 @@ exports.verifyEmail = async (req, res) => {
   }
 };
 
-// POST /api/users/resend-verification - Resend verification email
+// POST /api/users/resend-verification
 exports.resendVerification = async (req, res) => {
   try {
     const { email } = req.body;
@@ -107,11 +109,10 @@ exports.resendVerification = async (req, res) => {
   }
 };
 
-// POST /api/users/login - Login with hashed password check
+// POST /api/users/login
 exports.loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     if (!email || !password)
       return res
         .status(400)
@@ -143,7 +144,7 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
-// GET /api/users/:id - Fetch a user by ID
+// GET /api/users/:id
 exports.getUserById = async (req, res, next) => {
   const { id } = req.params;
 
@@ -153,9 +154,7 @@ exports.getUserById = async (req, res, next) => {
 
   try {
     const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(user);
   } catch (error) {
@@ -163,7 +162,7 @@ exports.getUserById = async (req, res, next) => {
   }
 };
 
-// GET /api/users/me - Fetch current user by token
+// GET /api/users/me
 exports.getCurrentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -173,9 +172,7 @@ exports.getCurrentUser = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(user);
   } catch (error) {
@@ -183,7 +180,7 @@ exports.getCurrentUser = async (req, res, next) => {
   }
 };
 
-// PUT /api/users/:id - Update a user
+// PUT /api/users/:id
 exports.updateUser = async (req, res, next) => {
   const { id } = req.params;
 
@@ -197,9 +194,8 @@ exports.updateUser = async (req, res, next) => {
       runValidators: true,
     });
 
-    if (!updatedUser) {
+    if (!updatedUser)
       return res.status(404).json({ message: "User not found" });
-    }
 
     res
       .status(200)
@@ -209,7 +205,7 @@ exports.updateUser = async (req, res, next) => {
   }
 };
 
-// DELETE /api/users/:id - Delete user and cascade delete related data
+// DELETE /api/users/:id
 exports.deleteUser = async (req, res, next) => {
   const { id } = req.params;
 
@@ -219,11 +215,9 @@ exports.deleteUser = async (req, res, next) => {
 
   try {
     const deletedUser = await User.findByIdAndDelete(id);
-    if (!deletedUser) {
+    if (!deletedUser)
       return res.status(404).json({ message: "User not found" });
-    }
 
-    // Cascade delete related data
     await Promise.all([
       axios.delete(`${BASE_URL}/api/cart/delete/${id}`),
       axios.delete(`${BASE_URL}/api/orders/delete/${id}`),

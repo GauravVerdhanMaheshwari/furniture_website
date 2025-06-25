@@ -1,4 +1,3 @@
-// utils/sendVerificationEmail.js
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 
@@ -23,8 +22,9 @@ const sendVerificationEmail = async (user) => {
     subject: "Verify Your Email",
     html: `
       <p>Hi ${user.name},</p>
-      <p>Click below to verify your email:</p>
-      <a href="${verificationLink}">Verify Email</a>
+      <p>Thank you for registering. Please click the link below to verify your email:</p>
+      <p><a href="${verificationLink}">${verificationLink}</a></p>
+      <p>This link will expire in 24 hours.</p>
     `,
   };
 
