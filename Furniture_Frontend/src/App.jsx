@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
+import { setUser } from "../features/userSlice";
+import Loading from "./components/Loading/Loading.jsx";
 
 import {
   Header,
@@ -9,7 +11,6 @@ import {
   AdminHeader,
   AdminFooter,
 } from "./components/indexComponents";
-import { setUser } from "../features/userSlice";
 
 function App() {
   const location = useLocation();
@@ -34,19 +35,14 @@ function App() {
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   if (!rehydrated) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-[#FFE8D6] text-[#3F4238] text-xl font-medium">
-        Loading app...
-      </div>
-    );
+    return <Loading />;
   }
 
-  // 👇 Slide + fade animation settings
   const pageAnimation = {
-    initial: { opacity: 0, x: 50 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -50 },
-    transition: { duration: 0.4, ease: "easeInOut" },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.3 },
   };
 
   return (
@@ -59,7 +55,9 @@ function App() {
           {...pageAnimation}
           className="min-h-screen"
         >
-          <Outlet />
+          <React.Suspense fallback={<Loading />}>
+            <Outlet />
+          </React.Suspense>
         </motion.div>
       </AnimatePresence>
 

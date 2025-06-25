@@ -11,7 +11,7 @@ function Loading() {
 
   useEffect(() => {
     // Delay display to avoid flicker during fast loads
-    const timer = setTimeout(() => setShow(true), 500);
+    const timer = setTimeout(() => setShow(true), []);
 
     return () => clearTimeout(timer); // Cleanup on unmount
   }, []);
