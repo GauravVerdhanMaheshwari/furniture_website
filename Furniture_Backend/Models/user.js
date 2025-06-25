@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema(
       trim: true,
       match: [/^[0-9]{10}$/, "Phone number must be exactly 10 digits"],
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true, // adds createdAt and updatedAt fields automatically
