@@ -1,27 +1,19 @@
-import { StrictMode, lazy, Suspense } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import { motion } from "framer-motion";
-
+import React, { lazy, Suspense } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
+  useLocation,
 } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
-import { Provider } from "react-redux";
-import { store } from "../app/store.js";
-
+// Core components
 import App from "./App.jsx";
-import Loading from "./components/Loading/Loading.jsx";
 import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
+import Loading from "./components/Loading/Loading.jsx";
 
-/**
- * 💤 Lazy loader with optional artificial delay (for UX or spinner testing)
- * @param {Function} importFunc - The dynamic import of the component
- * @param {number} delay - Optional delay in milliseconds (default: 8500ms)
- */
+// Lazy loader helper
 const lazyWithDelay = (importFunc, delay = 0) =>
   lazy(() =>
     Promise.all([
@@ -30,7 +22,7 @@ const lazyWithDelay = (importFunc, delay = 0) =>
     ]).then(([module]) => module)
   );
 
-// 🧩 Client pages
+// Lazy-loaded pages
 const Home = lazyWithDelay(() => import("./pages/Home/Home.jsx"));
 const Products = lazyWithDelay(() => import("./pages/Products/Products.jsx"));
 const PackagesUser = lazyWithDelay(() =>
@@ -42,7 +34,6 @@ const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
 const Login = lazyWithDelay(() => import("./pages/Login/Login.jsx"));
 const Register = lazyWithDelay(() => import("./pages/Register/Register.jsx"));
 
-// 🔐 Admin pages
 const AdminLogin = lazyWithDelay(() =>
   import("./pages/AdminLogin/AdminLogin.jsx")
 );
@@ -71,16 +62,12 @@ const AdminPackagesEdit = lazyWithDelay(() =>
   import("./pages/AdminPackagesEdit/AdminPackagesEdit.jsx")
 );
 
-// ❌ 404 fallback page
 const Page404 = lazyWithDelay(() => import("./pages/404/Page404.jsx"));
 
-/**
- * 🧭 React Router setup
- */
+// Router setup
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
-      {/* Client-side routes */}
       <Route
         index
         element={
@@ -146,7 +133,7 @@ const router = createBrowserRouter(
         }
       />
 
-      {/* Admin routes */}
+      {/* Admin */}
       <Route
         path="admin"
         element={
@@ -228,7 +215,7 @@ const router = createBrowserRouter(
         }
       />
 
-      {/* Fallback route (404) */}
+      {/* 404 */}
       <Route
         path="*"
         element={
@@ -241,28 +228,30 @@ const router = createBrowserRouter(
   )
 );
 
-/**
- * ✨ Motion animation variants
- */
-const variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
+// Page transition wrapper
+function MotionWrapper({ children }) {
+  const location = useLocation();
 
-/**
- * 🚀 React app entry point
- */
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <motion.div
-      className="min-h-screen" // optional styling
-      variants={variants}
-      initial="hidden"
-      animate="visible"
-    >
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </motion.div>
-  </StrictMode>
-);
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="min-h-screen"
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+export default function AnimatedApp() {
+  return (
+    <MotionWrapper>
+      <RouterProvider router={router} />
+    </MotionWrapper>
+  );
+}
