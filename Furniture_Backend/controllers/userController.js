@@ -33,14 +33,15 @@ exports.addUser = async (req, res, next) => {
         throw new Error("Password hashing failed");
       }
     }
-    console.log("Registering user:", { name, email, password, phone });
+    const hashedPassword = await hashPassword(password);
+    console.log("Registering user:", { name, email, hashedPassword, phone });
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    const user = new User({ name, email, password, phone });
+    const user = new User({ name, email, hashedPassword, phone });
     await user.save();
 
     await sendVerificationEmail(user);
