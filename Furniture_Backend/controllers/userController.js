@@ -20,7 +20,7 @@ exports.getAllUsers = async (req, res, next) => {
 // POST /api/users - Register a new user with hashed password and email verification
 exports.addUser = async (req, res, next) => {
   try {
-    const { name, email, password, address, phone } = req.body;
+    let { name, email, password, address, phone } = req.body;
     if (!address) {
       address = null; // Allow address to be optional
     }
