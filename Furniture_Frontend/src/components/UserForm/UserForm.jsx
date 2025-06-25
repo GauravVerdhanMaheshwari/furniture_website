@@ -76,21 +76,6 @@ function UserForm({
       </div>
 
       <div>
-        <label htmlFor="address" className="block mb-1 font-medium">
-          Address:
-        </label>
-        <input
-          id="address"
-          type="text"
-          value={userData.address}
-          placeholder="Enter your address"
-          className={inputBase}
-          required
-          onChange={(e) => handleChange("address", e.target.value)}
-        />
-      </div>
-
-      <div>
         <label htmlFor="phone" className="block mb-1 font-medium">
           Phone:
         </label>

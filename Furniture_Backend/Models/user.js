@@ -32,15 +32,6 @@ const userSchema = new mongoose.Schema(
       minlength: [6, "Password must be at least 6 characters"],
     },
 
-    // 🏠 Address for deliveries or billing
-    address: {
-      type: String,
-      required: [true, "Address is required"],
-      trim: true,
-      minlength: [1, "Address cannot be empty"],
-      maxlength: [500, "Address cannot exceed 500 characters"],
-    },
-
     // 📞 10-digit phone number
     phone: {
       type: String,

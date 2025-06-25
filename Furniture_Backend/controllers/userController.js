@@ -21,7 +21,6 @@ exports.getAllUsers = async (req, res, next) => {
 exports.addUser = async (req, res, next) => {
   try {
     const { name, email, password, phone } = req.body;
-    const address = req.body.address || "";
     console.log("Registering user:", { name, email, password, address, phone });
 
     const existingUser = await User.findOne({ email });
