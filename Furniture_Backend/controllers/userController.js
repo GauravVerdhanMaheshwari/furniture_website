@@ -20,10 +20,8 @@ exports.getAllUsers = async (req, res, next) => {
 // POST /api/users - Register a new user with hashed password and email verification
 exports.addUser = async (req, res, next) => {
   try {
-    let { name, email, password, address, phone } = req.body;
-    if (!address) {
-      address = null; // Allow address to be optional
-    }
+    const { name, email, password, phone } = req.body;
+    const address = req.body.address || "";
     console.log("Registering user:", { name, email, password, address, phone });
 
     const existingUser = await User.findOne({ email });
