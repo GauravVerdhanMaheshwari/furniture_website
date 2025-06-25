@@ -5,7 +5,7 @@ const ownerController = require("../controllers/ownerController");
 
 router.post("/login", userController.loginUser);
 router.post("/register", userController.addUser);
-router.post("/me", userController.getUserByEmail);
+router.post("/me", userController.getCurrentUser);
 router.post("/admin/login", ownerController.loginOwner);
 
 module.exports = router;
