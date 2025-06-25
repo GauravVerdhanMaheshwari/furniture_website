@@ -18,6 +18,7 @@ function Register() {
   const handleRegister = async () => {
     setErrorMsg("");
 
+    // ✅ Form validation
     if (!username || !email || !password || !confirmPassword) {
       setErrorMsg("Please fill in all required fields.");
       return;
@@ -63,7 +64,7 @@ function Register() {
   };
 
   return (
-    <div className="mt-18 py-12 bg-[#FFE8D6] min-h-[80vh] flex justify-center items-start">
+    <div className="mt-20 py-12 bg-[#FFE8D6] min-h-[80vh] flex justify-center items-start">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -194,19 +195,15 @@ function Register() {
           />
         </div>
 
-        {/* ⚠️ Error Message */}
+        {/* ⚠️ Error */}
         {errorMsg && (
           <p className="text-red-600 text-sm text-center">{errorMsg}</p>
         )}
 
-        {/* 🚀 Register Button */}
+        {/* 🚀 Submit */}
         <button
           type="submit"
           className="w-full bg-[#CB997E] text-white font-semibold py-2 rounded-md hover:bg-[#B98B73] transition-all"
-          onClick={(e) => {
-            e.preventDefault();
-            handleRegister();
-          }}
         >
           Register
         </button>

@@ -18,32 +18,27 @@ exports.getAllUsers = async (req, res, next) => {
 };
 
 // POST /api/users - Register a new user with hashed password and email verification
-exports.addUser = async (req, res) => {
+exports.addUser = async (req, res, next) => {
   try {
     const { name, email, password, address, phone } = req.body;
+    console.log("Registering user:", { name, email, password, address, phone });
 
     const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "User already exists" });
+    if (existingUser) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-      address,
-      phone,
-    });
-
+    const user = new User({ name, email, password, address, phone });
     await user.save();
-    await sendVerificationEmail(user);
 
-    res.status(201).json({
-      message: "Signup successful. Check your email to verify.",
-    });
+    await sendVerificationEmail(user); // this might be throwing the error
+
+    res
+      .status(201)
+      .json({ msg: "Signup successful. Check your email to verify." });
   } catch (err) {
-    res.status(500).json({ message: "Signup failed", error: err.message });
+    console.error("Signup failed:", err);
+    res.status(500).json({ msg: "Signup failed", error: err.message });
   }
 };
 
