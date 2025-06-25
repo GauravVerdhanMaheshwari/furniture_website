@@ -5,10 +5,8 @@ import { setUser } from "../../../features/userSlice";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [errorMsg, setErrorMsg] = useState("");
   const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
@@ -17,7 +15,7 @@ function Login() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
   const handleLogin = async () => {
-    if (!username || !email || !password) {
+    if (!email.trim() || !password.trim()) {
       setErrorMsg("Please fill in all fields.");
       return;
     }
@@ -26,21 +24,26 @@ function Login() {
       const response = await fetch(`${URL}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }), // 👈 Username not needed for login
+        body: JSON.stringify({ email, password }),
       });
 
       const result = await response.json();
+
       if (!response.ok) {
         if (result?.notVerified && result?.email) {
           setUnverifiedEmail(result.email);
           setErrorMsg(result.message || "Please verify your email first.");
         } else {
-          throw new Error(result.message || "Login failed");
+          throw new Error(result.message || "Login failed.");
         }
         return;
       }
 
-      const userPayload = { userID: result.user._id, isAuthenticated: true };
+      const userPayload = {
+        userID: result.user._id,
+        isAuthenticated: true,
+      };
+
       localStorage.setItem("user", JSON.stringify(userPayload));
       dispatch(setUser(userPayload));
       navigate("/");
@@ -66,25 +69,6 @@ function Login() {
           Please login to continue
         </p>
 
-        {/* 👤 Username Field */}
-        <div>
-          <label
-            htmlFor="username"
-            className="block text-sm font-medium text-[#3F4238] mb-1"
-          >
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
-            placeholder="e.g. johndoe"
-            required
-          />
-        </div>
-
         {/* 📧 Email Field */}
         <div>
           <label
@@ -99,11 +83,11 @@ function Login() {
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
-              setUnverifiedEmail(""); // reset on change
+              setUnverifiedEmail("");
               setErrorMsg("");
             }}
-            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
             placeholder="you@example.com"
+            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
             required
           />
         </div>
@@ -122,11 +106,11 @@ function Login() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
               placeholder="••••••••"
               minLength={8}
               maxLength={20}
               required
+              className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
@@ -137,12 +121,10 @@ function Login() {
           </div>
         </div>
 
-        {/* ⚠️ Error Message */}
         {errorMsg && (
           <p className="text-red-600 text-sm text-center">{errorMsg}</p>
         )}
 
-        {/* 🔁 Resend Verification Link */}
         {unverifiedEmail && (
           <p className="text-sm text-center mt-2">
             Haven’t verified?{" "}
@@ -157,7 +139,6 @@ function Login() {
           </p>
         )}
 
-        {/* 🔘 Submit Button */}
         <button
           type="submit"
           className="w-full bg-[#6B705C] hover:bg-[#3F4238] text-white font-semibold py-2 rounded-md transition duration-300"
@@ -165,7 +146,6 @@ function Login() {
           Login
         </button>
 
-        {/* 🧭 Navigation to Register */}
         <p className="text-center text-sm mt-4">
           Don’t have an account?{" "}
           <NavLink

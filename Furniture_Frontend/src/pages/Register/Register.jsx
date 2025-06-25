@@ -54,6 +54,13 @@ function Register() {
       }
 
       alert("Signup successful! Check your email to verify your account.");
+      const requestVerify = await fetch(`${URL}/api/users/verify-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const verifyResult = await requestVerify.json();
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
