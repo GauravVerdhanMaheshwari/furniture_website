@@ -21,17 +21,17 @@ exports.getAllUsers = async (req, res, next) => {
 exports.addUser = async (req, res, next) => {
   try {
     const { name, email, password, phone } = req.body;
-    console.log("Registering user:", { name, email, password, address, phone });
+    console.log("Registering user:", { name, email, password, phone });
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    const user = new User({ name, email, password, address, phone });
+    const user = new User({ name, email, password, phone });
     await user.save();
 
-    await sendVerificationEmail(user); // this might be throwing the error
+    await sendVerificationEmail(user);
 
     res
       .status(201)
