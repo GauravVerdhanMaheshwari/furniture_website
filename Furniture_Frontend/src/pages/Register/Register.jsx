@@ -8,7 +8,6 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [address, setAddress] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [errorMsg, setErrorMsg] = React.useState("");
 
@@ -38,7 +37,6 @@ function Register() {
       name: username,
       email,
       password,
-      address,
       phone,
     };
 
@@ -161,21 +159,6 @@ function Register() {
               className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
             />
           </div>
-        </div>
-
-        {/* 🏠 Address */}
-        <div>
-          <label htmlFor="address" className="block text-[#3F4238] mb-1">
-            Address (optional)
-          </label>
-          <textarea
-            id="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter your address"
-            rows={3}
-            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md shadow-sm focus:outline-none"
-          />
         </div>
 
         {/* 📞 Phone */}
