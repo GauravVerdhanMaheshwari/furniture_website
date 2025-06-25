@@ -4,16 +4,12 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  useLocation,
 } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-
-// Core components
 import App from "./App.jsx";
 import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
 import Loading from "./components/Loading/Loading.jsx";
 
-// Lazy loader helper
+// lazyWithDelay function
 const lazyWithDelay = (importFunc, delay = 0) =>
   lazy(() =>
     Promise.all([
@@ -33,7 +29,6 @@ const Contacts = lazyWithDelay(() => import("./pages/Contacts/Contacts.jsx"));
 const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
 const Login = lazyWithDelay(() => import("./pages/Login/Login.jsx"));
 const Register = lazyWithDelay(() => import("./pages/Register/Register.jsx"));
-
 const AdminLogin = lazyWithDelay(() =>
   import("./pages/AdminLogin/AdminLogin.jsx")
 );
@@ -61,10 +56,8 @@ const AdminPackagesAdd = lazyWithDelay(() =>
 const AdminPackagesEdit = lazyWithDelay(() =>
   import("./pages/AdminPackagesEdit/AdminPackagesEdit.jsx")
 );
-
 const Page404 = lazyWithDelay(() => import("./pages/404/Page404.jsx"));
 
-// Router setup
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
@@ -133,7 +126,7 @@ const router = createBrowserRouter(
         }
       />
 
-      {/* Admin */}
+      {/* Admin routes */}
       <Route
         path="admin"
         element={
@@ -214,8 +207,6 @@ const router = createBrowserRouter(
           </Suspense>
         }
       />
-
-      {/* 404 */}
       <Route
         path="*"
         element={
@@ -228,30 +219,6 @@ const router = createBrowserRouter(
   )
 );
 
-// Page transition wrapper
-function MotionWrapper({ children }) {
-  const location = useLocation();
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="min-h-screen"
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
 export default function AnimatedApp() {
-  return (
-    <MotionWrapper>
-      <RouterProvider router={router} />
-    </MotionWrapper>
-  );
+  return <RouterProvider router={router} />;
 }

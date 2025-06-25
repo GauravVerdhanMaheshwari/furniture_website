@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 
 import {
   Header,
@@ -13,16 +14,10 @@ import { setUser } from "../features/userSlice";
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
-
-  // ✅ Rehydration state to ensure Redux is updated before rendering app
   const [rehydrated, setRehydrated] = useState(false);
 
-  /**
-   * 🔁 Rehydrate user state from localStorage on initial load
-   */
   useEffect(() => {
     const userData = localStorage.getItem("user");
-
     if (userData) {
       try {
         const parsedUser = JSON.parse(userData);
@@ -33,15 +28,11 @@ function App() {
         console.error("Error parsing stored user data:", error);
       }
     }
-
-    // ✅ Mark rehydration complete
     setRehydrated(true);
   }, [dispatch]);
 
-  // 🔁 Toggle between admin and user layouts based on route prefix
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-  // 🕐 Prevent early render before user state is set
   if (!rehydrated) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#FFE8D6] text-[#3F4238] text-xl font-medium">
@@ -51,16 +42,23 @@ function App() {
   }
 
   return (
-    <div>
-      {/* Conditional Header */}
+    <>
       {isAdminRoute ? <AdminHeader /> : <Header />}
 
-      {/* Nested route content */}
-      <Outlet />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Outlet />
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Conditional Footer */}
       {isAdminRoute ? <AdminFooter /> : <Footer />}
-    </div>
+    </>
   );
 }
 
