@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const axios = require("axios");
 const sendVerificationEmail = require("../utils/sendVerificationEmail");
 
 const BASE_URL = process.env.URL || "http://localhost:5000";
@@ -16,14 +17,14 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-// ✅ POST /api/users - Register a new user with hashed password and email verification
-exports.addUser = async (req, res, next) => {
+// POST /api/users - Register a new user with hashed password and email verification
+exports.addUser = async (req, res) => {
   try {
     const { name, email, password, address, phone } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser)
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,56 +39,67 @@ exports.addUser = async (req, res, next) => {
     await user.save();
     await sendVerificationEmail(user);
 
-    res
-      .status(201)
-      .json({ msg: "Signup successful. Check your email to verify." });
+    res.status(201).json({
+      message: "Signup successful. Check your email to verify.",
+    });
   } catch (err) {
-    res.status(500).json({ msg: "Signup failed", error: err.message });
+    res.status(500).json({ message: "Signup failed", error: err.message });
   }
 };
 
-// ✅ GET /api/users/verify-email?token=abc123 - Verify email token
+// GET /api/users/verify-email?token=abc123 - Verify email token
 exports.verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
-    if (!token) return res.status(400).json({ msg: "No token provided" });
+    if (!token) return res.status(400).json({ message: "No token provided" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     if (user.isVerified)
-      return res.status(400).json({ msg: "Email already verified" });
+      return res.status(400).json({ message: "Email already verified" });
 
     user.isVerified = true;
     await user.save();
 
-    res.status(200).json({ msg: "Email verified successfully!" });
+    res.status(200).json({ message: "Email verified successfully!" });
   } catch (err) {
-    res.status(400).json({ msg: "Invalid or expired token" });
+    if (err.name === "TokenExpiredError") {
+      return res.status(400).json({ message: "Token expired" });
+    }
+    if (err.name === "JsonWebTokenError") {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+    res
+      .status(400)
+      .json({ message: "Something went wrong", error: err.message });
   }
 };
 
+// POST /api/users/resend-verification - Resend verification email
 exports.resendVerification = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ msg: "Email is required" });
+    if (!email) return res.status(400).json({ message: "Email is required" });
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     if (user.isVerified)
-      return res.status(400).json({ msg: "Email already verified" });
+      return res.status(400).json({ message: "Email already verified" });
 
     await sendVerificationEmail(user);
 
-    res.status(200).json({ msg: "Verification email sent again." });
+    res.status(200).json({ message: "Verification email sent again." });
   } catch (err) {
-    res.status(500).json({ msg: "Something went wrong", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: err.message });
   }
 };
 
-// ✅ POST /api/users/login - Login with hashed password check
+// POST /api/users/login - Login with hashed password check
 exports.loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -105,7 +117,6 @@ exports.loginUser = async (req, res, next) => {
     if (!isMatch)
       return res.status(401).json({ message: "Invalid email or password" });
 
-    // ✅ Check if email is verified
     if (!user.isVerified) {
       return res.status(403).json({
         message: "Please verify your email before logging in.",
@@ -114,13 +125,17 @@ exports.loginUser = async (req, res, next) => {
       });
     }
 
-    res.status(200).json({ message: "Login successful", user });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.status(200).json({ message: "Login successful", user, token });
   } catch (error) {
     next(error);
   }
 };
 
-// ✅ GET /api/users/:id - Fetch a user by ID
+// GET /api/users/:id - Fetch a user by ID
 exports.getUserById = async (req, res, next) => {
   const { id } = req.params;
 
@@ -140,7 +155,7 @@ exports.getUserById = async (req, res, next) => {
   }
 };
 
-// ✅ PUT /api/users/:id - Update a user
+// PUT /api/users/:id - Update a user
 exports.updateUser = async (req, res, next) => {
   const { id } = req.params;
 
@@ -166,7 +181,7 @@ exports.updateUser = async (req, res, next) => {
   }
 };
 
-// ✅ DELETE /api/users/:id - Delete user and cascade delete related data
+// DELETE /api/users/:id - Delete user and cascade delete related data
 exports.deleteUser = async (req, res, next) => {
   const { id } = req.params;
 
@@ -180,17 +195,11 @@ exports.deleteUser = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Cascade delete - cart
-    fetch(`${BASE_URL}/api/cart/delete/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    }).catch((err) => console.error("Error deleting cart:", err));
-
-    // Cascade delete - orders
-    fetch(`${BASE_URL}/api/orders/delete/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    }).catch((err) => console.error("Error deleting orders:", err));
+    // Cascade delete related data
+    await Promise.all([
+      axios.delete(`${BASE_URL}/api/cart/delete/${id}`),
+      axios.delete(`${BASE_URL}/api/orders/delete/${id}`),
+    ]).catch((err) => console.error("Cascade delete error:", err));
 
     res
       .status(200)
