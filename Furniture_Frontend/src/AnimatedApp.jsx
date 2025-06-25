@@ -29,6 +29,12 @@ const Contacts = lazyWithDelay(() => import("./pages/Contacts/Contacts.jsx"));
 const Profile = lazyWithDelay(() => import("./pages/Profile/Profile.jsx"));
 const Login = lazyWithDelay(() => import("./pages/Login/Login.jsx"));
 const Register = lazyWithDelay(() => import("./pages/Register/Register.jsx"));
+const VerifyEmail = lazyWithDelay(() =>
+  import("./pages/VerifyEmail/VerifyEmail.jsx")
+);
+const ResendVerification = lazyWithDelay(() =>
+  import("./pages/ResendVerification/ResendVerification.jsx")
+);
 const AdminLogin = lazyWithDelay(() =>
   import("./pages/AdminLogin/AdminLogin.jsx")
 );
@@ -125,7 +131,23 @@ const router = createBrowserRouter(
           </Suspense>
         }
       />
+      <Route
+        path="verify-email"
+        element={
+          <Suspense fallback={<Loading />}>
+            <VerifyEmail />
+          </Suspense>
+        }
+      />
 
+      <Route
+        path="resend-verification"
+        element={
+          <Suspense fallback={<Loading />}>
+            <ResendVerification />
+          </Suspense>
+        }
+      />
       {/* Admin routes */}
       <Route
         path="admin"
