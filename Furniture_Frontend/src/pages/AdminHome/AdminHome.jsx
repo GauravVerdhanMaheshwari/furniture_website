@@ -53,8 +53,8 @@ function Home() {
             hoverColor="bg-[#B98B73]"
           />
           <NavCard
-            to="/admin/orders"
-            label="Manage Orders"
+            to="/admin/packages"
+            label="Manage Packages"
             bgColor="bg-[#B98B73]"
             hoverColor="bg-[#A5A58D]"
           />

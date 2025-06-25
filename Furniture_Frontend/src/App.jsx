@@ -41,6 +41,14 @@ function App() {
     );
   }
 
+  // 👇 Slide + fade animation settings
+  const pageAnimation = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+    transition: { duration: 0.4, ease: "easeInOut" },
+  };
+
   return (
     <>
       {isAdminRoute ? <AdminHeader /> : <Header />}
@@ -48,10 +56,8 @@ function App() {
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          {...pageAnimation}
+          className="min-h-screen"
         >
           <Outlet />
         </motion.div>
