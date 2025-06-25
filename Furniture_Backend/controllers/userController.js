@@ -21,6 +21,18 @@ exports.getAllUsers = async (req, res, next) => {
 exports.addUser = async (req, res, next) => {
   try {
     const { name, email, password, phone } = req.body;
+    async function hashPassword(password) {
+      try {
+        if (!password || password.length < 8 || password.length > 20) {
+          throw new Error("Password must be between 8 and 20 characters long");
+        }
+        const salt = await bcrypt.genSalt(10);
+        return await bcrypt.hash(password, salt);
+      } catch (error) {
+        console.error("Error hashing password:", error);
+        throw new Error("Password hashing failed");
+      }
+    }
     console.log("Registering user:", { name, email, password, phone });
 
     const existingUser = await User.findOne({ email });
