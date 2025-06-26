@@ -45,6 +45,8 @@ function Login() {
       };
 
       localStorage.setItem("user", JSON.stringify(userPayload));
+      localStorage.setItem("userName", result.user.name);
+      //! TODO : add a session for storing user email, username, isVerified
       dispatch(setUser(userPayload));
       navigate("/");
     } catch (error) {
