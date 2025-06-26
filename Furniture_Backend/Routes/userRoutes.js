@@ -11,7 +11,11 @@ router.post("/login", userController.loginUser);
 // Verify email
 router.get("/verify-email", userController.verifyEmail);
 
+// Resend email verification
 router.post("/resend-verification", userController.resendVerification);
+
+// Sending inquiry to owner
+router.post("/inquiry", userController.sendInquiryToOwner);
 
 // Get all users
 router.get("/", userController.getAllUsers);
