@@ -16,7 +16,13 @@ function FurnitureCard({
   width,
   depth,
   images = [],
+  handleInquiry,
+  userMessage,
+  setUserMessage,
+  username,
+  userEmail,
 }) {
+  const [productInquired, setProductInquired] = React.useState(false);
   return (
     <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 transform transition-transform hover:scale-105">
       {/* === Image Carousel (or fallback) === */}
@@ -66,6 +72,36 @@ function FurnitureCard({
       </p>
 
       <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price}</p>
+
+      {/* === Inquiry Button === */}
+      <button
+        className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-3 hover:bg-[#2C2D29] transition-colors"
+        disabled={!userMessage.trim()}
+        onClick={(e) => {
+          e.stopPropagation();
+          setProductInquired(true);
+        }}
+      >
+        <span className="text-sm">Start Inquiry</span>
+      </button>
+      {productInquired && (
+        <div className="mt-3">
+          <textarea
+            className="w-full p-2 border border-[#D4C7B0] rounded-lg text-sm"
+            rows="3"
+            placeholder="Type your message here..."
+            value={userMessage}
+            onChange={(e) => setUserMessage(e.target.value)}
+          />
+          <button
+            className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-2 hover:bg-[#2C2D29] transition-colors"
+            onClick={() => handleInquiry(id, username, userEmail, userMessage)}
+            disabled={!userMessage.trim()}
+          >
+            Send Inquiry
+          </button>
+        </div>
+      )}
     </div>
   );
 }
