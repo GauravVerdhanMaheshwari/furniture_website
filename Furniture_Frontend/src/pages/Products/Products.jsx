@@ -14,6 +14,9 @@ function Products() {
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [userMessage, setUserMessage] = useState("");
+  const [userName, setUserName] = useState(""); // username from session
+  const [userEmail, setUserEmail] = useState(""); // user email from session
 
   const URL = import.meta.env.VITE_BACK_END_API;
   const minPrice = 100;
@@ -61,6 +64,27 @@ function Products() {
     setSelectedType("");
     setSearchTerm("");
     setShowFilter(false);
+  };
+
+  const handleInquiry = (id) => {
+    const product = products.find((item) => item._id === id);
+    if (product) {
+      //! TODO: Send inquiry data to the backend through an API call and handle the response, and get the userName and userEmail from session
+      // `Inquiry about ${product.name}:\n\n` +
+      //   `From: <strong>${userName}\n</strong>` +
+      //   `Description: <strong>${product.description}\n</strong>` +
+      //   `Type: <strong>${product.type}\n</strong>` +
+      //   `Company: <strong>${product.company}\n</strong>` +
+      //   `Price: <strong>$${product.price}\n</strong>` +
+      //   `Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches\n</strong>` +
+      //   `<strong>${userMessage}</strong>`
+    }
+    try {
+      console.log("Sending inquiry for product ID:", id);
+    } catch (error) {
+      alert("An error occurred while sending the inquiry. Please try again.");
+      console.error("Inquiry sending error:", error);
+    }
   };
 
   if (loading) {
@@ -121,6 +145,9 @@ function Products() {
               width={item.size.width}
               depth={item.size.depth}
               images={item.images}
+              handleInquiry={handleInquiry}
+              userMessage={userMessage}
+              setUserMessage={setUserMessage}
             />
           ))}
         </div>
