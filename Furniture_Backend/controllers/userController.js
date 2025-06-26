@@ -109,6 +109,27 @@ exports.resendVerification = async (req, res) => {
   }
 };
 
+// POST /api/users/inquiry
+exports.sendInquiryToOwner = async (req, res) => {
+  const { productId, message, userName, userEmail } = req.body;
+
+  if (!productId || !message || !userName || !userEmail) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    //! TODO: Implement actual email sending logic here via sendInquiryToOwner function (can take help form the verifyEmail function)
+    console.log(
+      `Inquiry for product ${productId} from ${userName} (${userEmail}): ${message}`
+    );
+
+    res.status(200).json({ message: "Inquiry sent successfully" });
+  } catch (error) {
+    console.error("Error sending inquiry:", error);
+    res.status(500).json({ message: "Failed to send inquiry" });
+  }
+};
+
 // POST /api/users/login
 exports.loginUser = async (req, res, next) => {
   try {
