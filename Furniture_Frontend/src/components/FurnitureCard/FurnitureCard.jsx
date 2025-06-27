@@ -62,13 +62,19 @@ function FurnitureCard({
       <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price}</p>
 
       <button
-        className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-3 hover:bg-[#2C2D29] transition-colors"
+        className={`w-full py-2 rounded-lg mt-3 transition-colors text-white ${
+          productInquired
+            ? "bg-red-500 hover:bg-red-600"
+            : "bg-[#3F4238] hover:bg-[#2C2D29]"
+        }`}
         onClick={(e) => {
           setProductInquired();
           e.stopPropagation();
         }}
       >
-        <span className="text-sm">Start Inquiry</span>
+        <span className="text-sm">
+          {productInquired ? "Cancel Inquiry" : "Start Inquiry"}
+        </span>
       </button>
 
       {productInquired && (
@@ -83,7 +89,7 @@ function FurnitureCard({
           <button
             className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-2 hover:bg-[#2C2D29] transition-colors"
             onClick={() => handleInquiry(id)}
-            disabled={!userMessage}
+            disabled={!userMessage.trim()}
           >
             Send Inquiry
           </button>
