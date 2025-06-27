@@ -77,7 +77,7 @@ function FurnitureCard({
       {/* === Inquiry Button === */}
       <button
         className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-3 hover:bg-[#2C2D29] transition-colors"
-        disabled={!userMessage.trim()}
+        disabled={!userMessage}
         onClick={(e) => {
           setProductInquired(true);
           e.stopPropagation();
@@ -97,7 +97,7 @@ function FurnitureCard({
           <button
             className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-2 hover:bg-[#2C2D29] transition-colors"
             onClick={() => handleInquiry(id, username, userEmail, userMessage)}
-            disabled={!userMessage.trim()}
+            disabled={!userMessage}
           >
             Send Inquiry
           </button>
