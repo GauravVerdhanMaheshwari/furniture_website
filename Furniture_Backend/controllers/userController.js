@@ -112,14 +112,14 @@ exports.resendVerification = async (req, res) => {
 
 // POST /api/users/inquiry
 exports.sendInquiryToOwner = async (req, res) => {
-  const { productId, inquiryMessage, userEmail } = req.body;
+  const { productId, message, userEmail } = req.body;
 
-  if (!productId || !inquiryMessage || !userEmail) {
+  if (!productId || !message || !userEmail) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    await sendInquiryToOwner(productId, inquiryMessage, userEmail);
+    await sendInquiryToOwner(productId, message, userEmail);
     res.status(200).json({ message: "Inquiry sent successfully" });
   } catch (error) {
     console.error("Error sending inquiry:", error);
