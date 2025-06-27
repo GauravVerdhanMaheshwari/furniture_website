@@ -45,6 +45,10 @@ function Login() {
         isVerified: result.user.isVerified ? "true" : "false",
       };
 
+      console.log("Login successful:", result.user);
+      console.log("Phone number:", result.user.phone);
+      console.log("phone number type:", typeof result.user.phone);
+
       // Storing user data in localStorage and sessionStorage
       localStorage.setItem("user", JSON.stringify(userPayload));
       localStorage.setItem("userName", JSON.stringify(result.user.name));
