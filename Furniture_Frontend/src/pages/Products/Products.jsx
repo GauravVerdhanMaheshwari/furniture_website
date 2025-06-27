@@ -24,9 +24,11 @@ function Products() {
   const URL = import.meta.env.VITE_BACK_END_API;
   const minPrice = 100;
   const maxPrice = 10000;
-  setUserName(sessionStorage.getItem("userName") || "");
-  setUserEmail(sessionStorage.getItem("userEmail") || "");
-  setUserPhoneNumber(sessionStorage.getItem("userPhoneNumber") || "");
+  useEffect(() => {
+    setUserName(sessionStorage.getItem("userName") || "");
+    setUserEmail(sessionStorage.getItem("userEmail") || "");
+    setUserPhoneNumber(sessionStorage.getItem("userPhoneNumber") || "");
+  }, []);
 
   useEffect(() => {
     fetch(`${URL}/api/products/`)
@@ -191,7 +193,7 @@ function Products() {
               setProductInquired={setProductInquired}
               handleInquiry={handleInquiry}
               userMessage={userMessage}
-              setUserMessage={setUserMessage}
+              userEmail={userEmail}
             />
           ))}
         </div>
