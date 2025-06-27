@@ -110,7 +110,6 @@ function Products() {
         },
         body: JSON.stringify({
           productId: id,
-          userName,
           userEmail,
           inquiryMessage,
         }),
