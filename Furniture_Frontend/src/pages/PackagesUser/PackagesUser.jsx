@@ -1,4 +1,3 @@
-// pages/PackageUser.jsx
 import { useState, useEffect } from "react";
 import { PackageCard, SearchFilter } from "../../components/indexComponents.js";
 
@@ -9,10 +8,21 @@ function PackageUser() {
   const [priceValue, setPriceValue] = useState(10000);
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [packageInquiredId, setPackageInquiredId] = useState(null);
+  const [userMessages, setUserMessages] = useState({});
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhoneNumber, setUserPhoneNumber] = useState("");
 
   const URL = import.meta.env.VITE_BACK_END_API;
   const minPrice = 100;
   const maxPrice = 10000;
+
+  useEffect(() => {
+    setUserName(sessionStorage.getItem("userName") || "");
+    setUserEmail(sessionStorage.getItem("userEmail") || "");
+    setUserPhoneNumber(sessionStorage.getItem("userPhoneNumber") || "");
+  }, []);
 
   useEffect(() => {
     fetch(`${URL}/api/packages`)
@@ -46,9 +56,69 @@ function PackageUser() {
     setShowFilter(false);
   };
 
-  {
-    console.log("PackagesUser : Filtered Packages:", filteredPackages);
-  }
+  const handleUserMessageChange = (id, message) => {
+    setUserMessages((prev) => ({ ...prev, [id]: message }));
+  };
+
+  const handleInquiry = (id) => {
+    const userMessage = userMessages[id] || "";
+
+    if (!userName || !userEmail) {
+      alert("Please log in to send an inquiry.");
+      return;
+    }
+    if (sessionStorage.getItem("isVerified") !== "true") {
+      alert("Please verify your email before sending an inquiry.");
+      return;
+    }
+    if (!userMessage.trim()) {
+      alert("Please enter a message for your inquiry.");
+      return;
+    }
+    if (userMessage.length > 500 || userMessage.length < 10) {
+      alert("Message must be between 10 and 500 characters.");
+      return;
+    }
+
+    const pkg = packages.find((p) => p._id === id);
+    if (pkg) {
+      const message = `
+<p>Inquiry about <strong>${pkg.packageName}</strong>:</p>
+<p>From: <strong>${userName}</strong></p>
+<p>Email: <strong>${userEmail}</strong></p>
+<p>Phone: <strong>${userPhoneNumber}</strong></p>
+<p>Package ID: <strong>${id}</strong></p>
+<p>Included Products: ${pkg.items
+        .map(
+          (i) =>
+            `<br>- ${i.productId?.name || "Unknown"} (Qty: ${i.quantity || 1})`
+        )
+        .join("")}</p>
+<p>Price: <strong>₹${pkg.price}</strong></p>
+<p>Message: <strong>${userMessage}</strong></p>`;
+
+      fetch(`${URL}/api/users/inquiry`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: id, // you may also call this packageId
+          userEmail,
+          message,
+        }),
+      })
+        .then(() => {
+          setPackageInquiredId(null);
+          setUserMessages((prev) => ({ ...prev, [id]: "" }));
+          alert("Inquiry sent successfully.");
+        })
+        .catch((error) => {
+          console.error("Inquiry sending error:", error);
+          alert("An error occurred while sending the inquiry.");
+        });
+    }
+  };
 
   if (loading) {
     return (
@@ -103,7 +173,19 @@ function PackageUser() {
 
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredPackages.map((pkg) => (
-            <PackageCard key={pkg._id} data={pkg} />
+            <PackageCard
+              key={pkg._id}
+              data={pkg}
+              productInquired={packageInquiredId === pkg._id}
+              setProductInquired={() =>
+                setPackageInquiredId((prevId) =>
+                  prevId === pkg._id ? null : pkg._id
+                )
+              }
+              handleInquiry={handleInquiry}
+              userMessage={userMessages[pkg._id] || ""}
+              setUserMessage={(msg) => handleUserMessageChange(pkg._id, msg)}
+            />
           ))}
         </div>
 
