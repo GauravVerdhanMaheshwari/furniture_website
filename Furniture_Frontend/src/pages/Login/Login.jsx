@@ -42,13 +42,21 @@ function Login() {
       const userPayload = {
         userID: result.user._id,
         isAuthenticated: true,
+        isVerified: result.user.isVerified ? "true" : "false",
       };
 
+      // Storing user data in localStorage and sessionStorage
       localStorage.setItem("user", JSON.stringify(userPayload));
-      localStorage.setItem("userName", result.user.name);
-      //! TODO : add a session for storing user email, username, isVerified
-      dispatch(setUser(userPayload));
-      navigate("/");
+      localStorage.setItem("userName", JSON.stringify(result.user.name));
+      sessionStorage.setItem("userName", JSON.stringify(result.user.name));
+      sessionStorage.setItem("userEmail", JSON.stringify(result.user.email));
+      sessionStorage.setItem("userPhoneNumber", result.user.phoneNumber);
+      sessionStorage.setItem(
+        "isVerified",
+        result.user.isVerified ? "true" : "false"
+      );
+      dispatch(setUser(userPayload)); // storing the data in Redux store
+      navigate("/"); // Redirect to home page after successful login
     } catch (error) {
       console.error("Login error:", error);
       setErrorMsg("Login failed. Please check your credentials.");
