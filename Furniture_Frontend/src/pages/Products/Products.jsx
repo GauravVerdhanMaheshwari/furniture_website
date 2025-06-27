@@ -186,7 +186,11 @@ function Products() {
               depth={item.size.depth}
               images={item.images}
               productInquired={productInquiredId === item._id}
-              setProductInquired={() => setProductInquiredId(item._id)}
+              setProductInquired={() =>
+                setProductInquiredId((prevId) =>
+                  prevId === item._id ? null : item._id
+                )
+              }
               handleInquiry={handleInquiry}
               userMessage={userMessages[item._id] || ""}
               setUserMessage={(msg) => handleUserMessageChange(item._id, msg)}
