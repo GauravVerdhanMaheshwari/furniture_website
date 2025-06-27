@@ -111,7 +111,7 @@ function Products() {
         body: JSON.stringify({
           productId: id,
           userEmail,
-          inquiryMessage,
+          message: inquiryMessage,
         }),
       })
         .then(() => setProductInquiredId(null))
