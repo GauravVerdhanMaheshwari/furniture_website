@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const sendInquiryToOwner = async (inquiry) => {
+const sendInquiryToOwner = async (productId, message, userName, userEmail) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -12,11 +12,12 @@ const sendInquiryToOwner = async (inquiry) => {
   const mailOptions = {
     from: userEmail,
     to: process.env.EMAIL_USER,
-    subject: `Inquiry about ${inquiry.productName}`,
+    subject: `Inquiry about ${productId}`,
     html:
-      ` <p>Hi ${inquiry.ownerName},</p> ` +
+      ` <p>${userName} send an inquiry,</p> ` +
+      ` <p> Following is the message send by the user </p>` +
       ` <p>message : </p> ` +
-      ` ${inquiry.message},`,
+      ` ${message},`,
   };
 
   await transporter.sendMail(mailOptions);
