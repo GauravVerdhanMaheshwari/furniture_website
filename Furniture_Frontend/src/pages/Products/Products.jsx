@@ -193,7 +193,7 @@ function Products() {
               setProductInquired={setProductInquired}
               handleInquiry={handleInquiry}
               userMessage={userMessage}
-              userEmail={userEmail}
+              setUserMessage={setUserMessage}
             />
           ))}
         </div>
