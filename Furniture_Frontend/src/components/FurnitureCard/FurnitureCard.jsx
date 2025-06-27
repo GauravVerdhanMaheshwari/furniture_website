@@ -21,8 +21,9 @@ function FurnitureCard({
   setUserMessage,
   username,
   userEmail,
+  productInquired,
+  setProductInquired,
 }) {
-  const [productInquired, setProductInquired] = React.useState(false);
   return (
     <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 transform transition-transform hover:scale-105">
       {/* === Image Carousel (or fallback) === */}
@@ -78,8 +79,8 @@ function FurnitureCard({
         className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-3 hover:bg-[#2C2D29] transition-colors"
         disabled={!userMessage.trim()}
         onClick={(e) => {
-          e.stopPropagation();
           setProductInquired(true);
+          e.stopPropagation();
         }}
       >
         <span className="text-sm">Start Inquiry</span>
