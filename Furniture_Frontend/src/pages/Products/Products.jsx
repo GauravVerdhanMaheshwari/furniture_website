@@ -19,7 +19,6 @@ function Products() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPhoneNumber, setUserPhoneNumber] = useState("");
-  const [inquiryMessage, setInquiryMessage] = useState("");
 
   const URL = import.meta.env.VITE_BACK_END_API;
   const minPrice = 100;
@@ -101,8 +100,6 @@ function Products() {
 
 <p>Message: <strong>${userMessage}</strong></p>`;
 
-      setInquiryMessage(message);
-
       fetch(`${URL}/api/users/inquiry`, {
         method: "POST",
         headers: {
@@ -111,7 +108,7 @@ function Products() {
         body: JSON.stringify({
           productId: id,
           userEmail,
-          inquiryMessage,
+          message,
         }),
       })
         .then(() => setProductInquiredId(null))
