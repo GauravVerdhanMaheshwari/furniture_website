@@ -103,7 +103,7 @@ ${userMessage}`;
 
       setInquiryMessage(message);
 
-      fetch(`${URL}/api/user/inquiry`, {
+      fetch(`${URL}/api/users/inquiry`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
