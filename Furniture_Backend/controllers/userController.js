@@ -120,11 +120,6 @@ exports.sendInquiryToOwner = async (req, res) => {
 
   try {
     await sendInquiryToOwner(productId, message, userName, userEmail);
-
-    console.log(
-      `Inquiry for product ${productId} from ${userName} (${userEmail}): ${message}`
-    );
-
     res.status(200).json({ message: "Inquiry sent successfully" });
   } catch (error) {
     console.error("Error sending inquiry:", error);
