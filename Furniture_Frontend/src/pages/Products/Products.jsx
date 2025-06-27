@@ -87,19 +87,19 @@ function Products() {
     const product = products.find((item) => item._id === id);
     if (product) {
       const message = `
-Inquiry about ${product.name}:
+<p>Inquiry about <strong>${product.name}</strong>:</p> \n
 
-From: ${userName}
-Email: ${userEmail}
-Phone: ${userPhoneNumber}
-Product ID: ${id}
-Description: ${product.description}
-Type: ${product.type}
-Company: ${product.company}
-Price: ₹${product.price}
-Dimensions: ${product.size.height} x ${product.size.width} x ${product.size.depth} inches
+<p>From: <strong>${userName}</strong></p> \n
+<p>Email: <strong>${userEmail}</strong></p> \n
+<p>Phone: <strong>${userPhoneNumber}</strong></p> \n
+<p>Product ID: <strong>${id}</strong></p> \n
+<p>Description: <strong>${product.description}</strong></p> \n
+<p>Type: <strong>${product.type}</strong></p> \n
+<p>Company: <strong>${product.company}</strong></p> \n
+<p>Price: <strong>₹${product.price}</strong></p> \n
+<p>Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches</strong></p> \n
 
-${userMessage}`;
+<p>Message: <strong>${userMessage}</strong></p>`;
 
       setInquiryMessage(message);
 
@@ -112,9 +112,10 @@ ${userMessage}`;
           productId: id,
           userName,
           userEmail,
-          message,
+          inquiryMessage,
         }),
       })
+        .then(() => setProductInquiredId(null))
         .then(() => alert("Inquiry sent successfully."))
         .catch((error) => {
           console.error("Inquiry sending error:", error);
