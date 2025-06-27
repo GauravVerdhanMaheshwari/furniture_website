@@ -19,8 +19,6 @@ function FurnitureCard({
   handleInquiry,
   userMessage,
   setUserMessage,
-  username,
-  userEmail,
   productInquired,
   setProductInquired,
 }) {
@@ -36,7 +34,7 @@ function FurnitureCard({
               alt={`${name} - View ${index + 1}`}
               className="h-36 md:h-44 object-cover rounded-lg"
               onError={(e) => {
-                e.target.src = "/fallback-image.jpg"; // Fallback image
+                e.target.src = "/fallback-image.jpg";
               }}
             />
           )
@@ -47,15 +45,11 @@ function FurnitureCard({
       <h2 className="text-lg md:text-xl font-semibold text-[#3F4238]">
         {name}
       </h2>
-
-      {/* Truncated description to maintain card height */}
       <p className="text-sm text-[#6B705C] line-clamp-2 my-1">{description}</p>
-
       <p className="text-sm text-[#6B705C]">
         Type: <span className="font-medium">{type}</span>
       </p>
 
-      {/* === Dimensions === */}
       <div className="flex items-center justify-between mt-2">
         <div className="flex-1 text-center">
           <p className="text-sm text-[#6B705C]">Height: {height} inch</p>
@@ -71,10 +65,8 @@ function FurnitureCard({
       <p className="text-sm text-[#A5A58D] mt-1">
         {company ? `Company: ${company}` : "Made in factory"}
       </p>
-
       <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price}</p>
 
-      {/* === Inquiry Button === */}
       <button
         className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-3 hover:bg-[#2C2D29] transition-colors"
         disabled={!userMessage}
@@ -85,6 +77,7 @@ function FurnitureCard({
       >
         <span className="text-sm">Start Inquiry</span>
       </button>
+
       {productInquired && (
         <div className="mt-3">
           <textarea
@@ -96,7 +89,7 @@ function FurnitureCard({
           />
           <button
             className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-2 hover:bg-[#2C2D29] transition-colors"
-            onClick={() => handleInquiry(id, username, userEmail, userMessage)}
+            onClick={() => handleInquiry(id)}
             disabled={!userMessage}
           >
             Send Inquiry
