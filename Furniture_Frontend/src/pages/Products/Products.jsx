@@ -15,7 +15,7 @@ function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [productInquiredId, setProductInquiredId] = useState(null);
-  const [userMessage, setUserMessage] = useState("");
+  const [userMessages, setUserMessages] = useState({});
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPhoneNumber, setUserPhoneNumber] = useState("");
@@ -65,7 +65,13 @@ function Products() {
     setShowFilter(false);
   };
 
+  const handleUserMessageChange = (id, message) => {
+    setUserMessages((prev) => ({ ...prev, [id]: message }));
+  };
+
   const handleInquiry = (id) => {
+    const userMessage = userMessages[id] || "";
+
     if (!userName || !userEmail) {
       alert("Please log in to send an inquiry.");
       return;
@@ -86,18 +92,16 @@ function Products() {
     const product = products.find((item) => item._id === id);
     if (product) {
       const message = `
-<p>Inquiry about <strong>${product.name}</strong>:</p> \n
-
-<p>From: <strong>${userName}</strong></p> \n
-<p>Email: <strong>${userEmail}</strong></p> \n
-<p>Phone: <strong>${userPhoneNumber}</strong></p> \n
-<p>Product ID: <strong>${id}</strong></p> \n
-<p>Description: <strong>${product.description}</strong></p> \n
-<p>Type: <strong>${product.type}</strong></p> \n
-<p>Company: <strong>${product.company}</strong></p> \n
-<p>Price: <strong>₹${product.price}</strong></p> \n
-<p>Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches</strong></p> \n
-
+<p>Inquiry about <strong>${product.name}</strong>:</p>
+<p>From: <strong>${userName}</strong></p>
+<p>Email: <strong>${userEmail}</strong></p>
+<p>Phone: <strong>${userPhoneNumber}</strong></p>
+<p>Product ID: <strong>${id}</strong></p>
+<p>Description: <strong>${product.description}</strong></p>
+<p>Type: <strong>${product.type}</strong></p>
+<p>Company: <strong>${product.company}</strong></p>
+<p>Price: <strong>₹${product.price}</strong></p>
+<p>Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches</strong></p>
 <p>Message: <strong>${userMessage}</strong></p>`;
 
       fetch(`${URL}/api/users/inquiry`, {
@@ -108,7 +112,7 @@ function Products() {
         body: JSON.stringify({
           productId: id,
           userEmail,
-          message,
+          inquiryMessage: message,
         }),
       })
         .then(() => setProductInquiredId(null))
@@ -181,8 +185,8 @@ function Products() {
               productInquired={productInquiredId === item._id}
               setProductInquired={() => setProductInquiredId(item._id)}
               handleInquiry={handleInquiry}
-              userMessage={userMessage}
-              setUserMessage={setUserMessage}
+              userMessage={userMessages[item._id] || ""}
+              setUserMessage={(msg) => handleUserMessageChange(item._id, msg)}
             />
           ))}
         </div>
