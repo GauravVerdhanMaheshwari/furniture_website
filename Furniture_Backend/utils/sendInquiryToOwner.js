@@ -12,12 +12,8 @@ const sendInquiryToOwner = async (productId, message, userName, userEmail) => {
   const mailOptions = {
     from: userEmail,
     to: process.env.EMAIL_USER,
-    subject: `Inquiry about ${productId}`,
-    html:
-      ` <p>${userName} send an inquiry,</p> ` +
-      ` <p> Following is the message send by the user </p>` +
-      ` <p>message : </p> ` +
-      ` ${message},`,
+    subject: `Inquiry about product ID: ${productId}`,
+    html: message,
   };
 
   await transporter.sendMail(mailOptions);
