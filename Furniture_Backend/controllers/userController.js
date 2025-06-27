@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const sendVerificationEmail = require("../utils/sendVerificationEmail");
+const sendInquiryToOwner = require("../utils/sendInquiryToOwner");
 
 const BASE_URL = process.env.URL || "http://localhost:5000";
 
@@ -118,7 +119,8 @@ exports.sendInquiryToOwner = async (req, res) => {
   }
 
   try {
-    //! TODO: Implement actual email sending logic here via sendInquiryToOwner function (can take help form the verifyEmail function)
+    await sendInquiryToOwner(productId, message, userName, userEmail);
+
     console.log(
       `Inquiry for product ${productId} from ${userName} (${userEmail}): ${message}`
     );
