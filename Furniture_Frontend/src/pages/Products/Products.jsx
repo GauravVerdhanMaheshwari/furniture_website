@@ -115,8 +115,11 @@ function Products() {
           message,
         }),
       })
-        .then(() => setProductInquiredId(null))
-        .then(() => alert("Inquiry sent successfully."))
+        .then(() => {
+          setProductInquiredId(null);
+          setUserMessages((prev) => ({ ...prev, [id]: "" }));
+          alert("Inquiry sent successfully.");
+        })
         .catch((error) => {
           console.error("Inquiry sending error:", error);
           alert("An error occurred while sending the inquiry.");
