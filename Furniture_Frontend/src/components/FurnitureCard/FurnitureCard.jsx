@@ -1,9 +1,5 @@
 import React from "react";
 
-/**
- * FurnitureCard Component
- * @description Displays a furniture item with image preview, details, quantity control, and add-to-cart functionality.
- */
 function FurnitureCard({
   id,
   imageURL,
@@ -24,7 +20,6 @@ function FurnitureCard({
 }) {
   return (
     <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 transform transition-transform hover:scale-105">
-      {/* === Image Carousel (or fallback) === */}
       <div className="overflow-x-auto flex space-x-3 mb-3">
         {(images.length > 0 ? images : [imageURL || "/fallback-image.jpg"]).map(
           (img, index) => (
@@ -41,7 +36,6 @@ function FurnitureCard({
         )}
       </div>
 
-      {/* === Product Details === */}
       <h2 className="text-lg md:text-xl font-semibold text-[#3F4238]">
         {name}
       </h2>
@@ -69,9 +63,8 @@ function FurnitureCard({
 
       <button
         className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-3 hover:bg-[#2C2D29] transition-colors"
-        disabled={!userMessage}
         onClick={(e) => {
-          setProductInquired(true);
+          setProductInquired();
           e.stopPropagation();
         }}
       >

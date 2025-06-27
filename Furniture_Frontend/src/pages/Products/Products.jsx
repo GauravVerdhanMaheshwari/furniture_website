@@ -14,16 +14,17 @@ function Products() {
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [productInquired, setProductInquired] = useState(false);
+  const [productInquiredId, setProductInquiredId] = useState(null);
   const [userMessage, setUserMessage] = useState("");
-  const [userName, setUserName] = useState(""); // username from session
-  const [userEmail, setUserEmail] = useState(""); // user email from session
-  const [userPhoneNumber, setUserPhoneNumber] = useState(""); // user phone number from session
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhoneNumber, setUserPhoneNumber] = useState("");
   const [inquiryMessage, setInquiryMessage] = useState("");
 
   const URL = import.meta.env.VITE_BACK_END_API;
   const minPrice = 100;
   const maxPrice = 10000;
+
   useEffect(() => {
     setUserName(sessionStorage.getItem("userName") || "");
     setUserEmail(sessionStorage.getItem("userEmail") || "");
@@ -36,15 +37,6 @@ function Products() {
       .then((data) => {
         const items = data || [];
         setProducts(items);
-
-        const defaultQuantities = {};
-        items.forEach((item) => {
-          defaultQuantities[item._id] = 1;
-        });
-
-        const types = [...new Set(items.map((item) => item.type))];
-        if (!types.includes(selectedType)) setSelectedType("");
-
         setFilteredProducts(items);
         setLoading(false);
       })
@@ -87,32 +79,30 @@ function Products() {
       alert("Please enter a message for your inquiry.");
       return;
     }
-    if (userMessage.length > 500) {
-      alert("Message cannot exceed 500 characters.");
+    if (userMessage.length > 500 || userMessage.length < 10) {
+      alert("Message must be between 10 and 500 characters.");
       return;
     }
-    if (userMessage.length < 10) {
-      alert("Message must be at least 10 characters long.");
-      return;
-    }
+
     const product = products.find((item) => item._id === id);
     if (product) {
-      setInquiryMessage(
-        `Inquiry about ${product.name}:\n\n` +
-          `From: <strong>${userName}\n</strong>` +
-          `Email: <strong>${userEmail}\n</strong>` +
-          `Phone: <strong>${userPhoneNumber}\n</strong>` +
-          `Product ID: <strong>${id}\n</strong>` +
-          `Description: <strong>${product.description}\n</strong>` +
-          `Type: <strong>${product.type}\n</strong>` +
-          `Company: <strong>${product.company}\n</strong>` +
-          `Price: <strong>$${product.price}\n</strong>` +
-          `Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches\n</strong>` +
-          `<strong>${userMessage}</strong>`
-      );
-    }
-    try {
-      console.log("Sending inquiry for product ID:", id);
+      const message = `
+Inquiry about ${product.name}:
+
+From: ${userName}
+Email: ${userEmail}
+Phone: ${userPhoneNumber}
+Product ID: ${id}
+Description: ${product.description}
+Type: ${product.type}
+Company: ${product.company}
+Price: ₹${product.price}
+Dimensions: ${product.size.height} x ${product.size.width} x ${product.size.depth} inches
+
+${userMessage}`;
+
+      setInquiryMessage(message);
+
       fetch(`${URL}/api/user/inquiry`, {
         method: "POST",
         headers: {
@@ -120,14 +110,16 @@ function Products() {
         },
         body: JSON.stringify({
           productId: id,
-          userName: userName,
-          userEmail: userEmail,
-          message: inquiryMessage,
+          userName,
+          userEmail,
+          message,
         }),
-      });
-    } catch (error) {
-      alert("An error occurred while sending the inquiry. Please try again.");
-      console.error("Inquiry sending error:", error);
+      })
+        .then(() => alert("Inquiry sent successfully."))
+        .catch((error) => {
+          console.error("Inquiry sending error:", error);
+          alert("An error occurred while sending the inquiry.");
+        });
     }
   };
 
@@ -189,8 +181,8 @@ function Products() {
               width={item.size.width}
               depth={item.size.depth}
               images={item.images}
-              productInquired={productInquired}
-              setProductInquired={setProductInquired}
+              productInquired={productInquiredId === item._id}
+              setProductInquired={() => setProductInquiredId(item._id)}
               handleInquiry={handleInquiry}
               userMessage={userMessage}
               setUserMessage={setUserMessage}
