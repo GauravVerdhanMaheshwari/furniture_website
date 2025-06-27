@@ -21,8 +21,10 @@ export const userSlice = createSlice({
      * @param {Object} action - Action containing userID and auth flag
      */
     setUser(state, action) {
-      state.userID = action.payload.userID;
-      state.isAuthenticated = !!action.payload.isAuthenticated; // Ensure boolean
+      const { userID, isAuthenticated } = action.payload;
+      state.userID = userID ?? null;
+      state.isAuthenticated = !!isAuthenticated;
+      state.isVerified = action.payload.isVerified ?? false;
     },
   },
 });
