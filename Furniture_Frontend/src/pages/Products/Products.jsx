@@ -14,13 +14,19 @@ function Products() {
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [productInquired, setProductInquired] = useState(false);
   const [userMessage, setUserMessage] = useState("");
   const [userName, setUserName] = useState(""); // username from session
   const [userEmail, setUserEmail] = useState(""); // user email from session
+  const [userPhoneNumber, setUserPhoneNumber] = useState(""); // user phone number from session
+  const [inquiryMessage, setInquiryMessage] = useState("");
 
   const URL = import.meta.env.VITE_BACK_END_API;
   const minPrice = 100;
   const maxPrice = 10000;
+  setUserName(sessionStorage.getItem("userName") || "");
+  setUserEmail(sessionStorage.getItem("userEmail") || "");
+  setUserPhoneNumber(sessionStorage.getItem("userPhoneNumber") || "");
 
   useEffect(() => {
     fetch(`${URL}/api/products/`)
@@ -67,20 +73,56 @@ function Products() {
   };
 
   const handleInquiry = (id) => {
+    if (!userName || !userEmail) {
+      alert("Please log in to send an inquiry.");
+      return;
+    }
+    if (sessionStorage.getItem("isVerified") !== "true") {
+      alert("Please verify your email before sending an inquiry.");
+      return;
+    }
+    if (!userMessage.trim()) {
+      alert("Please enter a message for your inquiry.");
+      return;
+    }
+    if (userMessage.length > 500) {
+      alert("Message cannot exceed 500 characters.");
+      return;
+    }
+    if (userMessage.length < 10) {
+      alert("Message must be at least 10 characters long.");
+      return;
+    }
     const product = products.find((item) => item._id === id);
     if (product) {
-      //! TODO: Send inquiry data to the backend through an API call and handle the response, and get the userName and userEmail from session
-      // `Inquiry about ${product.name}:\n\n` +
-      //   `From: <strong>${userName}\n</strong>` +
-      //   `Description: <strong>${product.description}\n</strong>` +
-      //   `Type: <strong>${product.type}\n</strong>` +
-      //   `Company: <strong>${product.company}\n</strong>` +
-      //   `Price: <strong>$${product.price}\n</strong>` +
-      //   `Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches\n</strong>` +
-      //   `<strong>${userMessage}</strong>`
+      setInquiryMessage(
+        `Inquiry about ${product.name}:\n\n` +
+          `From: <strong>${userName}\n</strong>` +
+          `Email: <strong>${userEmail}\n</strong>` +
+          `Phone: <strong>${userPhoneNumber}\n</strong>` +
+          `Product ID: <strong>${id}\n</strong>` +
+          `Description: <strong>${product.description}\n</strong>` +
+          `Type: <strong>${product.type}\n</strong>` +
+          `Company: <strong>${product.company}\n</strong>` +
+          `Price: <strong>$${product.price}\n</strong>` +
+          `Dimensions: <strong>${product.size.height} x ${product.size.width} x ${product.size.depth} inches\n</strong>` +
+          `<strong>${userMessage}</strong>`
+      );
     }
     try {
       console.log("Sending inquiry for product ID:", id);
+      fetch(`${URL}/api/user/inquiry`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: id,
+          userName: userName,
+          userEmail: userEmail,
+          message: inquiryMessage,
+        }),
+      });
     } catch (error) {
       alert("An error occurred while sending the inquiry. Please try again.");
       console.error("Inquiry sending error:", error);
@@ -145,6 +187,8 @@ function Products() {
               width={item.size.width}
               depth={item.size.depth}
               images={item.images}
+              productInquired={productInquired}
+              setProductInquired={setProductInquired}
               handleInquiry={handleInquiry}
               userMessage={userMessage}
               setUserMessage={setUserMessage}
