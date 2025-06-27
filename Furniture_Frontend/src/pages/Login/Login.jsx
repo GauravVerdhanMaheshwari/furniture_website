@@ -50,7 +50,10 @@ function Login() {
       localStorage.setItem("userName", JSON.stringify(result.user.name));
       sessionStorage.setItem("userName", JSON.stringify(result.user.name));
       sessionStorage.setItem("userEmail", JSON.stringify(result.user.email));
-      sessionStorage.setItem("userPhoneNumber", result.user.phone);
+      sessionStorage.setItem(
+        "userPhoneNumber",
+        JSON.stringify(result.user.phone)
+      );
       sessionStorage.setItem(
         "isVerified",
         result.user.isVerified ? "true" : "false"
