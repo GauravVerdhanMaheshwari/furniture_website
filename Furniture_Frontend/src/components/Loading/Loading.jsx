@@ -1,4 +1,3 @@
-// src/components/Loading.jsx
 import React, { useEffect, useState } from "react";
 
 /**
@@ -11,7 +10,7 @@ function Loading() {
 
   useEffect(() => {
     // Delay display to avoid flicker during fast loads
-    const timer = setTimeout(() => setShow(true), []);
+    const timer = setTimeout(() => setShow(true), 300); // <-- FIXED delay
 
     return () => clearTimeout(timer); // Cleanup on unmount
   }, []);
@@ -31,9 +30,9 @@ function Loading() {
           {/* Spinning ring */}
           <div
             className="absolute inset-0 rounded-full border-4 
-                          border-t-[#DDBEA9] border-b-[#A68A64] 
-                          border-l-transparent border-r-transparent 
-                          animate-spin"
+                       border-t-[#DDBEA9] border-b-[#A68A64] 
+                       border-l-transparent border-r-transparent 
+                       animate-spin"
           ></div>
           {/* Inner circle to give a donut appearance */}
           <div className="absolute inset-4 rounded-full bg-[#F8F1EB]"></div>

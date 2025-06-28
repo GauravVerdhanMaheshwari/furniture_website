@@ -10,6 +10,7 @@ function AdminPackages() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // 🔐 Admin check + fetch packages
   useEffect(() => {
     if (!localStorage.getItem("admin")) {
       navigate("/admin/login");
@@ -32,8 +33,13 @@ function AdminPackages() {
     fetchPackages();
   }, [URL, navigate]);
 
+  // 🗑️ Delete a package
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this package?")) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this package?"
+    );
+    if (!confirmDelete) return;
+
     try {
       const res = await fetch(`${URL}/api/owner/package/delete/${id}`, {
         method: "DELETE",
@@ -42,7 +48,7 @@ function AdminPackages() {
       const result = await res.json();
       if (!res.ok) throw new Error(result.message);
 
-      alert("Package deleted successfully!");
+      alert("✅ Package deleted successfully!");
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
     } catch (err) {
       console.error("❌ Delete error:", err);
@@ -55,32 +61,33 @@ function AdminPackages() {
   );
 
   return (
-    <div className="mt-18 min-h-screen bg-[#FFE8D6] p-6 text-[#3F4238] sm:mt-15">
-      {/* 🔍 Header: Search bar + Add Product button */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-10 bg-white shadow-md rounded-xl p-6 gap-4">
+    <main className="min-h-screen bg-[#FFE8D6] px-4 py-8 sm:px-6 sm:py-10 md:px-10 mt-20 sm:mt-16 text-[#3F4238]">
+      {/* 🔍 Header */}
+      <section className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-white p-6 rounded-xl shadow-md">
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <Link
           to="/admin/add-package"
-          className="bg-[#CB997E] hover:bg-[#B98B73] text-white px-5 py-2 rounded-md text-sm font-semibold shadow-sm transition-all"
+          className="bg-[#CB997E] hover:bg-[#B98B73] text-white font-semibold text-sm px-5 py-2 rounded-md shadow transition"
         >
           + Add Package
         </Link>
-      </div>
+      </section>
 
+      {/* 📦 Packages Grid */}
       {loading ? (
-        <p className="text-2xl text-[#6B705C] text-center animate-pulse">
+        <p className="text-xl text-[#6B705C] text-center animate-pulse">
           Loading packages...
         </p>
       ) : filteredPackages.length === 0 ? (
-        <p className="text-center text-lg">No packages found.</p>
+        <p className="text-center text-lg text-[#6B705C]">No packages found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPackages.map((pkg) => (
-            <Package packages={pkg} onDelete={handleDelete} />
+            <Package key={pkg._id} packages={pkg} onDelete={handleDelete} />
           ))}
-        </div>
+        </section>
       )}
-    </div>
+    </main>
   );
 }
 

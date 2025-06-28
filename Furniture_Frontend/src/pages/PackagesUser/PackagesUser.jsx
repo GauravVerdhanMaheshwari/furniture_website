@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { PackageCard, SearchFilter } from "../../components/indexComponents.js";
 
-function PackageUser() {
+function PackagesUser() {
   const [packages, setPackages] = useState([]);
   const [filteredPackages, setFilteredPackages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -103,7 +103,7 @@ function PackageUser() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          productId: id, // you may also call this packageId
+          productId: id,
           userEmail,
           message,
         }),
@@ -122,7 +122,7 @@ function PackageUser() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F8F1EB] sm:mt-15">
+      <div className="flex items-center justify-center min-h-screen bg-[#F8F1EB] pt-20">
         <div className="text-center">
           <div className="relative w-16 h-16 mx-auto mb-4">
             <div className="absolute inset-0 rounded-full border-4 border-t-[#DDBEA9] border-b-[#A68A64] border-l-transparent border-r-transparent animate-spin"></div>
@@ -137,9 +137,11 @@ function PackageUser() {
   }
 
   return (
-    <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
+    <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4 sm:px-6 lg:px-10">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
-        <h1 className="text-4xl font-bold mb-6 text-[#3F4238]">Our Packages</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-[#3F4238] text-center">
+          Our Packages
+        </h1>
 
         <SearchFilter
           searchTerm={searchTerm}
@@ -162,7 +164,7 @@ function PackageUser() {
             <p className="text-sm mt-1 text-[#6B705C]">₹{priceValue}</p>
             <button
               onClick={handleClearFilter}
-              className="mt-4 px-4 py-2 text-sm bg-[#B5838D] text-white rounded hover:bg-[#6B705C]"
+              className="mt-4 px-4 py-2 text-sm bg-[#B5838D] text-white rounded hover:bg-[#6B705C] transition"
             >
               Clear Filter
             </button>
@@ -171,7 +173,7 @@ function PackageUser() {
 
         <hr className="w-full border-[#D4C7B0] my-6" />
 
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPackages.map((pkg) => (
             <PackageCard
               key={pkg._id}
@@ -190,7 +192,7 @@ function PackageUser() {
         </div>
 
         {filteredPackages.length === 0 && (
-          <p className="mt-8 text-lg text-[#6B705C] font-medium">
+          <p className="mt-8 text-lg text-[#6B705C] font-medium text-center">
             No packages match your search.
           </p>
         )}
@@ -199,4 +201,4 @@ function PackageUser() {
   );
 }
 
-export default PackageUser;
+export default PackagesUser;

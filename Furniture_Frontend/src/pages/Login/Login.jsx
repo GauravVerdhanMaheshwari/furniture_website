@@ -67,15 +67,15 @@ function Login() {
   };
 
   return (
-    <div className="mt-18 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center sm:mt-15">
+    <div className="mt-12 sm:mt-16 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center px-4">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleLogin();
         }}
-        className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-2xl px-8 py-10 space-y-6"
+        className="w-full max-w-md bg-[#DDBEA9] rounded-2xl shadow-2xl px-6 sm:px-8 py-8 sm:py-10 space-y-6"
       >
-        <h2 className="text-3xl font-bold text-center text-[#3F4238] mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#3F4238] mb-2">
           Welcome Back 👋
         </h2>
         <p className="text-center text-sm text-[#6B705C] mb-6">
@@ -100,7 +100,7 @@ function Login() {
               setErrorMsg("");
             }}
             placeholder="you@example.com"
-            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+            className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73] text-sm sm:text-base"
             required
           />
         </div>
@@ -123,12 +123,12 @@ function Login() {
               minLength={8}
               maxLength={20}
               required
-              className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+              className="w-full px-3 py-2 border border-[#D4C7B0] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73] text-sm sm:text-base"
             />
             <img
               src={showPassword ? "hide.webp" : "view.webp"}
               alt="Toggle password visibility"
-              className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 cursor-pointer"
               onClick={() => setShowPassword((prev) => !prev)}
             />
           </div>

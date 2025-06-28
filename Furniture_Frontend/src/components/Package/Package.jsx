@@ -11,25 +11,27 @@ function Packages({ packages, onDelete }) {
   const { _id, packageName, price, items = [] } = packages;
   const [showConfirm, setShowConfirm] = useState(false);
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
-  const [productDetails, setProductDetails] = useState({}); // cache by productId
+  const [productDetails, setProductDetails] = useState({});
 
-  // Fetch missing product info
+  // Fetch product details if not already present
   useEffect(() => {
-    items.forEach((item) => {
-      const pid = item.productId._id || item.productId;
-      if (!productDetails[pid] || !productDetails[pid].images) {
-        fetch(`${URL}/api/owner/product/${pid}`)
-          .then((res) => res.json())
-          .then((data) =>
-            setProductDetails((prev) => ({
-              ...prev,
-              [pid]: data,
-            }))
-          )
-          .catch(console.error);
-      }
+    const missingIds = items
+      .map((item) => item.productId._id || item.productId)
+      .filter((id) => !productDetails[id]);
+
+    missingIds.forEach((id) => {
+      fetch(`${URL}/api/owner/product/${id}`)
+        .then((res) => res.json())
+        .then((data) =>
+          setProductDetails((prev) => ({
+            ...prev,
+            [id]: data,
+          }))
+        )
+        .catch(console.error);
     });
-  }, [items, URL, productDetails]);
+    // intentionally skipping productDetails in deps to avoid infinite loop
+  }, [items, URL]);
 
   const handleConfirmDelete = () => {
     onDelete(_id);
@@ -51,20 +53,22 @@ function Packages({ packages, onDelete }) {
 
       <hr className="my-2 border-[#B7B7A4]" />
 
-      {/* Items list with details */}
+      {/* Items list */}
       <ul className="text-sm text-[#3F4238] list-none space-y-2 max-h-36 overflow-y-auto scrollbar-thin scrollbar-thumb-[#B7B7A4]">
-        {items.map((item, idx) => {
+        {items.map((item) => {
           const pid = item.productId._id || item.productId;
           const prod = productDetails[pid] || item.productId;
           const img = prod.images?.[0] || "/no-img.png";
           const name = prod.name || "Unknown";
           const pr = prod.price || 0;
+
           return (
-            <li key={idx} className="flex gap-2 items-center">
+            <li key={pid} className="flex gap-2 items-center">
               <img
                 src={img}
                 alt={name}
                 className="w-10 h-10 rounded object-cover border"
+                onError={(e) => (e.target.src = "/no-img.png")}
               />
               <div className="flex flex-col truncate">
                 <span className="font-medium truncate">{name}</span>
@@ -77,7 +81,7 @@ function Packages({ packages, onDelete }) {
         })}
       </ul>
 
-      {/* Edit/Delete buttons */}
+      {/* Actions */}
       <div className="mt-4 space-y-2">
         <Link
           to={`/admin/edit-package/${_id}`}
@@ -94,9 +98,13 @@ function Packages({ packages, onDelete }) {
         </button>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       {showConfirm && (
-        <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center rounded-xl z-10">
+        <div
+          className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center rounded-xl z-10"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="bg-white p-4 rounded-md shadow-md w-64">
             <p className="text-sm text-center mb-4">
               Delete <strong>{packageName}</strong>?

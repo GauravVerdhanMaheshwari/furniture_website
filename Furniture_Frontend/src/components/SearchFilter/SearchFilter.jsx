@@ -16,30 +16,31 @@ function SearchFilter({
 }) {
   return (
     <div className="flex flex-col sm:flex-row items-center w-full gap-3 px-2 mb-4">
-      {/* Search Field with Icon */}
+      {/* === Search Field with Icon === */}
       <div className="relative w-full sm:w-auto flex items-center">
-        {/* Search Icon (click to focus input) */}
+        {/* Search Icon (clickable) */}
         <img
           src="/search.webp"
           alt="Search icon"
+          onError={(e) => (e.target.src = "/fallback-image.jpg")}
           className="w-5 h-5 sm:w-6 sm:h-6 absolute left-3 top-1/2 transform -translate-y-1/2 cursor-pointer opacity-70 hover:opacity-100"
           onClick={() => document.getElementById("search")?.focus()}
         />
 
-        {/* Search Input Field */}
+        {/* Input Field */}
         <input
           type="text"
           id="search"
           value={searchTerm}
           placeholder="Search for furniture..."
           onChange={(e) => setSearchTerm(e.target.value)}
-          onFocus={() => setShowFilter(false)} // Hide filters when typing
+          onFocus={() => setShowFilter(false)} // Hide filter panel on input focus
           className="pl-10 py-2 px-3 ml-1 sm:ml-2 w-full sm:w-[220px] text-[#3F4238] bg-white border-2 border-[#DDBEA9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#CB997E] placeholder-[#A5A58D] transition"
           aria-label="Search input"
         />
       </div>
 
-      {/* Toggle Filter Button */}
+      {/* === Filter Toggle Button === */}
       <button
         onClick={() => setShowFilter((prev) => !prev)}
         className={`ml-1 sm:ml-2 px-4 py-2 text-sm font-semibold rounded shadow-sm border transition-all duration-150 ${

@@ -1,4 +1,3 @@
-// src/pages/ResendVerification.jsx
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -28,27 +27,51 @@ function ResendVerification() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9F5EC] p-4 text-center sm:mt-15">
-      <h2 className="text-2xl font-semibold mb-4">Resend Verification Email</h2>
-      <form onSubmit={handleResend} className="space-y-4 w-full max-w-md">
-        <input
-          type="email"
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button
-          type="submit"
-          className="bg-[#DDBEA9] text-white font-semibold px-4 py-2 rounded hover:bg-[#cfa98f] w-full"
-          disabled={loading}
-        >
-          {loading ? "Sending..." : "Resend Email"}
-        </button>
-      </form>
-      {msg && <p className="mt-4 text-green-600">{msg}</p>}
-      {error && <p className="mt-4 text-red-600">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F5EC] px-4 py-12 sm:mt-15">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <h2 className="text-2xl font-bold text-[#3F4238] text-center mb-6">
+          Resend Verification Email
+        </h2>
+
+        <form onSubmit={handleResend} className="space-y-5">
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-1 font-semibold text-[#3F4238]"
+            >
+              Email Address
+            </label>
+            <input
+              id="email"
+              type="email"
+              className="w-full border border-[#D4C7B0] px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
+              placeholder="Enter your registered email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-2 font-semibold rounded-md text-white transition duration-300 ${
+              loading
+                ? "bg-[#C1A48D] cursor-not-allowed"
+                : "bg-[#DDBEA9] hover:bg-[#B98B73]"
+            }`}
+          >
+            {loading ? "Sending..." : "Resend Email"}
+          </button>
+        </form>
+
+        {msg && (
+          <p className="mt-4 text-center text-green-600 font-medium">{msg}</p>
+        )}
+        {error && (
+          <p className="mt-4 text-center text-red-600 font-medium">{error}</p>
+        )}
+      </div>
     </div>
   );
 }

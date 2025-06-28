@@ -12,20 +12,24 @@ function PackageCard({
   const [productDetails, setProductDetails] = useState({});
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
-  // Fetch product details
   useEffect(() => {
-    items.forEach((item) => {
-      const pid = item.productId._id || item.productId;
-      if (!productDetails[pid]) {
-        fetch(`${URL}/api/owner/product/${pid}`)
-          .then((res) => res.json())
-          .then((product) =>
-            setProductDetails((prev) => ({ ...prev, [pid]: product }))
-          )
-          .catch(console.error);
-      }
+    const missingIds = items
+      .map((item) => item.productId._id || item.productId)
+      .filter((pid) => !productDetails[pid]);
+
+    missingIds.forEach((pid) => {
+      fetch(`${URL}/api/owner/product/${pid}`)
+        .then((res) => res.json())
+        .then((data) =>
+          setProductDetails((prev) => ({
+            ...prev,
+            [pid]: data,
+          }))
+        )
+        .catch(console.error);
     });
-  }, [items, URL, productDetails]);
+    // Skip productDetails in deps to avoid infinite loop
+  }, [items, URL]);
 
   return (
     <div className="bg-[#DDBEA9] rounded-xl shadow-lg p-4 m-3 w-full sm:w-64 md:w-72 transition-transform hover:scale-105">
@@ -41,22 +45,20 @@ function PackageCard({
 
       {/* Items List */}
       <ul className="space-y-2 max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-[#B7B7A4] pr-1">
-        {items.map((item, index) => {
+        {items.map((item) => {
           const pid = item.productId._id || item.productId;
-          const prod = productDetails[pid] || item.productId;
+          const prod = productDetails[pid] || {};
           const name = prod?.name || "Loading...";
-          const img = prod?.images?.[0];
+          const img = prod?.images?.[0] || "/fallback-image.jpg";
           const pr = prod?.price || 0;
 
           return (
-            <li key={index} className="flex gap-2 items-center">
+            <li key={pid} className="flex gap-2 items-center">
               <img
-                src={img || "/fallback-image.jpg"}
+                src={img}
                 alt={name}
                 className="w-20 h-20 rounded object-cover border"
-                onError={(e) => {
-                  e.target.src = "/fallback-image.jpg";
-                }}
+                onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
               <div className="truncate">
                 <p className="text-sm font-medium truncate">{name}</p>
@@ -74,7 +76,7 @@ function PackageCard({
         ₹ {price}
       </p>
 
-      {/* Inquiry Toggle Button */}
+      {/* Inquiry Button */}
       <button
         className={`w-full py-2 rounded-lg mt-3 transition-colors text-white ${
           productInquired

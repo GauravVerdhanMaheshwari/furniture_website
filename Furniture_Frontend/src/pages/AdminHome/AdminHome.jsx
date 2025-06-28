@@ -3,49 +3,45 @@ import { useNavigate, Link } from "react-router-dom";
 
 /**
  * Admin Home Dashboard
- * Displays the main admin panel with links to manage products, orders, and admin profile.
- * Includes authentication redirect logic.
+ * Displays main admin panel with links to manage products, packages, and profile.
  */
 function Home() {
   const navigate = useNavigate();
 
-  /**
-   * Redirects unauthenticated users to login
-   */
+  // 🔐 Redirect if not authenticated
   useEffect(() => {
-    const isAdmin = localStorage.getItem("admin");
-    if (!isAdmin) {
+    if (!localStorage.getItem("admin")) {
       navigate("/admin/login");
     }
   }, [navigate]);
 
   /**
-   * Navigation card component for reusability
+   * Navigation card for each admin section
    */
   const NavCard = ({ to, label, bgColor, hoverColor }) => (
     <Link
       to={to}
-      className={`block ${bgColor} hover:${hoverColor} text-white font-semibold py-3 rounded-lg shadow transition duration-300 text-center`}
+      className={`w-full text-center py-4 px-6 rounded-xl font-semibold text-white shadow-md transition duration-300 ${bgColor} hover:${hoverColor}`}
     >
       {label}
     </Link>
   );
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-12 mt-20 sm:mt-15">
-      <section className="bg-[#DDBEA9] border border-[#C9B8A3] rounded-2xl shadow-lg p-10 w-full max-w-2xl text-center">
-        {/* Page Title */}
-        <h1 className="text-4xl font-extrabold text-[#3F4238] mb-4">
-          Welcome to the Admin Dashboard
+    <main className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4 py-16 sm:py-20">
+      <section className="bg-[#DDBEA9] w-full max-w-3xl p-8 sm:p-10 rounded-2xl shadow-xl border border-[#C9B8A3]">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[#3F4238] mb-4">
+          🛠️ Admin Dashboard
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg text-[#6B705C] mb-8">
-          Manage your products, orders, and profile efficiently.
+        <p className="text-base sm:text-lg text-center text-[#6B705C] mb-8">
+          Manage products, packages, and your profile efficiently.
         </p>
 
-        {/* Navigation Links */}
-        <div className="grid sm:grid-cols-3 gap-4 w-full">
+        {/* Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <NavCard
             to="/admin/products"
             label="Manage Products"

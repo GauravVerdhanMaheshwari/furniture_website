@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-/**
- * AdminEditProduct - Edit product details
- */
 function AdminEditProduct() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const { id } = useParams();
@@ -21,14 +18,12 @@ function AdminEditProduct() {
       reader.onerror = reject;
     });
 
-  // 🔐 Auth redirect
   useEffect(() => {
     if (!localStorage.getItem("admin")) {
       navigate("/admin/login");
     }
   }, [navigate]);
 
-  // 🧠 Fetch categories
   useEffect(() => {
     fetch(`${URL}/api/products/categories`)
       .then((res) => res.json())
@@ -39,7 +34,6 @@ function AdminEditProduct() {
       });
   }, [URL]);
 
-  // 📦 Fetch product
   useEffect(() => {
     fetch(`${URL}/api/owner/product/${id}`)
       .then((res) => {
@@ -53,7 +47,7 @@ function AdminEditProduct() {
           Hot: data.Hot || false,
           Package: data.Package || false,
           PackageName: data.PackageName || "",
-          image: "", // placeholder
+          image: "", // will be updated if file uploaded
         });
         setLoading(false);
       })
@@ -81,125 +75,164 @@ function AdminEditProduct() {
         return res.json();
       })
       .then(() => {
-        alert("Product updated successfully");
+        alert("✅ Product updated successfully!");
         navigate("/admin/products");
       })
       .catch((err) => {
         console.error("Update error:", err);
-        alert("Failed to update product");
+        alert("Failed to update product.");
       });
   };
 
   if (loading || !product) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4">
         <p className="text-xl text-[#6B705C]">
-          {loading ? "Loading..." : "Product not found"}
+          {loading ? "Loading..." : "Product not found."}
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-10 mt-19 sm:mt-15">
+    <div className="min-h-screen bg-[#FFE8D6] flex justify-center items-start px-4 py-16 sm:mt-20">
       <form
         onSubmit={handleSaveChanges}
-        className="bg-white border border-[#D4C7B0] rounded-xl shadow-xl p-8 w-full max-w-xl"
+        className="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg border border-[#D4C7B0] space-y-6"
       >
-        <h2 className="text-3xl font-bold text-center mb-6 text-[#3F4238]">
-          Edit Product
+        <h2 className="text-3xl font-bold text-center text-[#3F4238]">
+          ✏️ Edit Product
         </h2>
 
         {/* Name */}
-        <label className="block text-[#3F4238] font-medium mb-1">Name</label>
-        <input
-          type="text"
-          value={product.name}
-          onChange={(e) => setProduct({ ...product, name: e.target.value })}
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-          required
-        />
+        <div>
+          <label
+            htmlFor="name"
+            className="block font-medium text-[#3F4238] mb-1"
+          >
+            Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={product.name}
+            onChange={(e) => setProduct({ ...product, name: e.target.value })}
+            required
+            className="w-full border border-[#B7B7A4] rounded-lg px-3 py-2"
+          />
+        </div>
 
         {/* Description */}
-        <label className="block text-[#3F4238] font-medium mb-1">
-          Description
-        </label>
-        <textarea
-          value={product.description}
-          onChange={(e) =>
-            setProduct({ ...product, description: e.target.value })
-          }
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-          required
-        />
+        <div>
+          <label
+            htmlFor="description"
+            className="block font-medium text-[#3F4238] mb-1"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            value={product.description}
+            onChange={(e) =>
+              setProduct({ ...product, description: e.target.value })
+            }
+            required
+            className="w-full border border-[#B7B7A4] rounded-lg px-3 py-2"
+          />
+        </div>
 
         {/* Type */}
-        <label className="block text-[#3F4238] font-medium mb-1">Type</label>
-        <select
-          value={product.type}
-          onChange={(e) => setProduct({ ...product, type: e.target.value })}
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-          required
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label
+            htmlFor="type"
+            className="block font-medium text-[#3F4238] mb-1"
+          >
+            Category / Type
+          </label>
+          <select
+            id="type"
+            value={product.type}
+            onChange={(e) => setProduct({ ...product, type: e.target.value })}
+            required
+            className="w-full border border-[#B7B7A4] rounded-lg px-3 py-2"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Size */}
-        <label className="block text-[#3F4238] font-medium mb-1">
-          Size (H x W x D)
-        </label>
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          {["height", "width", "depth"].map((dim) => (
-            <input
-              key={dim}
-              type="number"
-              min={0}
-              value={product.size?.[dim] || ""}
-              onChange={(e) =>
-                setProduct({
-                  ...product,
-                  size: { ...product.size, [dim]: Number(e.target.value) },
-                })
-              }
-              placeholder={dim}
-              className="border border-[#B7B7A4] rounded-lg px-3 py-2"
-              required
-            />
-          ))}
+        <div>
+          <label className="block font-medium text-[#3F4238] mb-1">
+            Size (H × W × D)
+          </label>
+          <div className="grid grid-cols-3 gap-3">
+            {["height", "width", "depth"].map((dim) => (
+              <input
+                key={dim}
+                type="number"
+                min={0}
+                value={product.size?.[dim] || ""}
+                placeholder={dim}
+                required
+                onChange={(e) =>
+                  setProduct({
+                    ...product,
+                    size: { ...product.size, [dim]: Number(e.target.value) },
+                  })
+                }
+                className="border border-[#B7B7A4] rounded-lg px-3 py-2 w-full"
+              />
+            ))}
+          </div>
         </div>
 
         {/* Price */}
-        <label className="block text-[#3F4238] font-medium mb-1">Price</label>
-        <input
-          type="number"
-          min={0}
-          value={product.price}
-          onChange={(e) =>
-            setProduct({ ...product, price: Number(e.target.value) })
-          }
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-          required
-        />
+        <div>
+          <label
+            htmlFor="price"
+            className="block font-medium text-[#3F4238] mb-1"
+          >
+            Price (₹)
+          </label>
+          <input
+            id="price"
+            type="number"
+            min={0}
+            value={product.price}
+            onChange={(e) =>
+              setProduct({ ...product, price: Number(e.target.value) })
+            }
+            required
+            className="w-full border border-[#B7B7A4] rounded-lg px-3 py-2"
+          />
+        </div>
 
-        {/* Image Upload */}
-        <label className="block text-[#3F4238] font-medium mb-1">
-          Upload New Image
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setProduct({ ...product, image: e.target.files[0] })}
-          className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
-        />
+        {/* Image */}
+        <div>
+          <label className="block font-medium text-[#3F4238] mb-1">
+            Upload New Image
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              setProduct({ ...product, image: e.target.files[0] })
+            }
+            className="w-full border border-[#B7B7A4] rounded-lg px-3 py-2"
+          />
+        </div>
 
         {/* Tags */}
-        <div className="grid grid-cols-2 gap-4 mb-4 text-[#3F4238]">
+        <div className="grid grid-cols-2 gap-4">
           {["Hot", "New", "Package"].map((key) => (
-            <label key={key} className="flex gap-2 items-center">
+            <label
+              key={key}
+              className="flex items-center gap-2 text-[#3F4238] font-medium"
+            >
               <input
                 type="checkbox"
                 checked={product[key] || false}
@@ -214,8 +247,8 @@ function AdminEditProduct() {
 
         {/* Package Name */}
         {product.Package && (
-          <>
-            <label className="block text-[#3F4238] font-medium mb-1">
+          <div>
+            <label className="block font-medium text-[#3F4238] mb-1">
               Package Name
             </label>
             <input
@@ -224,14 +257,15 @@ function AdminEditProduct() {
               onChange={(e) =>
                 setProduct({ ...product, PackageName: e.target.value })
               }
-              className="w-full mb-4 border border-[#B7B7A4] rounded-lg px-3 py-2"
+              className="w-full border border-[#B7B7A4] rounded-lg px-3 py-2"
             />
-          </>
+          </div>
         )}
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-[#6B705C] text-white py-2 px-4 rounded hover:bg-[#3F4238] transition"
+          className="w-full bg-[#CB997E] text-white font-semibold py-2 px-4 rounded hover:bg-[#6B705C] transition"
         >
           Save Changes
         </button>

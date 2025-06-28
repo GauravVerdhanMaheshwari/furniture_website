@@ -1,5 +1,3 @@
-// components/AdminFooter.jsx
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -15,24 +13,24 @@ function AdminFooter() {
    */
   const linkCss = ({ isActive }) =>
     isActive
-      ? "text-[#CB997E] font-semibold mx-3 md:mx-4 transition-colors duration-200"
-      : "text-[#FFE8D6] mx-3 md:mx-4 hover:text-[#CB997E] transition-colors duration-200";
+      ? "text-[#CB997E] font-semibold mx-2 sm:mx-3 md:mx-4 transition-colors duration-200"
+      : "text-[#FFE8D6] mx-2 sm:mx-3 md:mx-4 hover:text-[#CB997E] transition-colors duration-200";
 
   return (
-    <footer className="bg-[#3F4238] text-[#FFE8D6] py-6 px-6 border-t border-[#6c6f63]">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <footer className="bg-[#3F4238] text-[#FFE8D6] py-6 px-4 sm:px-6 border-t border-[#6c6f63]">
+      <div className="max-w-7xl mx-auto flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         {/* Brand Section */}
         <div className="text-center md:text-left">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-[#FFE8D6]">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-wide text-[#FFE8D6]">
             Geetanjali Furniture
           </h1>
-          <p className="text-sm md:text-base text-[#D4C7B0] mt-1">
+          <p className="text-xs sm:text-sm md:text-base text-[#D4C7B0] mt-1">
             © 2025 Geetanjali Furniture. All rights reserved.
           </p>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex flex-wrap justify-center md:justify-end items-center gap-3 md:gap-5">
+        <nav className="flex flex-wrap justify-center md:justify-end items-center gap-2 sm:gap-3 md:gap-5">
           <NavLink to="/admin/home" className={linkCss}>
             Home
           </NavLink>

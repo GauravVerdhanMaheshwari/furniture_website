@@ -28,7 +28,11 @@ function UserForm({
   };
 
   return (
-    <form className="bg-white border border-[#D4C7B0] p-8 rounded-2xl shadow-lg text-[#6B705C] w-full max-w-2xl mx-auto space-y-5">
+    <form
+      className="bg-white border border-[#D4C7B0] p-8 rounded-2xl shadow-lg text-[#6B705C] w-full max-w-2xl mx-auto space-y-5"
+      autoComplete="on"
+    >
+      {/* Name Field */}
       <div>
         <label htmlFor="name" className="block mb-1 font-medium">
           Name:
@@ -36,23 +40,19 @@ function UserForm({
         <input
           id="name"
           type="text"
+          autoComplete="name"
           value={userData.name}
           placeholder="Enter your name"
           className={inputBase}
           minLength={8}
           maxLength={50}
           required
+          title="Name must be between 8 and 50 characters."
           onChange={(e) => handleChange("name", e.target.value)}
-          onBlur={(e) => {
-            const len = e.target.value.trim().length;
-            if (len < 8 || len > 50) {
-              alert("Name must be between 8 and 50 characters.");
-              handleChange("name", "");
-            }
-          }}
         />
       </div>
 
+      {/* Email Field */}
       <div>
         <label htmlFor="email" className="block mb-1 font-medium">
           Email:
@@ -60,21 +60,17 @@ function UserForm({
         <input
           id="email"
           type="email"
+          autoComplete="email"
           value={userData.email}
           placeholder="Enter your email"
           className={inputBase}
           required
+          title="Must be a valid email format (e.g., name@example.com)"
           onChange={(e) => handleChange("email", e.target.value)}
-          onBlur={(e) => {
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(e.target.value)) {
-              alert("Please enter a valid email address.");
-              handleChange("email", "");
-            }
-          }}
         />
       </div>
 
+      {/* Phone Field */}
       <div>
         <label htmlFor="phone" className="block mb-1 font-medium">
           Phone:
@@ -82,28 +78,26 @@ function UserForm({
         <input
           id="phone"
           type="tel"
+          autoComplete="tel"
           value={userData.phone}
-          placeholder="Enter your phone number"
+          placeholder="Enter your 10-digit phone number"
           className={inputBase}
-          pattern="\d{10}"
           maxLength={10}
+          pattern="\d{10}"
           required
+          title="Phone number must be exactly 10 digits"
           onChange={(e) => handleChange("phone", e.target.value)}
-          onBlur={(e) => {
-            if (e.target.value.length !== 10) {
-              alert("Phone number must be exactly 10 digits.");
-              handleChange("phone", "");
-            }
-          }}
         />
       </div>
 
+      {/* Change Status */}
       {changed && (
         <p className="text-[#6B705C] text-sm italic">
           ✅ Unsaved changes detected.
         </p>
       )}
 
+      {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 mt-6">
         {changed && (
           <button
@@ -114,6 +108,7 @@ function UserForm({
             Save Changes
           </button>
         )}
+
         <button
           type="button"
           onClick={() => {

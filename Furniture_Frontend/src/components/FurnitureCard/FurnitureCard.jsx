@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * FurnitureCard Component
+ * @description Displays a single furniture item card with image previews, details, and inquiry interaction.
+ */
 function FurnitureCard({
   id,
   imageURL,
@@ -18,49 +22,52 @@ function FurnitureCard({
   productInquired,
   setProductInquired,
 }) {
+  const fallbackImage = "/fallback-image.jpg";
+
   return (
     <div className="bg-[#DDBEA9] shadow-lg rounded-xl p-4 m-3 w-full sm:w-64 md:w-72 transform transition-transform hover:scale-105">
+      {/* Image Carousel */}
       <div className="overflow-x-auto flex space-x-3 mb-3">
-        {(images.length > 0 ? images : [imageURL || "/fallback-image.jpg"]).map(
+        {(images.length > 0 ? images : [imageURL || fallbackImage]).map(
           (img, index) => (
             <img
               key={index}
               src={img}
-              alt={`${name} - View ${index + 1}`}
+              alt={`${name || "Furniture"} - View ${index + 1}`}
               className="h-36 md:h-44 object-cover rounded-lg"
               onError={(e) => {
-                e.target.src = "/fallback-image.jpg";
+                e.target.src = fallbackImage;
               }}
             />
           )
         )}
       </div>
 
-      <h2 className="text-lg md:text-xl font-semibold text-[#3F4238]">
-        {name}
+      {/* Product Info */}
+      <h2 className="text-lg md:text-xl font-semibold text-[#3F4238] truncate">
+        {name || "Unnamed Product"}
       </h2>
-      <p className="text-sm text-[#6B705C] line-clamp-2 my-1">{description}</p>
+      <p className="text-sm text-[#6B705C] line-clamp-2 my-1">
+        {description || "No description available."}
+      </p>
       <p className="text-sm text-[#6B705C]">
-        Type: <span className="font-medium">{type}</span>
+        Type: <span className="font-medium">{type || "N/A"}</span>
       </p>
 
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex-1 text-center">
-          <p className="text-sm text-[#6B705C]">Height: {height} inch</p>
-        </div>
-        <div className="flex-1 text-center">
-          <p className="text-sm text-[#6B705C]">Width: {width} inch</p>
-        </div>
-        <div className="flex-1 text-center">
-          <p className="text-sm text-[#6B705C]">Depth: {depth} inch</p>
-        </div>
+      {/* Size Info */}
+      <div className="flex items-center justify-between mt-2 text-sm text-[#6B705C]">
+        <p className="flex-1 text-center">H: {height || "?"} in</p>
+        <p className="flex-1 text-center">W: {width || "?"} in</p>
+        <p className="flex-1 text-center">D: {depth || "?"} in</p>
       </div>
 
+      {/* Company + Price */}
       <p className="text-sm text-[#A5A58D] mt-1">
         {company ? `Company: ${company}` : "Made in factory"}
       </p>
-      <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price}</p>
+      <p className="text-md text-[#B98B73] font-bold mt-2">₹ {price ?? "?"}</p>
 
+      {/* Inquiry Button */}
       <button
         className={`w-full py-2 rounded-lg mt-3 transition-colors text-white ${
           productInquired
@@ -77,6 +84,7 @@ function FurnitureCard({
         </span>
       </button>
 
+      {/* Inquiry Text Area */}
       {productInquired && (
         <div className="mt-3">
           <textarea
@@ -85,9 +93,10 @@ function FurnitureCard({
             placeholder="Type your message here..."
             value={userMessage}
             onChange={(e) => setUserMessage(e.target.value)}
+            aria-label="Inquiry Message"
           />
           <button
-            className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-2 hover:bg-[#2C2D29] transition-colors"
+            className="w-full bg-[#3F4238] text-white py-2 rounded-lg mt-2 hover:bg-[#2C2D29] transition-colors disabled:opacity-50"
             onClick={() => handleInquiry(id)}
             disabled={!userMessage.trim()}
           >

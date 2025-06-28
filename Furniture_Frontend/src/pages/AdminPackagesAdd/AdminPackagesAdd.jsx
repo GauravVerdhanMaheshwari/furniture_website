@@ -87,15 +87,16 @@ function AdminAddPackage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFE8D6] px-4 py-10 sm:mt-15">
+    <main className="min-h-screen bg-[#FFE8D6] px-4 py-12 sm:px-6 md:px-10 lg:px-20">
       <form
         onSubmit={handleSubmit}
-        className="max-w-4xl mx-auto bg-[#DDBEA9] rounded-xl shadow-xl p-8 space-y-6 text-[#3F4238]"
+        className="max-w-5xl mx-auto bg-[#DDBEA9] rounded-2xl shadow-lg p-6 sm:p-8 md:p-10 space-y-6 text-[#3F4238]"
       >
-        <h1 className="text-3xl font-bold text-center text-[#B98B73]">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#B98B73] mb-6">
           Add New Package
         </h1>
 
+        {/* Package Name */}
         <div>
           <label className="block font-semibold mb-1">Package Name</label>
           <input
@@ -103,28 +104,31 @@ function AdminAddPackage() {
             value={packageName}
             onChange={(e) => setPackageName(e.target.value)}
             required
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
+            className="w-full border border-[#A5A58D] p-2 rounded-lg focus:ring-2 focus:ring-[#B5838D] outline-none"
           />
         </div>
 
+        {/* Package Price */}
         <div>
           <label className="block font-semibold mb-1">Total Price (₹)</label>
           <input
             type="number"
+            min={0}
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
+            className="w-full border border-[#A5A58D] p-2 rounded-lg focus:ring-2 focus:ring-[#B5838D] outline-none"
           />
         </div>
 
+        {/* Product Selector */}
         <div>
           <label className="block font-semibold mb-2">Select Products:</label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-80 overflow-y-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
             {products.map((p) => (
               <div
                 key={p._id}
-                className="border rounded p-3 bg-white flex items-center gap-3"
+                className="flex items-center gap-3 border border-[#D4C7B0] bg-white p-3 rounded-xl shadow-sm"
               >
                 <img
                   src={p.images?.[0] || "/no-img.png"}
@@ -147,6 +151,7 @@ function AdminAddPackage() {
           </div>
         </div>
 
+        {/* Selected Products */}
         {selectedItems.length > 0 && (
           <div>
             <label className="block font-semibold mb-2">
@@ -156,7 +161,7 @@ function AdminAddPackage() {
               {selectedItems.map((i) => (
                 <div
                   key={i.productId}
-                  className="bg-white p-3 rounded shadow-sm flex items-center gap-3"
+                  className="flex items-center gap-3 bg-white border border-[#D4C7B0] p-3 rounded-xl shadow-sm"
                 >
                   <img
                     src={i.image || "/no-img.png"}
@@ -166,7 +171,7 @@ function AdminAddPackage() {
                   <div className="flex-1">
                     <p className="font-medium">{i.name}</p>
                     <p className="text-sm text-gray-600">
-                      ₹{i.price} × quantity
+                      ₹{i.price} × Quantity
                     </p>
                     <input
                       type="number"
@@ -175,13 +180,13 @@ function AdminAddPackage() {
                       onChange={(e) =>
                         handleQuantityChange(i.productId, e.target.value)
                       }
-                      className="w-20 border p-1 rounded mt-1"
+                      className="w-24 mt-1 border border-[#A5A58D] p-1 rounded-md focus:ring-2 focus:ring-[#B5838D] outline-none"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={() => handleRemoveItem(i.productId)}
-                    className="text-red-600 hover:text-red-800 font-bold"
+                    className="text-red-600 hover:text-red-800 font-bold text-xl"
                   >
                     ✖
                   </button>
@@ -191,10 +196,11 @@ function AdminAddPackage() {
           </div>
         )}
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-3 text-white font-semibold rounded transition ${
+          className={`w-full py-3 font-bold text-white rounded-lg transition ${
             loading
               ? "bg-[#CB997E] opacity-70 cursor-not-allowed"
               : "bg-[#CB997E] hover:bg-[#6B705C]"
@@ -203,7 +209,7 @@ function AdminAddPackage() {
           {loading ? "Creating Package..." : "Create Package"}
         </button>
       </form>
-    </div>
+    </main>
   );
 }
 

@@ -4,32 +4,22 @@ import { useNavigate } from "react-router-dom";
 function AdminAddProduct() {
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const navigate = useNavigate();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /**
-   * Redirect to login if user is not an admin
-   */
   useEffect(() => {
     if (!localStorage.getItem("admin")) {
       navigate("/admin/login");
     }
   }, [navigate]);
 
-  /**
-   * Convert image file to base64 string
-   */
   const convertToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
+      reader.onerror = (err) => reject(err);
     });
 
-  /**
-   * Handles form submission for adding a new product
-   */
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -70,14 +60,11 @@ function AdminAddProduct() {
       });
 
       const result = await response.json();
-
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(result.message || "Failed to add product");
-      }
 
       alert("✅ Product added successfully!");
       form.reset();
-
       setTimeout(() => navigate("/admin/products"), 800);
     } catch (err) {
       console.error("❌ Product submission failed:", err);
@@ -88,17 +75,16 @@ function AdminAddProduct() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4 py-12 sm:mt-15">
+    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4 py-16">
       <form
         onSubmit={handleAddProduct}
-        className="w-full max-w-2xl bg-[#DDBEA9] rounded-2xl shadow-2xl p-8 space-y-6 text-[#3F4238]"
+        className="w-full max-w-2xl bg-[#DDBEA9] rounded-2xl shadow-xl p-8 space-y-6 text-[#3F4238]"
       >
-        {/* Title */}
-        <h1 className="text-3xl font-extrabold text-center text-[#B98B73]">
-          Add New Product
+        <h1 className="text-3xl font-bold text-center text-[#B98B73]">
+          🪑 Add New Product
         </h1>
 
-        {/* Standard Input Fields */}
+        {/* Input Fields */}
         {[
           { label: "Product Name", name: "name", type: "text", required: true },
           {
@@ -114,95 +100,92 @@ function AdminAddProduct() {
             required: true,
           },
           {
-            label: "Product Dimensions Length(inch)",
+            label: "Length (in inches)",
             name: "Length",
             type: "number",
             required: true,
           },
           {
-            label: "Product Dimensions Width(inch)",
+            label: "Width (in inches)",
             name: "Width",
             type: "number",
             required: true,
           },
           {
-            label: "Product Dimensions Depth(inch)",
+            label: "Depth (in inches)",
             name: "Depth",
             type: "number",
             required: true,
           },
           {
-            label: "Company / Brand",
+            label: "Brand / Company",
             name: "company",
             type: "text",
             required: false,
           },
-        ].map((field, idx) => (
-          <div key={idx}>
-            <label className="block font-medium mb-1">{field.label}</label>
+        ].map((field, i) => (
+          <div key={i}>
+            <label htmlFor={field.name} className="block font-medium mb-1">
+              {field.label}
+            </label>
             {field.type === "textarea" ? (
               <textarea
+                id={field.name}
                 name={field.name}
                 required={field.required}
                 placeholder={field.label}
-                className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
+                className="w-full border border-[#A5A58D] p-2 rounded-lg focus:ring-2 focus:ring-[#B5838D]"
               />
             ) : (
               <input
+                id={field.name}
                 type={field.type}
                 name={field.name}
                 required={field.required}
                 placeholder={field.label}
-                className="w-full border border-[#A5A58D] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#B5838D]"
+                className="w-full border border-[#A5A58D] p-2 rounded-lg focus:ring-2 focus:ring-[#B5838D]"
               />
             )}
           </div>
         ))}
 
-        {/* Image Upload Field */}
+        {/* Image Upload */}
         <div>
-          <label className="block font-medium mb-1">
+          <label htmlFor="images" className="block font-medium mb-1">
             Upload Images (Max 4)
           </label>
           <input
+            id="images"
             type="file"
             name="images"
             accept="image/*"
             multiple
             required
-            className="w-full border border-[#A5A58D] p-2 rounded bg-white"
+            className="w-full border border-[#A5A58D] p-2 rounded-lg bg-white"
           />
         </div>
 
-        {/* Feature Toggles */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Checkboxes */}
+        <div className="flex flex-wrap gap-4">
           {[
             { name: "hot", label: "🔥 Mark as Hot" },
             { name: "newProduct", label: "🆕 Mark as New" },
-          ].map(({ name, label, onChange }, idx) => (
-            <label
-              key={idx}
-              className="flex items-center space-x-2 text-base font-medium"
-            >
-              <input
-                type="checkbox"
-                name={name}
-                onChange={onChange}
-                className="accent-[#B5838D]"
-              />
+          ].map(({ name, label }) => (
+            <label key={name} className="flex items-center gap-2 text-base">
+              <input type="checkbox" name={name} className="accent-[#B5838D]" />
               <span>{label}</span>
             </label>
           ))}
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-2 text-white font-semibold rounded transition duration-300 ${
+          className={`w-full py-2 font-semibold rounded-lg transition duration-300 ${
             isSubmitting
-              ? "bg-[#CB997E] opacity-70 cursor-not-allowed"
-              : "bg-[#CB997E] hover:bg-[#6B705C]"
+              ? "bg-[#CB997E] opacity-70 cursor-not-allowed text-white"
+              : "bg-[#CB997E] hover:bg-[#6B705C] text-white"
           }`}
         >
           {isSubmitting ? "Adding Product..." : "Add Product"}

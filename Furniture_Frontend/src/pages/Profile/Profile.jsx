@@ -7,13 +7,15 @@ function Profile() {
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
   const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
-  if (!isLoggedIn || !userID) {
-    window.location.href = "/login";
-  }
-
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
+
+  useEffect(() => {
+    if (!isLoggedIn || !userID) {
+      window.location.href = "/login";
+    }
+  }, [isLoggedIn, userID]);
 
   useEffect(() => {
     if (!userID) return;
@@ -41,7 +43,6 @@ function Profile() {
 
     if (!window.confirm("Are you sure you want to save changes?")) return;
 
-    // Validate address length
     if (userData.address.length < 10 || userData.address.length > 100)
       return alert("Address must be between 10 and 100 characters.");
 
@@ -86,9 +87,9 @@ function Profile() {
   };
 
   return (
-    <div className="mt-20 min-h-screen px-4 py-12 bg-[#FFE8D6] text-[#3F4238] sm:mt-15">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-10 text-center text-[#6B705C]">
+    <div className="mt-20 min-h-screen px-4 py-12 bg-[#FFE8D6] text-[#3F4238] sm:mt-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#6B705C]">
           Your Profile
         </h1>
 

@@ -1,4 +1,3 @@
-// pages/Products.jsx
 import { useState, useEffect } from "react";
 import {
   FurnitureCard,
@@ -146,7 +145,9 @@ function Products() {
   return (
     <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4 sm:mt-15">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
-        <h1 className="text-4xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
+        <h1 className="text-4xl font-bold mb-6 text-[#3F4238] text-center px-4">
+          Our Products
+        </h1>
 
         <SearchFilter
           searchTerm={searchTerm}

@@ -15,31 +15,36 @@ function Suggestions({ title, api }) {
 
   const [productInquiredId, setProductInquiredId] = useState(null);
   const [userMessages, setUserMessages] = useState({});
+
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPhoneNumber, setUserPhoneNumber] = useState("");
 
-  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
   const userId = useSelector((state) => state.user.userID);
+  const URL = import.meta.env.VITE_BACK_END_API || "http://localhost:3000";
 
+  // Load user info from session
   useEffect(() => {
     setUserName(sessionStorage.getItem("userName") || "");
     setUserEmail(sessionStorage.getItem("userEmail") || "");
     setUserPhoneNumber(sessionStorage.getItem("userPhoneNumber") || "");
   }, []);
 
+  // Fetch products on mount or API change
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch(api);
-        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const res = await fetch(api);
+        if (!res.ok) throw new Error(`Status: ${res.status}`);
+        const data = await res.json();
 
-        const data = await response.json();
         const productList = Array.isArray(data) ? data : data.products || [];
-
         setProducts(productList);
-        if (productList.length === 0 && data.message) {
+
+        if (productList.length === 0) {
           setError(`No products found in "${title}" category`);
         }
       } catch (err) {
@@ -57,67 +62,52 @@ function Suggestions({ title, api }) {
     setUserMessages((prev) => ({ ...prev, [id]: message }));
   };
 
-  const handleInquiry = (id) => {
+  const handleInquiry = async (id) => {
     const userMessage = userMessages[id] || "";
-
-    if (!userName || !userEmail) {
-      alert("Please log in to send an inquiry.");
-      return;
-    }
-    if (sessionStorage.getItem("isVerified") !== "true") {
-      alert("Please verify your email before sending an inquiry.");
-      return;
-    }
-    if (!userMessage.trim()) {
-      alert("Please enter a message for your inquiry.");
-      return;
-    }
-    if (userMessage.length > 500 || userMessage.length < 10) {
-      alert("Message must be between 10 and 500 characters.");
-      return;
-    }
-
     const product = products.find((item) => item._id === id);
-    if (product) {
-      const message = `
-<p>Inquiry about <strong>${product.name}</strong>:</p>
-<p>From: <strong>${userName}</strong></p>
-<p>Email: <strong>${userEmail}</strong></p>
-<p>Phone: <strong>${userPhoneNumber}</strong></p>
-<p>Product ID: <strong>${id}</strong></p>
-<p>Description: <strong>${product.description}</strong></p>
-<p>Type: <strong>${product.type}</strong></p>
-<p>Company: <strong>${product.company}</strong></p>
-<p>Price: <strong>₹${product.price}</strong></p>
-<p>Dimensions: <strong>${product.size?.height} x ${product.size?.width} x ${product.size?.depth} inches</strong></p>
-<p>Message: <strong>${userMessage}</strong></p>`;
 
-      fetch(`${URL}/api/users/inquiry`, {
+    if (!userName || !userEmail)
+      return alert("Please log in to send an inquiry.");
+    if (sessionStorage.getItem("isVerified") !== "true")
+      return alert("Please verify your email.");
+    if (!userMessage.trim()) return alert("Please enter your message.");
+    if (userMessage.length < 10 || userMessage.length > 500)
+      return alert("Message must be 10–500 characters long.");
+    if (!product) return alert("Product not found.");
+
+    const message = `
+      <p><strong>Inquiry about:</strong> ${product.name}</p>
+      <p><strong>From:</strong> ${userName}</p>
+      <p><strong>Email:</strong> ${userEmail}</p>
+      <p><strong>Phone:</strong> ${userPhoneNumber}</p>
+      <p><strong>Description:</strong> ${product.description}</p>
+      <p><strong>Type:</strong> ${product.type}</p>
+      <p><strong>Company:</strong> ${product.company}</p>
+      <p><strong>Price:</strong> ₹${product.price}</p>
+      <p><strong>Dimensions:</strong> ${product.size?.height} x ${product.size?.width} x ${product.size?.depth} in</p>
+      <p><strong>Message:</strong> ${userMessage}</p>`;
+
+    try {
+      await fetch(`${URL}/api/users/inquiry`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productId: id,
-          userEmail,
-          message,
-        }),
-      })
-        .then(() => {
-          setProductInquiredId(null);
-          setUserMessages((prev) => ({ ...prev, [id]: "" }));
-          alert("Inquiry sent successfully.");
-        })
-        .catch((error) => {
-          console.error("Inquiry sending error:", error);
-          alert("An error occurred while sending the inquiry.");
-        });
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: id, userEmail, message }),
+      });
+
+      alert("Inquiry sent successfully.");
+      setUserMessages((prev) => ({ ...prev, [id]: "" }));
+      setProductInquiredId(null);
+    } catch (err) {
+      console.error("Inquiry error:", err);
+      alert("Error sending inquiry.");
     }
   };
 
+  // === UI Blocks ===
+
   if (loading) {
     return (
-      <div className="text-center p-6 bg-[#FFE8D6] text-[#3F4238]">
+      <div className="text-center py-10 bg-[#FFE8D6] text-[#3F4238]">
         <p className="text-lg animate-pulse">Loading products...</p>
       </div>
     );
@@ -125,7 +115,7 @@ function Suggestions({ title, api }) {
 
   if (error) {
     return (
-      <div className="text-center p-6 bg-[#FFE8D6] text-[#6B705C]">
+      <div className="text-center py-10 bg-[#FFE8D6] text-[#6B705C]">
         <h2 className="text-2xl font-semibold mb-2">{title}</h2>
         <p className="text-lg italic">{error}</p>
       </div>
@@ -133,46 +123,38 @@ function Suggestions({ title, api }) {
   }
 
   return (
-    <section className="bg-[#FFE8D6] px-4 py-6 flex flex-col items-center">
-      <h1 className="text-3xl md:text-4xl font-bold mb-6 text-[#CB997E] text-center">
+    <section className="bg-[#FFE8D6] px-4 sm:px-6 py-6 flex flex-col items-center">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-[#CB997E] text-center">
         {title}
       </h1>
 
-      <div className="flex flex-wrap justify-center gap-6 w-full">
-        {products.length === 0 ? (
-          <p className="text-xl font-medium text-[#6B705C]">
-            No Products Found
-          </p>
-        ) : (
-          products.map((product) => (
-            <FurnitureCard
-              key={product._id}
-              id={product._id}
-              userId={userId}
-              name={product.name}
-              company={product.company}
-              price={product.price}
-              description={product.description}
-              imageURL={product.images?.[0]}
-              images={product.images || []}
-              height={product.size?.height}
-              width={product.size?.width}
-              depth={product.size?.depth}
-              type={product.type}
-              productInquired={productInquiredId === product._id}
-              setProductInquired={() =>
-                setProductInquiredId((prevId) =>
-                  prevId === product._id ? null : product._id
-                )
-              }
-              handleInquiry={handleInquiry}
-              userMessage={userMessages[product._id] || ""}
-              setUserMessage={(msg) =>
-                handleUserMessageChange(product._id, msg)
-              }
-            />
-          ))
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-[1400px]">
+        {products.map((product) => (
+          <FurnitureCard
+            key={product._id}
+            id={product._id}
+            userId={userId}
+            name={product.name}
+            company={product.company}
+            price={product.price}
+            description={product.description}
+            imageURL={product.images?.[0]}
+            images={product.images || []}
+            height={product.size?.height}
+            width={product.size?.width}
+            depth={product.size?.depth}
+            type={product.type}
+            productInquired={productInquiredId === product._id}
+            setProductInquired={() =>
+              setProductInquiredId((prev) =>
+                prev === product._id ? null : product._id
+              )
+            }
+            handleInquiry={handleInquiry}
+            userMessage={userMessages[product._id] || ""}
+            setUserMessage={(msg) => handleUserMessageChange(product._id, msg)}
+          />
+        ))}
       </div>
     </section>
   );

@@ -18,11 +18,12 @@ function Search({ searchTerm, setSearchTerm }) {
         <img
           src="/search.webp"
           alt="Search icon"
+          onError={(e) => (e.target.src = "/fallback-image.jpg")}
           className="w-5 h-5 sm:w-6 sm:h-6 opacity-70 hover:opacity-100 transition-opacity duration-200"
         />
       </button>
 
-      {/* Search Input */}
+      {/* Search Input Field */}
       <input
         type="text"
         id="search"

@@ -17,7 +17,6 @@ function Register() {
   const handleRegister = async () => {
     setErrorMsg("");
 
-    // ✅ Form validation
     if (!username || !email || !password || !confirmPassword) {
       setErrorMsg("Please fill in all required fields.");
       return;
@@ -33,12 +32,7 @@ function Register() {
       return;
     }
 
-    const userData = {
-      name: username,
-      email,
-      password,
-      phone,
-    };
+    const userData = { name: username, email, password, phone };
 
     try {
       const response = await fetch(`${URL}/api/users`, {
@@ -54,13 +48,13 @@ function Register() {
       }
 
       alert("Signup successful! Check your email to verify your account.");
-      const requestVerify = await fetch(`${URL}/api/users/verify-email`, {
+
+      await fetch(`${URL}/api/users/verify-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
-      const verifyResult = await requestVerify.json();
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
@@ -69,21 +63,21 @@ function Register() {
   };
 
   return (
-    <div className="mt-20 py-12 bg-[#FFE8D6] min-h-[80vh] flex justify-center items-start sm:mt-15">
+    <div className="mt-20 min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-12 sm:mt-15">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleRegister();
         }}
-        className="bg-[#DDBEA9] w-full max-w-lg px-10 py-12 rounded-2xl shadow-2xl space-y-5"
+        className="w-full max-w-lg bg-[#DDBEA9] p-8 sm:p-10 rounded-2xl shadow-2xl text-[#3F4238] space-y-6"
       >
-        <h2 className="text-3xl font-bold text-center text-[#3F4238] mb-6">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center">
           Create an Account
         </h2>
 
-        {/* 👤 Username */}
+        {/* Username */}
         <div>
-          <label htmlFor="username" className="block text-[#3F4238] mb-1">
+          <label htmlFor="username" className="block font-semibold mb-1">
             Username
           </label>
           <input
@@ -91,15 +85,15 @@ function Register() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username"
             required
-            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md shadow-sm focus:outline-none"
+            placeholder="Enter your username"
+            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
           />
         </div>
 
-        {/* 📧 Email */}
+        {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-[#3F4238] mb-1">
+          <label htmlFor="email" className="block font-semibold mb-1">
             Email
           </label>
           <input
@@ -107,15 +101,15 @@ function Register() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
             required
-            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md shadow-sm focus:outline-none"
+            placeholder="Enter your email"
+            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
           />
         </div>
 
-        {/* 🔑 Password */}
+        {/* Password */}
         <div>
-          <label htmlFor="password" className="block text-[#3F4238] mb-1">
+          <label htmlFor="password" className="block font-semibold mb-1">
             Password
           </label>
           <div className="relative">
@@ -124,26 +118,26 @@ function Register() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
               minLength={8}
               maxLength={20}
               required
-              className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md shadow-sm focus:outline-none"
+              placeholder="Enter your password"
+              className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
             />
             <img
               src={showPassword ? "/hide.webp" : "/view.webp"}
-              alt="toggle password visibility"
+              alt="Toggle password visibility"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
             />
           </div>
         </div>
 
-        {/* 🔁 Confirm Password */}
+        {/* Confirm Password */}
         <div>
           <label
             htmlFor="confirm-password"
-            className="block text-[#3F4238] mb-1"
+            className="block font-semibold mb-1"
           >
             Confirm Password
           </label>
@@ -153,25 +147,25 @@ function Register() {
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Re-enter password"
               minLength={8}
               maxLength={20}
               required
-              className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md shadow-sm focus:outline-none"
+              placeholder="Re-enter your password"
+              className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
             />
             <img
               src={showConfirmPassword ? "/hide.webp" : "/view.webp"}
-              alt="toggle confirm password visibility"
+              alt="Toggle confirm password visibility"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-3 top-2.5 w-5 h-5 cursor-pointer"
             />
           </div>
         </div>
 
-        {/* 📞 Phone */}
+        {/* Phone */}
         <div>
-          <label htmlFor="phone" className="block text-[#3F4238] mb-1">
-            Phone (10 digits)
+          <label htmlFor="phone" className="block font-semibold mb-1">
+            Phone (optional)
           </label>
           <input
             id="phone"
@@ -180,34 +174,34 @@ function Register() {
             maxLength={10}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="Enter your phone number"
-            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md shadow-sm focus:outline-none"
+            placeholder="Enter your 10-digit phone number"
+            className="w-full border border-[#D4C7B0] py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
           />
         </div>
 
-        {/* ⚠️ Error */}
+        {/* Error message */}
         {errorMsg && (
-          <p className="text-red-600 text-sm text-center">{errorMsg}</p>
+          <p className="text-red-600 text-center text-sm">{errorMsg}</p>
         )}
 
-        {/* 🚀 Submit */}
+        {/* Submit button */}
         <button
           type="submit"
-          className="w-full bg-[#CB997E] text-white font-semibold py-2 rounded-md hover:bg-[#B98B73] transition-all"
+          className="w-full py-2 font-semibold bg-[#CB997E] text-white rounded-md hover:bg-[#B98B73] transition duration-300"
         >
           Register
         </button>
 
-        {/* 🔁 Link to Login */}
-        <div className="text-center mt-4 text-sm text-[#6B705C]">
+        {/* Link to login */}
+        <p className="text-center text-sm text-[#6B705C] mt-4">
           Already have an account?{" "}
           <NavLink
             to="/login"
-            className="text-[#3F4238] hover:underline font-medium"
+            className="text-[#3F4238] font-semibold hover:underline"
           >
             Login
           </NavLink>
-        </div>
+        </p>
       </form>
     </div>
   );

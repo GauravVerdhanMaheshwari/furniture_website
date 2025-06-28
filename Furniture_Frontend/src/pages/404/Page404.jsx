@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 
 function Page404() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-10 bg-[#FFE8D6] text-[#3F4238] sm:mt-15">
+    <main className="min-h-screen flex flex-col justify-center items-center px-4 py-16 bg-[#FFE8D6] text-[#3F4238]">
       {/* SEO & Accessibility */}
       <Helmet>
         <title>404 - Page Not Found | Furniture Store</title>
@@ -16,26 +16,29 @@ function Page404() {
 
       {/* Main Heading */}
       <h1
-        className="text-5xl sm:text-6xl md:text-7xl font-bold text-[#B98B73] mb-4 text-center leading-tight"
+        className="text-5xl sm:text-6xl md:text-7xl font-bold text-[#B98B73] mb-6 text-center leading-tight"
         role="heading"
         aria-level="1"
       >
         404 - Page Not Found
       </h1>
 
+      {/* Optional Illustration */}
+      {/* <img src="/404-illustration.svg" alt="Page not found" className="w-64 mb-6" /> */}
+
       {/* Informative Paragraphs */}
       <div className="text-center max-w-2xl">
         <p className="text-base sm:text-lg md:text-xl text-[#6B705C] mb-3">
-          Oops! The page you're looking for doesn’t exist.
+          Uh-oh! Looks like this page took a detour.
         </p>
         <p className="text-base sm:text-lg md:text-xl text-[#6B705C] mb-3">
-          It may have been moved or deleted, or the URL might be incorrect.
+          It might have been moved, deleted, or the link is broken.
         </p>
         <p className="text-base sm:text-lg md:text-xl text-[#6B705C] mb-6">
-          Let us help you find your way back.
+          Let’s help you get back on track.
         </p>
 
-        {/* Action Buttons */}
+        {/* Navigation Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <NavLink
             to="/"
@@ -54,7 +57,7 @@ function Page404() {
           </NavLink>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
