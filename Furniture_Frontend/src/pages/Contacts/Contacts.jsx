@@ -41,51 +41,51 @@ function Contacts() {
       </div>
 
       {/* 📝 Contact Form Section */}
-      <div className="w-full md:w-1/2 bg-white border border-[#B7B7A4] shadow-lg rounded-2xl p-8 md:p-10 transition hover:shadow-xl">
-        <form
+      {/* <div className="w-full md:w-1/2 bg-white border border-[#B7B7A4] shadow-lg rounded-2xl p-8 md:p-10 transition hover:shadow-xl"> */}
+      {/* <form
           className="space-y-6"
           onSubmit={(e) => {
             e.preventDefault();
             // TODO: Handle form submission here (send email or store data)
             alert("Message sent! (Functionality not yet implemented)");
           }}
-        >
-          <h2 className="text-2xl font-bold text-[#3F4238] text-center md:text-left">
+        > */}
+      {/* <h2 className="text-2xl font-bold text-[#3F4238] text-center md:text-left">
             📝 Get in Touch
-          </h2>
+          </h2> */}
 
-          {/* Name Field */}
-          <input
+      {/* Name Field */}
+      {/* <input
             type="text"
             placeholder="Your Name"
             required
             className="w-full p-3 border border-[#B7B7A4] rounded-md bg-[#FFF8F0] text-[#3F4238] focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
-          />
+          /> */}
 
-          {/* Email Field */}
-          <input
+      {/* Email Field */}
+      {/* <input
             type="email"
             placeholder="Your Email"
             required
             className="w-full p-3 border border-[#B7B7A4] rounded-md bg-[#FFF8F0] text-[#3F4238] focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
-          />
+          /> */}
 
-          {/* Phone Field */}
-          <input
+      {/* Phone Field */}
+      {/* <input
             type="tel"
             placeholder="Phone Number"
             className="w-full p-3 border border-[#B7B7A4] rounded-md bg-[#FFF8F0] text-[#3F4238] focus:outline-none focus:ring-2 focus:ring-[#B98B73]"
-          />
+          /> */}
 
-          {/* Submit Button */}
-          <button
+      {/* Submit Button */}
+      {/* <button
             type="submit"
             className="w-full bg-[#B98B73] text-white py-3 rounded-md font-semibold hover:bg-[#CB997E] transition duration-300"
           >
             Send Message
-          </button>
-        </form>
-      </div>
+          </button> */}
+      {/* </form> */}
+      {/* </div> */}
     </div>
   );
 }
