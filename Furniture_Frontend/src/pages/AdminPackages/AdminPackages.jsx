@@ -55,7 +55,7 @@ function AdminPackages() {
   );
 
   return (
-    <div className="mt-18 min-h-screen bg-[#FFE8D6] p-6 text-[#3F4238]">
+    <div className="mt-18 md:mt-15 min-h-screen bg-[#FFE8D6] p-6 text-[#3F4238]">
       {/* 🔍 Header: Search bar + Add Product button */}
       <div className="flex flex-col sm:flex-row items-center justify-between mb-10 bg-white shadow-md rounded-xl p-6 gap-4">
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

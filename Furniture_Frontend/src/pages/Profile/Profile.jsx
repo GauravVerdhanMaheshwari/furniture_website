@@ -86,7 +86,7 @@ function Profile() {
   };
 
   return (
-    <div className="mt-20 min-h-screen px-4 py-12 bg-[#FFE8D6] text-[#3F4238]">
+    <div className="mt-20 min-h-screen px-4 py-12 md:mt-15 bg-[#FFE8D6] text-[#3F4238]">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-10 text-center text-[#6B705C]">
           Your Profile

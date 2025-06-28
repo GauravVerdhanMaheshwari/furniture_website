@@ -9,7 +9,7 @@ function Hero() {
   const navigate = useNavigate(); // React Router hook for programmatic navigation
 
   return (
-    <section className="bg-[#FFE8D6] flex flex-col md:flex-row mt-20 min-h-[70vh]">
+    <section className="bg-[#FFE8D6] flex flex-col md:flex-row mt-20 md:mt-15 min-h-[70vh]">
       {/* === Left Section: Text Content === */}
       <div className="bg-[#DDBEA9] w-full md:w-1/2 flex flex-col justify-center items-center md:items-end p-8 md:p-20 gap-4">
         {/* Headline */}
@@ -32,7 +32,7 @@ function Hero() {
       </div>
 
       {/* === Right Section: Hero Image === */}
-      <div className="w-full md:w-1/2 flex justify-center items-center min-h-[300px] md:min-h-0">
+      <div className="w-full md:w-1/2 flex justify-center items-center min-h-[300px] md:min-h-0 mb:hidden">
         <img
           src="hero_img.webp"
           alt="Beautiful modern furniture"

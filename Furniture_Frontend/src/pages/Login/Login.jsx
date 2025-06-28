@@ -67,7 +67,7 @@ function Login() {
   };
 
   return (
-    <div className="mt-18 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center">
+    <div className="md:mt-15 mt-18 py-10 bg-[#FFE8D6] min-h-[70vh] flex items-center justify-center">
       <form
         onSubmit={(e) => {
           e.preventDefault();

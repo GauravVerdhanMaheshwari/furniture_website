@@ -6,7 +6,7 @@ import React from "react";
  */
 function Contacts() {
   return (
-    <div className="flex flex-col md:flex-row justify-center items-start min-h-[85vh] bg-[#FFE8D6] px-6 md:px-16 py-10 mt-20 gap-10">
+    <div className="md:mt-15 flex flex-col md:flex-row justify-center items-start min-h-[85vh] bg-[#FFE8D6] px-6 md:px-16 py-10 mt-20 gap-10">
       {/* 📌 Contact Details Section */}
       <div className="w-full md:w-1/2 bg-white rounded-2xl shadow-lg p-8 md:p-10 border border-[#B7B7A4] transition hover:shadow-xl">
         <h1 className="text-3xl font-bold text-[#3F4238] mb-6 text-center md:text-left">

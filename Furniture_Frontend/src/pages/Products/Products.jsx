@@ -144,7 +144,7 @@ function Products() {
   }
 
   return (
-    <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4">
+    <div className="bg-[#FFE8D6] min-h-screen pt-20 pb-10 px-4 md:mt-15">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         <h1 className="text-4xl font-bold mb-6 text-[#3F4238]">Our Products</h1>
 

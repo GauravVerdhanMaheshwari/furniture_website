@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 
 function AboutUs() {
   return (
-    <div className="bg-cream py-10 px-4 sm:px-8 md:px-16 max-w-7xl mx-auto mt-20">
+    <div className="bg-cream py-10 px-4 sm:px-8 md:px-16 max-w-7xl mx-auto mt-20 md:mt-15">
       {/* SEO and Meta Info */}
       <Helmet>
         <title>About Us | Geetanjali Furniture</title>

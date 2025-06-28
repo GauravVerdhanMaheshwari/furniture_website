@@ -101,7 +101,7 @@ function AdminEditProduct() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-10 mt-19 md:mt-15">
       <form
         onSubmit={handleSaveChanges}
         className="bg-white border border-[#D4C7B0] rounded-xl shadow-xl p-8 w-full max-w-xl"

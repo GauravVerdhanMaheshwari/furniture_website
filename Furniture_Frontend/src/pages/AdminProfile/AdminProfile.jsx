@@ -103,7 +103,7 @@ function AdminProfile() {
 
   // --- Profile form UI ---
   return (
-    <div className="min-h-screen bg-[#FFE8D6] pt-24 px-4">
+    <div className="min-h-screen bg-[#FFE8D6] pt-24 px-4 md:mt-15">
       <div className="max-w-xl mx-auto bg-[#FAF3E0] rounded-2xl shadow-xl border border-[#DDBEA9]">
         <div className="p-8">
           {/* Title */}

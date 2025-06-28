@@ -88,7 +88,7 @@ function AdminAddProduct() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#FFE8D6] flex items-center justify-center px-4 py-12 md:mt-15">
       <form
         onSubmit={handleAddProduct}
         className="w-full max-w-2xl bg-[#DDBEA9] rounded-2xl shadow-2xl p-8 space-y-6 text-[#3F4238]"
