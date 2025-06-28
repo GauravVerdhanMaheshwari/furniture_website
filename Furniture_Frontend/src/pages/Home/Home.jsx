@@ -7,7 +7,7 @@ import { Hero, Suggestions } from "../../components/indexComponents.js";
  */
 function Home() {
   return (
-    <div className="bg-[#FFE8D6] text-[#3F4238] min-h-screen pb-16 md:mt-15">
+    <div className="bg-[#FFE8D6] text-[#3F4238] min-h-screen pb-16 sm:mt-15">
       {/* Main container with responsive horizontal padding */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 🖼️ Hero Banner */}

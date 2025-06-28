@@ -28,7 +28,7 @@ function ResendVerification() {
   };
 
   return (
-    <div className="md:mt-15 min-h-screen flex flex-col items-center justify-center bg-[#F9F5EC] p-4 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9F5EC] p-4 text-center sm:mt-15">
       <h2 className="text-2xl font-semibold mb-4">Resend Verification Email</h2>
       <form onSubmit={handleResend} className="space-y-4 w-full max-w-md">
         <input

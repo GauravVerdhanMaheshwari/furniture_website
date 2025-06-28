@@ -32,7 +32,7 @@ function Home() {
   );
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-12 mt-20 md:mt-15">
+    <main className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 py-12 mt-20 sm:mt-15">
       <section className="bg-[#DDBEA9] border border-[#C9B8A3] rounded-2xl shadow-lg p-10 w-full max-w-2xl text-center">
         {/* Page Title */}
         <h1 className="text-4xl font-extrabold text-[#3F4238] mb-4">

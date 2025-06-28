@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 
 function Page404() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-10 bg-[#FFE8D6] text-[#3F4238] md:mt-15">
+    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-10 bg-[#FFE8D6] text-[#3F4238] sm:mt-15">
       {/* SEO & Accessibility */}
       <Helmet>
         <title>404 - Page Not Found | Furniture Store</title>

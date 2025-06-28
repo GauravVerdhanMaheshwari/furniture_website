@@ -133,7 +133,7 @@ function AdminEditPackage() {
   );
 
   return (
-    <div className="mt-18 min-h-screen bg-[#FFE8D6] px-4 py-10 md:mt-15">
+    <div className="mt-18 min-h-screen bg-[#FFE8D6] px-4 py-10 sm:mt-15">
       <form
         onSubmit={handleSubmit}
         className="max-w-4xl mx-auto bg-[#DDBEA9] rounded-xl shadow-xl p-8 space-y-6 text-[#3F4238]"

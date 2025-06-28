@@ -66,7 +66,7 @@ function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 mt-20 md:mt-15">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFE8D6] px-4 mt-20 sm:mt-15">
       <div className="w-full max-w-md bg-[#DDBEA9] p-8 rounded-2xl shadow-xl border border-[#C9B8A3]">
         {/* Title */}
         <h1 className="text-3xl font-extrabold text-center text-[#3F4238] mb-6">

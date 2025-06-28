@@ -39,10 +39,7 @@ function VerifyEmail() {
   }, [searchParams]);
 
   return (
-
-
-
-<div className="md:mt-15 min-h-screen flex items-center justify-center bg-[#F8F1EB]">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F1EB] sm:mt-15">
       <div className="bg-white p-6 rounded shadow-md text-center max-w-md w-full">
         {status === "verifying" && <p>⏳ Verifying your email...</p>}
         {status === "success" && (

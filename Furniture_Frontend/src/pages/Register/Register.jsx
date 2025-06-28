@@ -69,7 +69,7 @@ function Register() {
   };
 
   return (
-    <div className="mt-20 md:mt-15 py-12 bg-[#FFE8D6] min-h-[80vh] flex justify-center items-start">
+    <div className="mt-20 py-12 bg-[#FFE8D6] min-h-[80vh] flex justify-center items-start sm:mt-15">
       <form
         onSubmit={(e) => {
           e.preventDefault();
